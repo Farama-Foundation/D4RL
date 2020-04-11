@@ -1,0 +1,46 @@
+<!-- ======================================================
+	Model 		:: ADROIT MANIPULATION PLATFORM
+		Sources		: Manipulator and Manipulation in High Dimensional Spaces. Vikash Kumar, Ph.D. Thesis, CSE, Univ. of Washington. 2016.
+					: Shadow robot company (https://github.com/shadow-robot/sr_common)
+ 
+	Mujoco		:: Advanced physics simulation engine
+		Source		: www.roboti.us
+		Version		: 1.50
+		Released 	: 17Jan'17
+		
+	Author		:: Vikash Kumar
+		Contacts 	: vikash@cs.washington.edu
+		Last edits 	: 17Jan'17
+
+	Copyright 	:: Vikash Kumar
+		Licensed under Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+====================================================== -->
+<mujocoinclude>
+	<actuator>
+	<!-- ================ EQUIVALENT JOINT POSITION MOTORS ====================== -->
+		<position name="A_WRJ1" class="Adroit" user="2038" joint="WRJ1" ctrlrange="-0.52   0.17" kp="50"/>
+		<position name="A_WRJ0" class="Adroit" user="2036" joint="WRJ0" ctrlrange="-0.79   0.61" kp="50"/>
+		<position name="A_FFJ3" class="Adroit" user="2004" joint="FFJ3" ctrlrange="-0.44   0.44" kp="10"/>
+        <position name="A_FFJ2" class="Adroit" user="2002" joint="FFJ2" ctrlrange="0       1.6 " kp="10"/>
+        <position name="A_FFJ1" class="Adroit" user="2000" joint="FFJ1" ctrlrange="0       1.6 " kp="10"/>
+		<position name="A_FFJ0" class="Adroit" user="2000" joint="FFJ0" ctrlrange="0       1.6 " kp="10"/>
+		<position name="A_MFJ3" class="Adroit" user="2010" joint="MFJ3" ctrlrange="-0.44   0.44" kp="10"/>
+        <position name="A_MFJ2" class="Adroit" user="2008" joint="MFJ2" ctrlrange="0       1.6 " kp="10"/>
+        <position name="A_MFJ1" class="Adroit" user="2006" joint="MFJ1" ctrlrange="0       1.6 " kp="10"/>
+		<position name="A_MFJ0" class="Adroit" user="2006" joint="MFJ0" ctrlrange="0       1.6 " kp="10"/>
+		<position name="A_RFJ3" class="Adroit" user="2016" joint="RFJ3" ctrlrange="-0.44   0.44" kp="10"/>
+        <position name="A_RFJ2" class="Adroit" user="2014" joint="RFJ2" ctrlrange="0       1.6 " kp="10"/>
+        <position name="A_RFJ1" class="Adroit" user="2012" joint="RFJ1" ctrlrange="0       1.6 " kp="10"/>
+		<position name="A_RFJ0" class="Adroit" user="2012" joint="RFJ0" ctrlrange="0       1.6 " kp="10"/>
+		<position name="A_LFJ4" class="Adroit" user="2024" joint="LFJ4" ctrlrange="0 		0.7	" kp="10"/>
+		<position name="A_LFJ3" class="Adroit" user="2022" joint="LFJ3" ctrlrange="-0.44   0.44" kp="10"/>
+		<position name="A_LFJ2" class="Adroit" user="2020" joint="LFJ2" ctrlrange="0       1.6 " kp="10"/>
+		<position name="A_LFJ1" class="Adroit" user="2018" joint="LFJ1" ctrlrange="0       1.6 " kp="10"/>
+		<position name="A_LFJ0" class="Adroit" user="2018" joint="LFJ0" ctrlrange="0       1.6 " kp="10"/>
+        <position name="A_THJ4" class="Adroit" user="2034" joint="THJ4" ctrlrange="-1      1   " kp="10"/>
+		<position name="A_THJ3" class="Adroit" user="2032" joint="THJ3" ctrlrange="0       1.3 " kp="10"/>
+		<position name="A_THJ2" class="Adroit" user="2030" joint="THJ2" ctrlrange="-0.26   0.26" kp="10"/>
+		<position name="A_THJ1" class="Adroit" user="2028" joint="THJ1" ctrlrange="-0.52   0.52" kp="10"/>
+		<position name="A_THJ0" class="Adroit" user="2026" joint="THJ0" ctrlrange="-1.571  0   " kp="10"/>
+	</actuator>
+</mujocoinclude>

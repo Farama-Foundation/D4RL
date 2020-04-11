@@ -1,0 +1,123 @@
+<!-- ======================================================
+	Model 		:: ADROIT MANIPULATION PLATFORM
+		Sources		: Manipulator and Manipulation in High Dimensional Spaces. Vikash Kumar, Ph.D. Thesis, CSE, Univ. of Washington. 2016.
+					: Shadow robot company (https://github.com/shadow-robot/sr_common)
+ 
+	Mujoco		:: Advanced physics simulation engine
+		Source		: www.roboti.us
+		Version		: 1.50
+		Released 	: 17Jan'17
+		
+	Author		:: Vikash Kumar
+		Contacts 	: vikash@cs.washington.edu
+		Last edits 	: 17Jan'17
+
+	Copyright 	:: Vikash Kumar
+		Licensed under Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+====================================================== -->
+
+<mujocoinclude>
+	<!-- ================ ACTUATORS:: TENDON MOTORS ====================== -->
+	<actuator> 
+    <!--Act_force  = gear * gainprm * ctrl :: gainprm = cylinder_max_force :: gear=1:: direct attachment -->
+    <!--Jnt_torque = tendon moment * Act_force-->
+    <!-- ctrl_range = [-1 0] = as you can only pull -->
+
+        <!--<general name="A_ARJ3" user="2046" joint="ARJ3" gainprm="295" gear="0.015"/>
+        <general name="A_ARJ3" class="Adroit" user="2046" joint="ARJ3" gainprm="295" gear="0.015"/>
+        <general name="A_ARJ2" class="Adroit" user="2044" joint="ARJ2" gainprm="885" gear="0.068"/>
+        <general name="A_ARJ1" class="Adroit" user="2042" joint="ARJ1" gainprm="590" gear="0.055"/>
+        <general name="A_ARJ0" class="Adroit" user="2040" joint="ARJ0" gainprm="295" gear="0.028"/>-->
+
+        <general name="A_WRJ1r" class="Adroit" user="2038" tendon="T_WRJ1r" ctrlrange="-1 0" gainprm="125" gear="1"/>
+        <general name="A_WRJ1l" class="Adroit" user="2039" tendon="T_WRJ1l" ctrlrange="-1 0" gainprm="125" gear="1"/>
+        <general name="A_WRJ0u" class="Adroit" user="2036" tendon="T_WRJ0u" ctrlrange="-1 0" gainprm="125" gear="1"/>
+        <general name="A_WRJ0d" class="Adroit" user="2037" tendon="T_WRJ0d" ctrlrange="-1 0" gainprm="125" gear="1"/>
+
+        <general name="A_FFJ3r" class="Adroit" user="2004" tendon="T_FFJ3r" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_FFJ3l" class="Adroit" user="2005" tendon="T_FFJ3l" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_FFJ2u" class="Adroit" user="2002" tendon="T_FFJ2u" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_FFJ2d" class="Adroit" user="2003" tendon="T_FFJ2d" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_FFJ1u" class="Adroit" user="2000" tendon="T_FFJ1u" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_FFJ1d" class="Adroit" user="2001" tendon="T_FFJ1d" ctrlrange="-1 0" gainprm="45" gear="1"/>
+
+        <general name="A_MFJ3r" class="Adroit" user="2010" tendon="T_MFJ3r" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_MFJ3l" class="Adroit" user="2011" tendon="T_MFJ3l" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_MFJ2u" class="Adroit" user="2008" tendon="T_MFJ2u" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_MFJ2d" class="Adroit" user="2009" tendon="T_MFJ2d" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_MFJ1u" class="Adroit" user="2006" tendon="T_MFJ1u" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_MFJ1d" class="Adroit" user="2007" tendon="T_MFJ1d" ctrlrange="-1 0" gainprm="45" gear="1"/>
+
+        <general name="A_RFJ3r" class="Adroit" user="2016" tendon="T_RFJ3r" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_RFJ3l" class="Adroit" user="2017" tendon="T_RFJ3l" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_RFJ2u" class="Adroit" user="2014" tendon="T_RFJ2u" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_RFJ2d" class="Adroit" user="2015" tendon="T_RFJ2d" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_RFJ1u" class="Adroit" user="2012" tendon="T_RFJ1u" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_RFJ1d" class="Adroit" user="2013" tendon="T_RFJ1d" ctrlrange="-1 0" gainprm="45" gear="1"/>
+
+        <general name="A_LFJ4u" class="Adroit" user="2024" tendon="T_LFJ4u" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_LFJ4d" class="Adroit" user="2025" tendon="T_LFJ4d" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_LFJ3r" class="Adroit" user="2022" tendon="T_LFJ3r" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_LFJ3l" class="Adroit" user="2023" tendon="T_LFJ3l" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_LFJ2u" class="Adroit" user="2020" tendon="T_LFJ2u" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_LFJ2d" class="Adroit" user="2021" tendon="T_LFJ2d" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_LFJ1u" class="Adroit" user="2018" tendon="T_LFJ1u" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_LFJ1d" class="Adroit" user="2019" tendon="T_LFJ1d" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        
+        <general name="A_THJ4a" class="Adroit" user="2033" tendon="T_THJ4a" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_THJ4c" class="Adroit" user="2034" tendon="T_THJ4c" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_THJ3u" class="Adroit" user="2031" tendon="T_THJ3u" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_THJ3d" class="Adroit" user="2032" tendon="T_THJ3d" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_THJ2u" class="Adroit" user="2029" tendon="T_THJ2u" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_THJ2d" class="Adroit" user="2030" tendon="T_THJ2d" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_THJ1r" class="Adroit" user="2027" tendon="T_THJ1r" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_THJ1l" class="Adroit" user="2028" tendon="T_THJ1l" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_THJ0r" class="Adroit" user="2025" tendon="T_THJ0r" ctrlrange="-1 0" gainprm="45" gear="1"/>
+        <general name="A_THJ0l" class="Adroit" user="2026" tendon="T_THJ0l" ctrlrange="-1 0" gainprm="45" gear="1"/>
+    </actuator>
+
+
+	<sensor>
+	<!-- ======= Tendon Actuator Force Sensors ======= -->
+		<actuatorfrc name="Saf_WRJ1r" actuator="A_WRJ1r"/>
+		<actuatorfrc name="Saf_WRJ1l" actuator="A_WRJ1l"/>
+		<actuatorfrc name="Saf_WRJ0d" actuator="A_WRJ0d"/>
+		<actuatorfrc name="Saf_WRJ0u" actuator="A_WRJ0u"/>
+		<actuatorfrc name="Saf_FFJ3l" actuator="A_FFJ3l"/>
+		<actuatorfrc name="Saf_FFJ3r" actuator="A_FFJ3r"/>
+		<actuatorfrc name="Saf_FFJ2u" actuator="A_FFJ2u"/>
+		<actuatorfrc name="Saf_FFJ2d" actuator="A_FFJ2d"/>
+		<actuatorfrc name="Saf_FFJ1u" actuator="A_FFJ1u"/>
+		<actuatorfrc name="Saf_FFJ1d" actuator="A_FFJ1d"/>
+		<actuatorfrc name="Saf_MFJ3l" actuator="A_MFJ3l"/>
+		<actuatorfrc name="Saf_MFJ3r" actuator="A_MFJ3r"/>
+		<actuatorfrc name="Saf_MFJ2u" actuator="A_MFJ2u"/>
+		<actuatorfrc name="Saf_MFJ2d" actuator="A_MFJ2d"/>
+		<actuatorfrc name="Saf_MFJ1u" actuator="A_MFJ1u"/>
+		<actuatorfrc name="Saf_MFJ1d" actuator="A_MFJ1d"/>
+		<actuatorfrc name="Saf_RFJ3l" actuator="A_RFJ3l"/>
+		<actuatorfrc name="Saf_RFJ3r" actuator="A_RFJ3r"/>
+		<actuatorfrc name="Saf_RFJ2u" actuator="A_RFJ2u"/>
+		<actuatorfrc name="Saf_RFJ2d" actuator="A_RFJ2d"/>
+		<actuatorfrc name="Saf_RFJ1u" actuator="A_RFJ1u"/>
+		<actuatorfrc name="Saf_RFJ1d" actuator="A_RFJ1d"/>
+		<actuatorfrc name="Saf_LFJ4u" actuator="A_LFJ4u"/>
+		<actuatorfrc name="Saf_LFJ4d" actuator="A_LFJ4d"/>
+		<actuatorfrc name="Saf_LFJ3l" actuator="A_LFJ3l"/>
+		<actuatorfrc name="Saf_LFJ3r" actuator="A_LFJ3r"/>
+		<actuatorfrc name="Saf_LFJ2u" actuator="A_LFJ2u"/>
+		<actuatorfrc name="Saf_LFJ2d" actuator="A_LFJ2d"/>
+		<actuatorfrc name="Saf_LFJ1u" actuator="A_LFJ1u"/>
+		<actuatorfrc name="Saf_LFJ1d" actuator="A_LFJ1d"/>
+		<actuatorfrc name="Saf_THJ4a" actuator="A_THJ4a"/>
+		<actuatorfrc name="Saf_THJ4c" actuator="A_THJ4c"/>
+		<actuatorfrc name="Saf_THJ3u" actuator="A_THJ3u"/>
+		<actuatorfrc name="Saf_THJ3d" actuator="A_THJ3d"/>
+		<actuatorfrc name="Saf_THJ2u" actuator="A_THJ2u"/>
+		<actuatorfrc name="Saf_THJ2d" actuator="A_THJ2d"/>
+		<actuatorfrc name="Saf_THJ1l" actuator="A_THJ1l"/>
+		<actuatorfrc name="Saf_THJ1r" actuator="A_THJ1r"/>
+		<actuatorfrc name="Saf_THJ0l" actuator="A_THJ0l"/>
+		<actuatorfrc name="Saf_THJ0r" actuator="A_THJ0r"/>
+	</sensor>
+</mujocoinclude>

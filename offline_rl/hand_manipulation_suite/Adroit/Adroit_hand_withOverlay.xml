@@ -1,0 +1,57 @@
+<!-- ======================================================
+	Model 		:: ADROIT MANIPULATION PLATFORM
+		Sources		: Manipulator and Manipulation in High Dimensional Spaces. Vikash Kumar, Ph.D. Thesis, CSE, Univ. of Washington. 2016.
+					: Shadow robot company (https://github.com/shadow-robot/sr_common)
+ 
+	Mujoco		:: Advanced physics simulation engine
+		Source		: www.roboti.us
+		Version		: 1.50
+		Released 	: 17Jan'17
+		
+	Author		:: Vikash Kumar
+		Contacts 	: vikash@cs.washington.edu
+		Last edits 	: 17Jan'17
+
+	Copyright 	:: Vikash Kumar
+		Licensed under Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+====================================================== -->
+
+<mujoco>
+
+	<include file="resources/assets.xml"/>
+	<!--<include file="resources/tendon_torque_actuation.xml"/>--> <!-- Tendon torque motors -->
+	<include file="resources/joint_position_actuation.xml"/> <!-- Joint position servos -->
+	
+	<asset>
+		<texture name="texplane" type="2d" builtin="checker" rgb1=".2 .3 .4" rgb2=".1 0.15 0.2" 
+            width="512" height="512"/>
+        <material name='MatGnd' reflectance='0.5' texture="texplane" texrepeat="2 2" texuniform="true"/>
+	</asset>
+
+	
+	<!-- ======= WORLD ======= -->
+    <worldbody>
+		<light directional='false' diffuse='.8 .8 .8' specular='0.3 0.3 0.3' pos='0 1.0 4.0' dir='0 -1.0 -4'/>
+		<geom name="ground" pos="0 0 0" size="1 1 5" material="MatGnd" type="plane" contype="1" conaffinity="1"/>
+		
+		<body name="mocap1" mocap="true" pos="0 0 0">
+            <geom type="mesh" group="2" pos="0 -.01 .181" mesh="forearm_cvx" contype="0" conaffinity="0" euler="0 0 -1.57" rgba=".9 .5 .5 .2"/>
+        </body>
+		
+		<body name="hand mount" pos="0 0 0">
+			<inertial mass="0.100" pos="0 0 0" diaginertia="0.001 0.001 0.001"/>
+			<include file="resources/chain.xml"/>
+		</body>
+
+		<body name="hand mount1" pos="0 0 0">
+			<inertial mass="0.100" pos="0 0 0" diaginertia="0.001 0.001 0.001"/>			
+			<include file="resources/chain1.xml"/>
+		</body>
+		
+    </worldbody>
+	
+	<equality>
+        <weld body1="mocap1" body2="forearm" solref="0.01 1" solimp=".9 .9 0.01"/>
+	</equality>
+
+</mujoco>

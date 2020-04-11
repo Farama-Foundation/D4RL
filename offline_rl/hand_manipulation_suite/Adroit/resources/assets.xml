@@ -1,0 +1,345 @@
+<!-- ======================================================
+	Model 		:: ADROIT MANIPULATION PLATFORM
+		Sources		: Manipulator and Manipulation in High Dimensional Spaces. Vikash Kumar, Ph.D. Thesis, CSE, Univ. of Washington. 2016.
+					: Shadow robot company (https://github.com/shadow-robot/sr_common)
+ 
+	Mujoco		:: Advanced physics simulation engine
+		Source		: www.roboti.us
+		Version		: 1.50
+		Released 	: 17Jan'17
+		
+	Author		:: Vikash Kumar
+		Contacts 	: vikash@cs.washington.edu
+		Last edits 	: 17Jan'17
+
+	Copyright 	:: Vikash Kumar
+		Licensed under Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+====================================================== -->
+
+<mujocoinclude>
+	<compiler angle="radian"/>
+
+	<size 	njmax="400"
+			nconmax="100"
+			nuser_jnt="1"
+			nuser_site="1"
+			nuser_tendon="1"
+			nuser_sensor="1"
+			nuser_actuator="16"
+			nstack="600000"/>
+
+	<option	timestep="0.002"
+			iterations="20"
+			apirate="200"
+			noslip_iterations="20">
+	</option>
+
+	<visual>
+        <map fogstart="3" fogend="5" force="0.1"/>
+        <quality shadowsize="4096"/>
+		<global offwidth="1280" offheight="720"/>
+    </visual>
+
+	<asset>
+		<!-- <mesh name="forearm" 		 file="resources/meshes/forearm_electric.stl"/> -->
+		<!-- <mesh name="forearm_cvx" 	 file="resources/meshes/forearm_electric_cvx.stl"/> -->
+		<mesh name="forearm" file="resources/meshes/forearm_simple.stl"/>
+		<mesh name="forearm_cvx" 	 file="resources/meshes/forearm_simple_cvx.stl"/>
+		<mesh scale=".001 .001 .001" file="resources/meshes/wrist.stl"/>
+		<mesh scale=".001 .001 .001" file="resources/meshes/palm.stl"/>
+		<mesh scale=".001 .001 .001" file="resources/meshes/knuckle.stl"/>
+		<mesh scale=".001 .001 .001" file="resources/meshes/F3.stl"/>
+		<mesh scale=".001 .001 .001" file="resources/meshes/F2.stl"/>
+		<mesh scale=".001 .001 .001" file="resources/meshes/F1.stl"/>
+		<mesh scale=".001 .001 .001" file="resources/meshes/lfmetacarpal.stl"/>
+		<mesh scale=".001 .001 .001" file="resources/meshes/TH3_z.stl"/>
+		<mesh scale=".001 .001 .001" file="resources/meshes/TH2_z.stl"/>
+		<mesh scale=".001 .001 .001" file="resources/meshes/TH1_z.stl"/>
+
+		<texture name="texgeom" type="cube" builtin="flat" mark="cross" width="127" height="127"
+            rgb1=".3 .6 .5" rgb2=".3 .6 .5" markrgb="0 0 0" random="0.01"/>
+
+		<material name="MatColl" specular="1" shininess=".3" reflectance="0.5" rgba=".4 .5 .6 1"/>
+		<material name="MatViz" specular="0.75" shininess=".1" reflectance="0.5" rgba="0.9 .7 .5 1"/>
+		<material name="_MatViz" specular="0.75" shininess=".1" reflectance="0.5" rgba="0.4 .4 .4 1"/>
+
+		<material name='object' texture="texgeom" texuniform="false"/>
+	</asset>
+
+	<default>
+		<default class="Adroit">
+			<geom friction="1 0.005 0.001" condim="3" margin="0.0005" contype="1" conaffinity="1"/>
+			<joint limited="true" damping="0.05" armature=".001" margin="0.01" frictionloss="0.001"/>
+			<tendon limited="true"/>
+			<!--<mesh scale="0.001 0.001 0.001"/>-->
+			<site size="0.005" rgba=".4 .9 .4 1"/>
+
+			<!--Touch geoms-->
+			<default class="D_Touch">
+				<site type="box" size="0.009 0.004 0.013" pos="0 -.004 .018" rgba=".8 .8 .8 .15" group="4"/>
+			</default>
+
+			<!--Collission geoms-->
+			<default class="DC_Hand">
+				<geom material="MatColl" contype="1" conaffinity="0" group="4"/>
+			</default>
+
+			<!--Meshes-->
+			<default class="D_Vizual">
+				<geom material="MatViz" contype="0" conaffinity="0" group="1" type="mesh"/>
+			</default>
+			<default class="_D_Vizual">
+				<geom material="_MatViz" contype="0" conaffinity="0" group="2" type="mesh"/>
+			</default>
+
+			<default class="free">
+				<joint type="free" damping="0" armature="0" limited="false"/>
+			</default>
+
+			<!--EQUIVALENT JOINT MOTORS-->
+			<general ctrllimited="true" ctrlrange="-1 1" dyntype="none" gaintype="fixed"/>
+		</default>
+	</default>
+
+	<contact>
+		<!--Thumb-->
+		<pair geom1="C_ffdistal" geom2="C_thdistal" condim="1"/>
+		<pair geom1="C_ffmiddle" geom2="C_thdistal" condim="1"/>
+		<pair geom1="C_ffproximal" geom2="C_thdistal" condim="1"/>
+		<pair geom1="C_mfproximal" geom2="C_thdistal" condim="1"/>
+		<pair geom1="C_mfdistal" geom2="C_thdistal" condim="1"/>
+		<pair geom1="C_rfdistal" geom2="C_thdistal" condim="1"/>
+		<pair geom1="C_lfdistal" geom2="C_thdistal" condim="1"/>
+		<pair geom1="C_palm0" geom2="C_thdistal" condim="1"/>
+
+		<!--Distals with Distals-->
+		<pair geom1="C_mfdistal" geom2="C_ffdistal" condim="1"/>
+		<pair geom1="C_rfdistal" geom2="C_mfdistal" condim="1"/>
+		<pair geom1="C_lfdistal" geom2="C_rfdistal" condim="1"/>
+
+		<!--Proximals with Proximals-->
+		<pair geom1="C_mfproximal" geom2="C_ffproximal" condim="1"/>
+		<pair geom1="C_rfproximal" geom2="C_mfproximal" condim="1"/>
+		<pair geom1="C_lfproximal" geom2="C_rfproximal" condim="1"/>
+
+		<!--little finger -->
+		<pair geom1="C_lfdistal" geom2="C_rfdistal" condim="1"/>
+		<pair geom1="C_lfdistal" geom2="C_mfdistal" condim="1"/>
+		<pair geom1="C_lfdistal" geom2="C_rfmiddle" condim="1"/>
+		<pair geom1="C_lfmiddle" geom2="C_rfdistal" condim="1"/>
+		<pair geom1="C_lfmiddle" geom2="C_rfmiddle" condim="1"/>
+	</contact>
+
+	<tendon>
+
+		<!-- ======= Wrist ======= -->
+		<!--<spatial name="T_WRJ1r" range="0.25 0.314" user="1238">
+			<site site = "S_CY38"/>
+			<site site = "S_WRJ1r"/>
+		</spatial>
+		<spatial name="T_WRJ1l" range="0.25 0.314" user="1239">
+			<site site = "S_CY36"/>
+			<site site = "S_WRJ1l"/>
+		</spatial>-->
+		<fixed name="T_WRJ1r" range="-.032 0.032" user="1236">
+			<joint joint="WRJ1"  coef="0.018"/>
+		</fixed>
+		<fixed name="T_WRJ1l" range="-.032 0.032" user="1237">
+			<joint joint="WRJ1"  coef="-0.018"/>
+		</fixed>
+
+		<fixed name="T_WRJ0u" range="-.032 0.032" user="1236">
+			<joint joint="WRJ0"  coef="0.018"/>
+		</fixed>
+		<fixed name="T_WRJ0d" range="-.032 0.032" user="1237">
+			<joint joint="WRJ0"  coef="-0.018"/>
+		</fixed>
+
+		<!-- ======= First Finger ======= -->
+		<fixed name="T_FFJ3r" range="-0.018 0.018" user="1204">
+			<joint joint="FFJ3"  coef="0.010"/>
+		</fixed>
+		<fixed name="T_FFJ3l" range="-0.018 0.018" user="1205">
+			<joint joint="FFJ3"  coef="-0.010"/>
+		</fixed>
+		<fixed name="T_FFJ2u" range="-0.007 0.030" user="1202">
+			<joint joint="FFJ2"  coef="0.010"/>
+		</fixed>
+		<fixed name="T_FFJ2d" range="-0.030 0.007" user="1203">
+			<joint joint="FFJ2"  coef="-0.010"/>
+		</fixed>
+		<!--coupler tendon-->
+		<fixed name="T_FFJ1c" range ="-0.0010 0.0010">
+			<joint joint="FFJ0"  coef="0.00705"/>
+			<joint joint="FFJ1"  coef="-0.00805"/>
+		</fixed>
+		<fixed name="T_FFJ1u" range="-0.007 0.030" user="1200">
+			<joint joint="FFJ0"  coef="0.00705"/>
+			<joint joint="FFJ1"  coef="0.00805"/>
+		</fixed>
+		<fixed name="T_FFJ1d" range="-0.030 0.007" user="1201">
+			<joint joint="FFJ0"  coef="-0.00705"/>
+			<joint joint="FFJ1"  coef="-0.00805"/>
+		</fixed>
+
+		<!-- ======= Middle Finger ======= -->
+		<fixed name="T_MFJ3r" range="-0.018 0.018" user="1210">
+			<joint joint="MFJ3"  coef="0.010"/>
+		</fixed>
+		<fixed name="T_MFJ3l" range="-0.018 0.018" user="1211">
+			<joint joint="MFJ3"  coef="-0.010"/>
+		</fixed>
+		<fixed name="T_MFJ2u" range="-0.007 0.030" user="1208">
+			<joint joint="MFJ2"  coef="0.010"/>
+		</fixed>
+		<fixed name="T_MFJ2d" range="-0.030 0.007" user="1209">
+			<joint joint="MFJ2"  coef="-0.010"/>
+		</fixed>
+		<!--coupler tendon-->
+		<fixed name="T_MFJ1c" range ="-0.001 0.001">
+			<joint joint="MFJ0"  coef="0.00705"/>
+			<joint joint="MFJ1"  coef="-0.00805"/>
+		</fixed>
+		<fixed name="T_MFJ1u" range="-0.007 0.030" user="1206">
+			<joint joint="MFJ0"  coef="0.00705"/>
+			<joint joint="MFJ1"  coef="0.00805"/>
+		</fixed>
+		<fixed name="T_MFJ1d" range="-0.030 0.007" user="1207">
+			<joint joint="MFJ0"  coef="-0.00705"/>
+			<joint joint="MFJ1"  coef="-0.00805"/>
+		</fixed>
+
+		<!-- ======= Ring Finger ======= -->
+		<fixed name="T_RFJ3r" range="-0.018 0.018" user="1216">
+			<joint joint="RFJ3"  coef="0.010"/>
+		</fixed>
+		<fixed name="T_RFJ3l" range="-0.018 0.018" user="1217">
+			<joint joint="RFJ3"  coef="-0.010"/>
+		</fixed>
+		<fixed name="T_RFJ2u" range="-0.007 0.030" user="1214">
+			<joint joint="RFJ2"  coef="0.010"/>
+		</fixed>
+		<fixed name="T_RFJ2d" range="-0.030 0.007" user="1215">
+			<joint joint="RFJ2"  coef="-0.010"/>
+		</fixed>
+		<!--coupler tendon-->
+		<fixed name="T_RFJ1c" range ="-0.001 0.001">
+			<joint joint="RFJ0"  coef="0.00705"/>
+			<joint joint="RFJ1"  coef="-0.00805"/>
+		</fixed>
+		<fixed name="T_RFJ1u" range="-0.007 0.030" user="1212">
+			<joint joint="RFJ0"  coef="0.00705"/>
+			<joint joint="RFJ1"  coef="0.00805"/>
+		</fixed>
+		<fixed name="T_RFJ1d" range="-0.030 0.007" user="1213">
+			<joint joint="RFJ0"  coef="-0.00705"/>
+			<joint joint="RFJ1"  coef="-0.00805"/>
+		</fixed>
+
+		<!-- ======= Little Finger ======= -->
+		<fixed name="T_LFJ4u" range="-0.007 0.030" user="1224">
+			<joint joint="LFJ4"  coef="0.010"/>
+		</fixed>
+		<fixed name="T_LFJ4d" range="-0.030 0.007" user="1225">
+			<joint joint="LFJ4"  coef="-0.010"/>
+		</fixed>
+		<fixed name="T_LFJ3r" range="-0.018 0.018" user="1222">
+			<joint joint="LFJ3"  coef="0.010"/>
+		</fixed>
+		<fixed name="T_LFJ3l" range="-0.018 0.018" user="1223">
+			<joint joint="LFJ3"  coef="-0.010"/>
+		</fixed>
+		<fixed name="T_LFJ2u" range="-0.007 0.030" user="1220">
+			<joint joint="LFJ2"  coef="0.010"/>
+		</fixed>
+		<fixed name="T_LFJ2d" range="-0.030 0.007" user="1221">
+			<joint joint="LFJ2"  coef="-0.010"/>
+		</fixed>
+		<!--coupler tendon-->
+		<fixed name="T_LFJ1c" range ="-0.001 0.001">
+			<joint joint="LFJ0"  coef="0.00705"/>
+			<joint joint="LFJ1"  coef="-0.00805"/>
+		</fixed>
+		<fixed name="T_LFJ1u" range="-0.007 0.030" user="1218">
+			<joint joint="LFJ0"  coef="0.00705"/>
+			<joint joint="LFJ1"  coef="0.00805"/>
+		</fixed>
+		<fixed name="T_LFJ1d" range="-0.030 0.007" user="1219">
+			<joint joint="LFJ0"  coef="-0.00705"/>
+			<joint joint="LFJ1"  coef="-0.00805"/>
+		</fixed>
+
+		<!-- ======= Thumb Finger ======= -->
+		<fixed name="T_THJ4a" range="-0.018 0.018" user="1234">
+			<joint joint="THJ4"  coef="0.01636"/>
+		</fixed>
+		<fixed name="T_THJ4c" range="-0.018 0.018" user="1235">
+			<joint joint="THJ4"  coef="-0.01636"/>
+		</fixed>
+		<fixed name="T_THJ3u" range="-0.007 0.030" user="1232">
+			<joint joint="THJ3"  coef="0.010"/>
+		</fixed>
+		<fixed name="T_THJ3d" range="-0.030 0.007" user="1233">
+			<joint joint="THJ3"  coef="-0.010"/>
+		</fixed>
+		<fixed name="T_THJ2u" range="-0.018 0.018" user="1230">
+			<joint joint="THJ2"  coef="0.011"/>
+		</fixed>
+		<fixed name="T_THJ2d" range="-0.018 0.018" user="1231">
+			<joint joint="THJ2"  coef="-0.011"/>
+		</fixed>
+		<fixed name="T_THJ1r" range="-0.018 0.018" user="1228">
+			<joint joint="THJ1"  coef="0.011"/>
+		</fixed>
+		<fixed name="T_THJ1l" range="-0.018 0.018" user="1229">
+			<joint joint="THJ1"  coef="-0.011"/>
+		</fixed>
+		<fixed name="T_THJ0r" range="-0.030 0.007" user="1226">
+			<joint joint="THJ0"  coef="0.009"/>
+		</fixed>
+		<fixed name="T_THJ0l" range="-0.007 0.030" user="1227">
+			<joint joint="THJ0"  coef="-0.009"/>
+		</fixed>
+    </tendon>
+
+	<sensor>
+		<!-- ======= Joint Sensors ======= -->
+		<jointpos name="Sjp_WRJ1"	joint="WRJ1"/>
+		<jointpos name="Sjp_WRJ0"	joint="WRJ0"/>
+
+		<jointpos name="Sjp_FFJ3"	joint="FFJ3"/>
+		<jointpos name="Sjp_FFJ2"	joint="FFJ2"/>
+		<jointpos name="Sjp_FFJ1"	joint="FFJ1"/>
+		<jointpos name="Sjp_FFJ0"	joint="FFJ0"/>
+
+		<jointpos name="Sjp_MFJ3"	joint="MFJ3"/>
+		<jointpos name="Sjp_MFJ2"	joint="MFJ2"/>
+		<jointpos name="Sjp_MFJ1"	joint="MFJ1"/>
+		<jointpos name="Sjp_MFJ0"	joint="MFJ0"/>
+
+		<jointpos name="Sjp_RFJ3"	joint="RFJ3"/>
+		<jointpos name="Sjp_RFJ2"	joint="RFJ2"/>
+		<jointpos name="Sjp_RFJ1"	joint="RFJ1"/>
+		<jointpos name="Sjp_RFJ0"	joint="RFJ0"/>
+
+		<jointpos name="Sjp_LFJ4"	joint="LFJ4"/>
+		<jointpos name="Sjp_LFJ3"	joint="LFJ3"/>
+		<jointpos name="Sjp_LFJ2"	joint="LFJ2"/>
+		<jointpos name="Sjp_LFJ1"	joint="LFJ1"/>
+		<jointpos name="Sjp_LFJ0"	joint="LFJ0"/>
+
+		<jointpos name="Sjp_THJ4"	joint="THJ4"/>
+		<jointpos name="Sjp_THJ3"	joint="THJ3"/>
+		<jointpos name="Sjp_THJ2"	joint="THJ2"/>
+		<jointpos name="Sjp_THJ1"	joint="THJ1"/>
+		<jointpos name="Sjp_THJ0"	joint="THJ0"/>
+
+		<!-- ======= Touch Sensors ======= -->
+        <touch name="ST_Tch_fftip"	site="Tch_fftip"/>
+		<touch name="ST_Tch_mftip"	site="Tch_mftip"/>
+		<touch name="ST_Tch_rftip"	site="Tch_rftip"/>
+		<touch name="ST_Tch_lftip"	site="Tch_lftip"/>
+		<touch name="ST_Tch_thtip"	site="Tch_thtip"/>
+	</sensor>
+
+</mujocoinclude>
