@@ -24,7 +24,7 @@ Additionally, automatically downloading the datasets requires the gsutil tool in
 
 ## Using offline_rl
 
-offline_rl uses the [OpenAI Gym](https://github.com/openai/gym) API. Tasks are created via the `gym.make` function.
+offline_rl uses the [OpenAI Gym](https://github.com/openai/gym) API. Tasks are created via the `gym.make` function. A full list of all tasks is [available here](https://github.com/rail-berkeley/offline_rl/wiki/Tasks).
 
 Each task is associated with a fixed offline dataset, which can be obtained with the `get_dataset` method. This method returns an hdf5 dataset with `observations`, `actions`, `rewards`, `terminals`, and `infos` as keys. 
 
