@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 
-offline_rl is an open-source benchmark for offline reinforcement learning. It provides standardized environments and datasets for training and benchmarking algorithms.
+offline_rl is an open-source benchmark for offline reinforcement learning. It provides standardized environments and datasets for training and benchmarking algorithms. A whitepaper is available on [here](https://arxiv.org/abs/2004.07219).
 
 ## Setup
 
@@ -49,4 +49,19 @@ Datasets are automatically downloaded to the `~/.offline_rl/datasets` directory.
 ## Acknowledgements
 
 We would like to thank the authors of [hand_dapg](https://github.com/aravindr93/hand_dapg) and [gym-minigrid](https://github.com/maximecb/gym-minigrid) for providing several environments used in this repository.
+
+## Citation
+
+Please use the following bibtex for citations:
+
+```
+@misc{fu2020datasets,
+    title={Datasets for Data-Driven Reinforcement Learning},
+    author={Justin Fu and Aviral Kumar and Ofir Nachum and George Tucker and Sergey Levine},
+    year={2020},
+    eprint={2004.07219},
+    archivePrefix={arXiv},
+    primaryClass={cs.LG}
+}
+```
 
