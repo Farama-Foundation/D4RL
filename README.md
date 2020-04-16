@@ -8,17 +8,19 @@ offline_rl is an open-source benchmark for offline reinforcement learning. It pr
 
 offline_rl can be installed by cloning the repository as follows:
 ```
-git clone https://github.com/justinjfu/offline_rl.git
+git clone https://github.com/rail-berkeley/offline_rl.git
 cd offline_rl
 pip install -e .
 ```
 
 Or, alternatively:
 ```
-pip install git+https://github.com/justinjfu/offline_rl@master#egg=offline-rl
+pip install git+https://github.com/rail-berkeley/offline_rl@master#egg=offline-rl
 ```
 
 The control environments require MuJoCo as a dependency. You may need to obtain a [license](https://www.roboti.us/license.html) and follow the setup instructions for mujoco_py. This mostly involves copying the key to your MuJoCo installation folder.
+
+Additionally, automatically downloading the datasets requires the gsutil tool installed (although this is planned to change in the future). The installation instructions can be found [here](https://cloud.google.com/storage/docs/gsutil_install?hl=pl).
 
 ## Using offline_rl
 

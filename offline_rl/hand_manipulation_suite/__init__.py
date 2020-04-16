@@ -36,7 +36,7 @@ register(
 )
 
 register(
-    id='door-human-bc-combined-v0',
+    id='door-cloned-v0',
     entry_point='offline_rl.hand_manipulation_suite:DoorEnvV0',
     max_episode_steps=200,
     kwargs={
@@ -47,7 +47,7 @@ register(
 )
 
 register(
-    id='door-demos-v0',
+    id='door-only-cloned-v0',
     entry_point='offline_rl.hand_manipulation_suite:DoorEnvV0',
     max_episode_steps=200,
     kwargs={
@@ -87,7 +87,7 @@ register(
 )
 
 register(
-    id='hammer-human-bc-combined-v0',
+    id='hammer-cloned-v0',
     entry_point='offline_rl.hand_manipulation_suite:HammerEnvV0',
     max_episode_steps=200,
     kwargs={
@@ -98,7 +98,7 @@ register(
 )
 
 register(
-    id='hammer-demos-v0',
+    id='hammer-only-cloned-v0',
     entry_point='offline_rl.hand_manipulation_suite:HammerEnvV0',
     max_episode_steps=200,
     kwargs={
@@ -139,7 +139,7 @@ register(
 )
 
 register(
-    id='pen-human-bc-combined-v0',
+    id='pen-cloned-v0',
     entry_point='offline_rl.hand_manipulation_suite:PenEnvV0',
     max_episode_steps=100,
     kwargs={
@@ -150,7 +150,7 @@ register(
 )
 
 register(
-    id='pen-demos-v0',
+    id='pen-only-cloned-v0',
     entry_point='offline_rl.hand_manipulation_suite:PenEnvV0',
     max_episode_steps=100,
     kwargs={
@@ -191,7 +191,7 @@ register(
 )
 
 register(
-    id='relocate-human-bc-combined-v0',
+    id='relocate-cloned-v0',
     entry_point='offline_rl.hand_manipulation_suite:RelocateEnvV0',
     max_episode_steps=200,
     kwargs={
@@ -202,7 +202,7 @@ register(
 )
 
 register(
-    id='relocate-demos-v0',
+    id='relocate-only-cloned-v0',
     entry_point='offline_rl.hand_manipulation_suite:RelocateEnvV0',
     max_episode_steps=200,
     kwargs={

@@ -149,14 +149,15 @@ class MazeEnv(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
 
         # Set the default goal (overriden by a call to set_target)
         # Try to find a goal if it exists
-        goal_locations = list(zip(*np.where(self.maze_arr == GOAL)))
-        if len(goal_locations) == 1:
-            self.set_target(goal_locations[0])
-        elif len(goal_locations) > 1:
+        self.goal_locations = list(zip(*np.where(self.maze_arr == GOAL)))
+        if len(self.goal_locations) == 1:
+            self.set_target(self.goal_locations[0])
+        elif len(self.goal_locations) > 1:
             raise ValueError("More than 1 goal specified!")
         else:
             # If no goal, use the first empty tile
             self.set_target(np.array(self.reset_locations[0]).astype(self.observation_space.dtype))
+        self.empty_and_goal_locations = self.reset_locations + self.goal_locations
 
     def step(self, action):
         action = np.clip(action, -1.0, 1.0)
@@ -181,8 +182,8 @@ class MazeEnv(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
 
     def set_target(self, target_location=None):
         if target_location is None:
-            idx = self.np_random.choice(len(self.reset_locations))
-            reset_location = np.array(self.reset_locations[idx]).astype(self.observation_space.dtype)
+            idx = self.np_random.choice(len(self.empty_and_goal_locations))
+            reset_location = np.array(self.empty_and_goal_locations[idx]).astype(self.observation_space.dtype)
             target_location = reset_location + self.np_random.uniform(low=-.1, high=.1, size=self.model.nq)
         self._target = target_location
 
@@ -194,8 +195,8 @@ class MazeEnv(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
         self.set_state(self.sim.data.qpos, qvel)
 
     def reset_model(self):
-        idx = self.np_random.choice(len(self.reset_locations))
-        reset_location = np.array(self.reset_locations[idx]).astype(self.observation_space.dtype)
+        idx = self.np_random.choice(len(self.empty_and_goal_locations))
+        reset_location = np.array(self.empty_and_goal_locations[idx]).astype(self.observation_space.dtype)
         qpos = reset_location + self.np_random.uniform(low=-.1, high=.1, size=self.model.nq)
         qvel = self.init_qvel + self.np_random.randn(self.model.nv) * .1
         self.set_state(qpos, qvel)

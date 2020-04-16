@@ -50,7 +50,7 @@ def main():
         max_episode_steps = 150
     elif args.maze == 'open':
         maze = maze_model.OPEN
-        max_episode_steps = 50
+        max_episode_steps = 150
     elif args.maze == 'medium':
         maze = maze_model.MEDIUM_MAZE
         max_episode_steps = 250
@@ -97,9 +97,9 @@ def main():
 
     
     if args.noisy:
-        fname = 'pointmaze_%s_noisy.hdf5' % args.maze
+        fname = 'maze2d-%s-noisy.hdf5' % args.maze
     else:
-        fname = 'pointmaze_%s.hdf5' % args.maze
+        fname = 'maze2d-%s.hdf5' % args.maze
     dataset = h5py.File(fname, 'w')
     npify(data)
     for k in data:

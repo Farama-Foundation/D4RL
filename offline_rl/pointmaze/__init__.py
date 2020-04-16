@@ -4,7 +4,7 @@ from gym.envs.registration import register
 register(
     id='maze2d-open-v0',
     entry_point='offline_rl.pointmaze:MazeEnv',
-    max_episode_steps=50,
+    max_episode_steps=150,
     kwargs={
         'maze_spec':OPEN,
         'reward_type':'sparse',
@@ -62,7 +62,7 @@ register(
 register(
     id='maze2d-open-dense-v0',
     entry_point='offline_rl.pointmaze:MazeEnv',
-    max_episode_steps=50,
+    max_episode_steps=150,
     kwargs={
         'maze_spec':OPEN,
         'reward_type':'dense',
