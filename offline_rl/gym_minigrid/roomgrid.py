@@ -1,4 +1,4 @@
-from .minigrid import *
+from offline_rl.gym_minigrid.minigrid import *
 
 def reject_next_to(env, pos):
     """

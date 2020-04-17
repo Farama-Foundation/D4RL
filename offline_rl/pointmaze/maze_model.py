@@ -1,8 +1,8 @@
 """ A pointmass maze env."""
 from gym.envs.mujoco import mujoco_env
 from gym import utils
-from .. import offline_env
-from .dynamic_mjc import MJCModel
+from offline_rl import offline_env
+from offline_rl.pointmaze.dynamic_mjc import MJCModel
 import numpy as np
 import random
 

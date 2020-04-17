@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from ..minigrid import *
-from ..register import register
+from offline_rl.gym_minigrid.minigrid import *
+from offline_rl.gym_minigrid.register import register
 
 
 class FourRoomsEnv(MiniGridEnv):

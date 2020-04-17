@@ -1,7 +1,7 @@
 import numpy as np
-from . import q_iteration
-from .gridcraft import grid_env
-from .gridcraft import grid_spec
+from offline_rl.pointmaze import q_iteration
+from offline_rl.pointmaze.gridcraft import grid_env
+from offline_rl.pointmaze.gridcraft import grid_spec
 
 
 ZEROS = np.zeros((2,), dtype=np.float32)
