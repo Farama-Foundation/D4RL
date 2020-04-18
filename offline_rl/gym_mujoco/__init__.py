@@ -46,7 +46,7 @@ register(
 register(
     id='hopper-expert-v0',
     entry_point='offline_rl.gym_mujoco.gym_envs:get_hopper_env',
-    max_episode_steps=None,
+    max_episode_steps=1000,
     kwargs={
         'ref_min_score': HOPPER_RANDOM_SCORE,
         'ref_max_score': HOPPER_EXPERT_SCORE,
@@ -57,7 +57,7 @@ register(
 register(
     id='halfcheetah-expert-v0',
     entry_point='offline_rl.gym_mujoco.gym_envs:get_cheetah_env',
-    max_episode_steps=None,
+    max_episode_steps=1000,
     kwargs={
         'ref_min_score': HALFCHEETAH_RANDOM_SCORE,
         'ref_max_score': HALFCHEETAH_EXPERT_SCORE,
@@ -68,7 +68,7 @@ register(
 register(
     id='walker2d-expert-v0',
     entry_point='offline_rl.gym_mujoco.gym_envs:get_walker_env',
-    max_episode_steps=None,
+    max_episode_steps=1000,
     kwargs={
         'ref_min_score': WALKER_RANDOM_SCORE,
         'ref_max_score': WALKER_EXPERT_SCORE,
@@ -79,7 +79,7 @@ register(
 register(
     id='hopper-random-v0',
     entry_point='offline_rl.gym_mujoco.gym_envs:get_hopper_env',
-    max_episode_steps=None,
+    max_episode_steps=1000,
     kwargs={
         'ref_min_score': HOPPER_RANDOM_SCORE,
         'ref_max_score': HOPPER_EXPERT_SCORE,
@@ -90,7 +90,7 @@ register(
 register(
     id='halfcheetah-random-v0',
     entry_point='offline_rl.gym_mujoco.gym_envs:get_cheetah_env',
-    max_episode_steps=None,
+    max_episode_steps=1000,
     kwargs={
         'ref_min_score': HALFCHEETAH_RANDOM_SCORE,
         'ref_max_score': HALFCHEETAH_EXPERT_SCORE,
@@ -101,7 +101,7 @@ register(
 register(
     id='walker2d-random-v0',
     entry_point='offline_rl.gym_mujoco.gym_envs:get_walker_env',
-    max_episode_steps=None,
+    max_episode_steps=1000,
     kwargs={
         'ref_min_score': WALKER_RANDOM_SCORE,
         'ref_max_score': WALKER_EXPERT_SCORE,
@@ -113,7 +113,7 @@ register(
 register(
     id='hopper-mixed-v0',
     entry_point='offline_rl.gym_mujoco.gym_envs:get_hopper_env',
-    max_episode_steps=None,
+    max_episode_steps=1000,
     kwargs={
         'ref_min_score': HOPPER_RANDOM_SCORE,
         'ref_max_score': HOPPER_EXPERT_SCORE,
@@ -124,7 +124,7 @@ register(
 register(
     id='walker2d-mixed-v0',
     entry_point='offline_rl.gym_mujoco.gym_envs:get_walker_env',
-    max_episode_steps=None,
+    max_episode_steps=1000,
     kwargs={
         'ref_min_score': WALKER_RANDOM_SCORE,
         'ref_max_score': WALKER_EXPERT_SCORE,
@@ -135,7 +135,7 @@ register(
 register(
     id='halfcheetah-mixed-v0',
     entry_point='offline_rl.gym_mujoco.gym_envs:get_cheetah_env',
-    max_episode_steps=None,
+    max_episode_steps=1000,
     kwargs={
         'ref_min_score': HALFCHEETAH_RANDOM_SCORE,
         'ref_max_score': HALFCHEETAH_EXPERT_SCORE,
@@ -147,7 +147,7 @@ register(
 register(
     id='walker2d-random-expert-v0',
     entry_point='offline_rl.gym_mujoco.gym_envs:get_walker_env',
-    max_episode_steps=None,
+    max_episode_steps=1000,
     kwargs={
         'ref_min_score': WALKER_RANDOM_SCORE,
         'ref_max_score': WALKER_EXPERT_SCORE,
@@ -158,7 +158,7 @@ register(
 register(
     id='halfcheetah-random-expert-v0',
     entry_point='offline_rl.gym_mujoco.gym_envs:get_cheetah_env',
-    max_episode_steps=None,
+    max_episode_steps=1000,
     kwargs={
         'ref_min_score': HALFCHEETAH_RANDOM_SCORE,
         'ref_max_score': HALFCHEETAH_EXPERT_SCORE,
@@ -169,7 +169,7 @@ register(
 register(
     id='walker2d-medium-expert-v0',
     entry_point='offline_rl.gym_mujoco.gym_envs:get_walker_env',
-    max_episode_steps=None,
+    max_episode_steps=1000,
     kwargs={
         'ref_min_score': WALKER_RANDOM_SCORE,
         'ref_max_score': WALKER_EXPERT_SCORE,
@@ -180,7 +180,7 @@ register(
 register(
     id='halfcheetah-medium-expert-v0',
     entry_point='offline_rl.gym_mujoco.gym_envs:get_cheetah_env',
-    max_episode_steps=None,
+    max_episode_steps=1000,
     kwargs={
         'ref_min_score': HALFCHEETAH_RANDOM_SCORE,
         'ref_max_score': HALFCHEETAH_EXPERT_SCORE,
@@ -191,7 +191,7 @@ register(
 register(
     id='hopper-medium-expert-v0',
     entry_point='offline_rl.gym_mujoco.gym_envs:get_hopper_env',
-    max_episode_steps=None,
+    max_episode_steps=1000,
     kwargs={
         'ref_min_score': HOPPER_RANDOM_SCORE,
         'ref_max_score': HOPPER_EXPERT_SCORE,
