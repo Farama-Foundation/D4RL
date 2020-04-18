@@ -17,7 +17,7 @@ register(
     kwargs={
         'ref_min_score': HOPPER_RANDOM_SCORE,
         'ref_max_score': HOPPER_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/gym_mujoco/hopper_medium.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/hopper_medium.hdf5'
     }
 )
 
@@ -28,7 +28,7 @@ register(
     kwargs={
         'ref_min_score': HALFCHEETAH_RANDOM_SCORE,
         'ref_max_score': HALFCHEETAH_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/gym_mujoco/halfcheetah_medium.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/halfcheetah_medium.hdf5'
     }
 )
 
@@ -39,7 +39,7 @@ register(
     kwargs={
         'ref_min_score': WALKER_RANDOM_SCORE,
         'ref_max_score': WALKER_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/gym_mujoco/walker2d_medium.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/walker2d_medium.hdf5'
     }
 )
 
@@ -50,7 +50,7 @@ register(
     kwargs={
         'ref_min_score': HOPPER_RANDOM_SCORE,
         'ref_max_score': HOPPER_EXPERT_SCORE,
-        'dataset_url': 'gs://justinjfu-public/gym_mujoco/hopper_expert.hdf5'
+        'dataset_url': 'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/hopper_expert.hdf5'
     }
 )
 
@@ -61,7 +61,7 @@ register(
     kwargs={
         'ref_min_score': HALFCHEETAH_RANDOM_SCORE,
         'ref_max_score': HALFCHEETAH_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/gym_mujoco/halfcheetah_expert.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/halfcheetah_expert.hdf5'
     }
 )
 
@@ -72,7 +72,7 @@ register(
     kwargs={
         'ref_min_score': WALKER_RANDOM_SCORE,
         'ref_max_score': WALKER_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/gym_mujoco/walker2d_expert.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/walker2d_expert.hdf5'
     }
 )
 
@@ -83,7 +83,7 @@ register(
     kwargs={
         'ref_min_score': HOPPER_RANDOM_SCORE,
         'ref_max_score': HOPPER_EXPERT_SCORE,
-        'dataset_url': 'gs://justinjfu-public/gym_mujoco/hopper_random.hdf5'
+        'dataset_url': 'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/hopper_random.hdf5'
     }
 )
 
@@ -94,7 +94,7 @@ register(
     kwargs={
         'ref_min_score': HALFCHEETAH_RANDOM_SCORE,
         'ref_max_score': HALFCHEETAH_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/gym_mujoco/halfcheetah_random.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/halfcheetah_random.hdf5'
     }
 )
 
@@ -105,7 +105,7 @@ register(
     kwargs={
         'ref_min_score': WALKER_RANDOM_SCORE,
         'ref_max_score': WALKER_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/gym_mujoco/walker2d_random.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/walker2d_random.hdf5'
     }
 )
 
@@ -117,7 +117,7 @@ register(
     kwargs={
         'ref_min_score': HOPPER_RANDOM_SCORE,
         'ref_max_score': HOPPER_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/gym_mujoco/hopper_mixed.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/hopper_mixed.hdf5'
     },
 )
 
@@ -128,7 +128,7 @@ register(
     kwargs={
         'ref_min_score': WALKER_RANDOM_SCORE,
         'ref_max_score': WALKER_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/gym_mujoco/walker_mixed.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/walker_mixed.hdf5'
     }
 )
 
@@ -139,7 +139,7 @@ register(
     kwargs={
         'ref_min_score': HALFCHEETAH_RANDOM_SCORE,
         'ref_max_score': HALFCHEETAH_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/gym_mujoco/halfcheetah_mixed.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/halfcheetah_mixed.hdf5'
     }
 )
 
@@ -151,7 +151,7 @@ register(
     kwargs={
         'ref_min_score': WALKER_RANDOM_SCORE,
         'ref_max_score': WALKER_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/gym_mujoco/walker2d_random_expert.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/walker2d_random_expert.hdf5'
     }
 )
 
@@ -162,7 +162,7 @@ register(
     kwargs={
         'ref_min_score': HALFCHEETAH_RANDOM_SCORE,
         'ref_max_score': HALFCHEETAH_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/gym_mujoco/halfcheetah_random_expert.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/halfcheetah_random_expert.hdf5'
     }
 )
 
@@ -173,7 +173,7 @@ register(
     kwargs={
         'ref_min_score': WALKER_RANDOM_SCORE,
         'ref_max_score': WALKER_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/gym_mujoco/walker2d_medium_expert.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/walker2d_medium_expert.hdf5'
     }
 )
 
@@ -184,7 +184,7 @@ register(
     kwargs={
         'ref_min_score': HALFCHEETAH_RANDOM_SCORE,
         'ref_max_score': HALFCHEETAH_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/gym_mujoco/halfcheetah_medium_expert.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/halfcheetah_medium_expert.hdf5'
     }
 )
 
@@ -195,6 +195,6 @@ register(
     kwargs={
         'ref_min_score': HOPPER_RANDOM_SCORE,
         'ref_max_score': HOPPER_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/gym_mujoco/hopper_medium_expert.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/hopper_medium_expert.hdf5'
     }
 )

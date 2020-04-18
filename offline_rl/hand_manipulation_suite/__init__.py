@@ -31,7 +31,7 @@ register(
     kwargs={
         'ref_min_score': DOOR_RANDOM_SCORE,
         'ref_max_score': DOOR_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/hand_dapg/door-v0_demos_clipped.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/door-v0_demos_clipped.hdf5'
     }
 )
 
@@ -42,7 +42,7 @@ register(
     kwargs={
         'ref_min_score': DOOR_RANDOM_SCORE,
         'ref_max_score': DOOR_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/hand_dapg/door-demos-v0-bc-combined.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/door-demos-v0-bc-combined.hdf5'
     }
 )
 
@@ -53,7 +53,7 @@ register(
     kwargs={
         'ref_min_score': DOOR_RANDOM_SCORE,
         'ref_max_score': DOOR_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/hand_dapg/door-demos-v0-bc.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/door-demos-v0-bc.hdf5'
     }
 )
 
@@ -64,7 +64,7 @@ register(
     kwargs={
         'ref_min_score': DOOR_RANDOM_SCORE,
         'ref_max_score': DOOR_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/hand_dapg/door-v0_expert_clipped.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/door-v0_expert_clipped.hdf5'
     }
 )
 
@@ -82,7 +82,7 @@ register(
     kwargs={
         'ref_min_score': HAMMER_RANDOM_SCORE,
         'ref_max_score': HAMMER_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/hand_dapg/hammer-v0_demos_clipped.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/hammer-v0_demos_clipped.hdf5'
     }
 )
 
@@ -93,7 +93,7 @@ register(
     kwargs={
         'ref_min_score': HAMMER_RANDOM_SCORE,
         'ref_max_score': HAMMER_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/hand_dapg/hammer-demos-v0-bc-combined.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/hammer-demos-v0-bc-combined.hdf5'
     }
 )
 
@@ -104,7 +104,7 @@ register(
     kwargs={
         'ref_min_score': HAMMER_RANDOM_SCORE,
         'ref_max_score': HAMMER_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/hand_dapg/hammer-demos-v0-bc.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/hammer-demos-v0-bc.hdf5'
     }
 )
 
@@ -115,7 +115,7 @@ register(
     kwargs={
         'ref_min_score': HAMMER_RANDOM_SCORE,
         'ref_max_score': HAMMER_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/hand_dapg/hammer-v0_expert_clipped.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/hammer-v0_expert_clipped.hdf5'
     }
 )
 
@@ -134,7 +134,7 @@ register(
     kwargs={
         'ref_min_score': PEN_RANDOM_SCORE,
         'ref_max_score': PEN_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/hand_dapg/pen-v0_demos_clipped.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/pen-v0_demos_clipped.hdf5'
     }
 )
 
@@ -145,7 +145,7 @@ register(
     kwargs={
         'ref_min_score': PEN_RANDOM_SCORE,
         'ref_max_score': PEN_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/hand_dapg/pen-demos-v0-bc-combined.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/pen-demos-v0-bc-combined.hdf5'
     }
 )
 
@@ -156,7 +156,7 @@ register(
     kwargs={
         'ref_min_score': PEN_RANDOM_SCORE,
         'ref_max_score': PEN_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/hand_dapg/pen-demos-v0-bc.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/pen-demos-v0-bc.hdf5'
     }
 )
 
@@ -167,7 +167,7 @@ register(
     kwargs={
         'ref_min_score': PEN_RANDOM_SCORE,
         'ref_max_score': PEN_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/hand_dapg/pen-v0_expert_clipped.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/pen-v0_expert_clipped.hdf5'
     }
 )
 
@@ -186,7 +186,7 @@ register(
     kwargs={
         'ref_min_score': RELOCATE_RANDOM_SCORE,
         'ref_max_score': RELOCATE_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/hand_dapg/relocate-v0_demos_clipped.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/relocate-v0_demos_clipped.hdf5'
     }
 )
 
@@ -197,7 +197,7 @@ register(
     kwargs={
         'ref_min_score': RELOCATE_RANDOM_SCORE,
         'ref_max_score': RELOCATE_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/hand_dapg/relocate-demos-v0-bc-combined.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/relocate-demos-v0-bc-combined.hdf5'
     }
 )
 
@@ -208,7 +208,7 @@ register(
     kwargs={
         'ref_min_score': RELOCATE_RANDOM_SCORE,
         'ref_max_score': RELOCATE_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/hand_dapg/relocate-demos-v0-bc.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/relocate-demos-v0-bc.hdf5'
     }
 )
 
@@ -219,7 +219,7 @@ register(
     kwargs={
         'ref_min_score': RELOCATE_RANDOM_SCORE,
         'ref_max_score': RELOCATE_EXPERT_SCORE,
-        'dataset_url':'gs://justinjfu-public/hand_dapg/relocate-v0_expert_clipped.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/relocate-v0_expert_clipped.hdf5'
     }
 )
 

@@ -7,7 +7,7 @@ register(
     kwargs={
         'ref_min_score': 0.01442,
         'ref_max_score': 2.89685,
-        'dataset_url':'gs://justinjfu-public/minigrid/minigrid4rooms.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/minigrid/minigrid4rooms.hdf5'
     }
 )
 
@@ -18,6 +18,6 @@ register(
     kwargs={
         'ref_min_score': 0.01442,
         'ref_max_score': 2.89685,
-        'dataset_url':'gs://justinjfu-public/minigrid/minigrid4rooms_random.hdf5'
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/minigrid/minigrid4rooms_random.hdf5'
     }
 )

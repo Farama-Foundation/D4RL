@@ -10,7 +10,7 @@ register(
     kwargs={
         'maze_map': maze_env.U_MAZE_TEST,
         'reward_type':'sparse',
-        'dataset_url':'gs://justinjfu-public/ant_maze_new/Ant_maze_u-maze_noisy_multistart_False_multigoal_False_sparse.hdf5',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_u-maze_noisy_multistart_False_multigoal_False_sparse.hdf5',
         'non_zero_reset':False, 
         'eval':True,
         'maze_size_scaling': 4.0,
@@ -27,7 +27,7 @@ register(
     kwargs={
         'maze_map': maze_env.U_MAZE_TEST,
         'reward_type':'sparse',
-        'dataset_url':'gs://justinjfu-public/ant_maze_new/Ant_maze_u-maze_noisy_multistart_False_multigoal_False_sparse.hdf5',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_u-maze_noisy_multistart_False_multigoal_False_sparse.hdf5',
         'non_zero_reset':False, 
         'eval':True,
         'maze_size_scaling': 4.0,
@@ -43,7 +43,7 @@ register(
     kwargs={
         'maze_map': maze_env.U_MAZE_TEST,
         'reward_type':'sparse',
-        'dataset_url':'gs://justinjfu-public/ant_maze_new/Ant_maze_u-maze_noisy_multistart_True_multigoal_True_sparse.hdf5',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_u-maze_noisy_multistart_True_multigoal_True_sparse.hdf5',
         'non_zero_reset':False, 
         'eval':True,
         'maze_size_scaling': 4.0,
@@ -59,7 +59,7 @@ register(
     kwargs={
         'maze_map': maze_env.BIG_MAZE_TEST,
         'reward_type':'sparse',
-        'dataset_url':'gs://justinjfu-public/ant_maze_new/Ant_maze_big-maze_noisy_multistart_True_multigoal_False_sparse.hdf5',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_big-maze_noisy_multistart_True_multigoal_False_sparse.hdf5',
         'non_zero_reset':False, 
         'eval':True,
         'maze_size_scaling': 4.0,
@@ -75,7 +75,7 @@ register(
     kwargs={
         'maze_map': maze_env.BIG_MAZE_TEST,
         'reward_type':'sparse',
-        'dataset_url':'gs://justinjfu-public/ant_maze_new/Ant_maze_big-maze_noisy_multistart_True_multigoal_True_sparse.hdf5',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_big-maze_noisy_multistart_True_multigoal_True_sparse.hdf5',
         'non_zero_reset':False, 
         'eval':True,
         'maze_size_scaling': 4.0,
@@ -91,7 +91,7 @@ register(
     kwargs={
         'maze_map': maze_env.HARDEST_MAZE_TEST,
         'reward_type':'sparse',
-        'dataset_url':'gs://justinjfu-public/ant_maze_new/Ant_maze_hardest-maze_noisy_multistart_True_multigoal_True_sparse.hdf5',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_hardest-maze_noisy_multistart_True_multigoal_True_sparse.hdf5',
         'non_zero_reset':False, 
         'eval':True,
         'maze_size_scaling': 4.0,
@@ -107,7 +107,7 @@ register(
     kwargs={
         'maze_map': maze_env.HARDEST_MAZE_TEST,
         'reward_type':'sparse',
-        'dataset_url':'gs://justinjfu-public/ant_maze_new/Ant_maze_hardest-maze_noisy_multistart_True_multigoal_False_sparse.hdf5',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_hardest-maze_noisy_multistart_True_multigoal_False_sparse.hdf5',
         'non_zero_reset':False, 
         'eval':True,
         'maze_size_scaling': 4.0,
