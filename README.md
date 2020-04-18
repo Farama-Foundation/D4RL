@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 
-offline_rl is an open-source benchmark for offline reinforcement learning. It provides standardized environments and datasets for training and benchmarking algorithms. A whitepaper is available on [here](https://arxiv.org/abs/2004.07219).
+offline_rl is an open-source benchmark for offline reinforcement learning. It provides standardized environments and datasets for training and benchmarking algorithms. A whitepaper is available [here](https://arxiv.org/abs/2004.07219).
 
 ## Setup
 
@@ -26,7 +26,7 @@ Additionally, automatically downloading the datasets requires the gsutil tool in
 
 offline_rl uses the [OpenAI Gym](https://github.com/openai/gym) API. Tasks are created via the `gym.make` function. A full list of all tasks is [available here](https://github.com/rail-berkeley/offline_rl/wiki/Tasks).
 
-Each task is associated with a fixed offline dataset, which can be obtained with the `get_dataset` method. This method returns an hdf5 dataset with `observations`, `actions`, `rewards`, `terminals`, and `infos` as keys. 
+Each task is associated with a fixed offline dataset, which can be obtained with the `get_dataset` method. This method returns a dictionary with `observations`, `actions`, `rewards`, `terminals`, and `infos` as keys. 
 
 ```python
 import gym
@@ -41,14 +41,14 @@ env.step(env.action_space.sample())
 
 # Each task is associated with a dataset
 dataset = env.get_dataset()
-print(dataset['observations']) # An N x dim_observation array of observations
+print(dataset['observations']) # An N x dim_observation Numpy array of observations
 ```
 
 Datasets are automatically downloaded to the `~/.offline_rl/datasets` directory. If you would like to change the location of this directory, you can set the `$OFFLINE_RL_DATASET_DIR` environment variable to the directory of your choosing, or pass in the dataset filepath directly into the `get_dataset` method.
 
 ## Acknowledgements
 
-We would like to thank the authors of [hand_dapg](https://github.com/aravindr93/hand_dapg) and [gym-minigrid](https://github.com/maximecb/gym-minigrid) for providing several environments used in this repository.
+We would like to thank the authors of [hand_dapg](https://github.com/aravindr93/hand_dapg) and [gym-minigrid](https://github.com/maximecb/gym-minigrid) for their implementations of the respective environments.
 
 ## Citation
 
