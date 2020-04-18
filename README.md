@@ -20,8 +20,6 @@ pip install git+https://github.com/rail-berkeley/offline_rl@master#egg=offline-r
 
 The control environments require MuJoCo as a dependency. You may need to obtain a [license](https://www.roboti.us/license.html) and follow the setup instructions for mujoco_py. This mostly involves copying the key to your MuJoCo installation folder.
 
-Additionally, automatically downloading the datasets requires the gsutil tool installed (although this is planned to change in the future). The installation instructions can be found [here](https://cloud.google.com/storage/docs/gsutil_install?hl=pl).
-
 ## Using offline_rl
 
 offline_rl uses the [OpenAI Gym](https://github.com/openai/gym) API. Tasks are created via the `gym.make` function. A full list of all tasks is [available here](https://github.com/rail-berkeley/offline_rl/wiki/Tasks).

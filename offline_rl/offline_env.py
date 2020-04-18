@@ -1,6 +1,7 @@
 import os
 import gym
 import h5py
+import urllib.request
 
 def set_dataset_path(path):
     global DATASET_PATH
@@ -21,7 +22,7 @@ class OfflineEnv(gym.Env):
     """
     Base class for offline RL envs.
 
-    Args:
+    Arhttp:
         dataset_url: URL pointing to the dataset.
         ref_max_score: Maximum score (for score normalization)
         ref_min_score: Minimum score (for score normalization)
@@ -50,9 +51,8 @@ class OfflineEnv(gym.Env):
 
             if not os.path.exists(self.dataset_filepath):
                 print('Downloading dataset:', self._dataset_url, 'to', self.dataset_filepath)
-                import subprocess
-                cmd = 'gsutil cp %s %s' % (self._dataset_url, self.dataset_filepath)
-                subprocess.call(cmd, shell=True)
+                urllib.request.urlretrieve(self._dataset_url, self.dataset_filepath)
+
             if not os.path.exists(self.dataset_filepath):
                 raise IOError("Failed to download dataset from %s" % self._dataset_url)
             h5path = self.dataset_filepath
@@ -65,10 +65,11 @@ class OfflineEnv(gym.Env):
         for key in ['observations', 'actions', 'rewards', 'terminals']:
             assert key in data_dict, 'Dataset is missing key %s' % key
         N_samples = data_dict['observations'].shape[0]
-        assert data_dict['observations'].shape[1:] == self.observation_space.shape, \
-                'Observation shape does not match env: %s vs %s' % (str(data_dict['observations'].shape[1:]), str(env.observation_space.shape))
+        if self.observation_space.shape is not None:
+            assert data_dict['observations'].shape[1:] == self.observation_space.shape, \
+                    'Observation shape does not match env: %s vs %s' % (str(data_dict['observations'].shape[1:]), str(self.observation_space.shape))
         assert data_dict['actions'].shape[1:] == self.action_space.shape, \
-                'Action shape does not match env: %s vs %s' % (str(data_dict['actions'].shape[1:]), str(env.action_space.shape))
+                    'Action shape does not match env: %s vs %s' % (str(data_dict['actions'].shape[1:]), str(self.action_space.shape))
         if data_dict['rewards'].shape == (N_samples, 1):
             data_dict['rewards'] = data_dict['rewards'][:,0]
         assert data_dict['rewards'].shape == (N_samples,), 'Reward has wrong shape: %s' % (str(data_dict['rewards'].shape))
