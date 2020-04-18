@@ -1,6 +1,6 @@
 import numpy as np
-from .grid_env import REWARD, GridEnv
-from .wrappers import ObsWrapper
+from offline_rl.pointmaze.gridcraft.grid_env import REWARD, GridEnv
+from offline_rl.pointmaze.gridcraft.wrappers import ObsWrapper
 from gym.spaces import Box
 
 

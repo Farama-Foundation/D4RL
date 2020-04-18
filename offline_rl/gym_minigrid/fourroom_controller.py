@@ -1,9 +1,9 @@
 import numpy as np
 import random
 
-from ..pointmaze import q_iteration
-from ..pointmaze.gridcraft import grid_env
-from ..pointmaze.gridcraft import grid_spec
+from offline_rl.pointmaze import q_iteration
+from offline_rl.pointmaze.gridcraft import grid_env
+from offline_rl.pointmaze.gridcraft import grid_spec
 
 MAZE = \
 "###################\\"+\
