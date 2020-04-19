@@ -26,7 +26,7 @@ from absl import logging
 
 
 import gin
-import offline_rl
+import d4rl
 import tensorflow.compat.v1 as tf
 
 from behavior_regularized_offline_rl.brac import agents

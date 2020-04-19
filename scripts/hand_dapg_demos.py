@@ -1,4 +1,4 @@
-import offline_rl
+import d4rl
 import click 
 import os
 import gym

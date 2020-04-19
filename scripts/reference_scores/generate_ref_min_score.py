@@ -2,7 +2,7 @@
 Generate "minimum" reference scores by averaging the score for a random
 policy over 100 episodes.
 """
-import offline_rl
+import d4rl
 import argparse 
 import gym
 import numpy as np
