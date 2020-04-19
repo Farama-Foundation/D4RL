@@ -6,6 +6,7 @@ import urllib.request
 def set_dataset_path(path):
     global DATASET_PATH
     DATASET_PATH = path
+    os.makedirs(path, exist_ok=True)
 
 set_dataset_path(os.environ.get('OFFLINE_RL_DATASET_DIR', os.path.expanduser('~/.offline_rl/datasets')))
 
