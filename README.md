@@ -1,6 +1,7 @@
 # D4RL: Datasets for Deep Data-Driven Reinforcement Learning
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+Status: Beta (stable release expected June 2020)
 
 D4RL is an open-source benchmark for offline reinforcement learning. It provides standardized environments and datasets for training and benchmarking algorithms. A supplementary [whitepaper](https://arxiv.org/abs/2004.07219) and [website](https://sites.google.com/view/d4rl/home) are also available.
 
@@ -8,21 +9,21 @@ D4RL is an open-source benchmark for offline reinforcement learning. It provides
 
 D4RL can be installed by cloning the repository as follows:
 ```
-git clone https://github.com/rail-berkeley/offline_rl.git
+git clone https://github.com/rail-berkeley/d4rl.git
 cd offline_rl
 pip install -e .
 ```
 
 Or, alternatively:
 ```
-pip install git+https://github.com/rail-berkeley/offline_rl@master#egg=d4rl
+pip install git+https://github.com/rail-berkeley/d4rl@master#egg=d4rl
 ```
 
 The control environments require MuJoCo as a dependency. You may need to obtain a [license](https://www.roboti.us/license.html) and follow the setup instructions for mujoco_py. This mostly involves copying the key to your MuJoCo installation folder.
 
 ## Using d4rl
 
-d4rl uses the [OpenAI Gym](https://github.com/openai/gym) API. Tasks are created via the `gym.make` function. A full list of all tasks is [available here](https://github.com/rail-berkeley/offline_rl/wiki/Tasks).
+d4rl uses the [OpenAI Gym](https://github.com/openai/gym) API. Tasks are created via the `gym.make` function. A full list of all tasks is [available here](https://github.com/rail-berkeley/d4rl/wiki/Tasks).
 
 Each task is associated with a fixed offline dataset, which can be obtained with the `get_dataset` method. This method returns a dictionary with `observations`, `actions`, `rewards`, `terminals`, and `infos` as keys. 
 
