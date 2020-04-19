@@ -1,4 +1,4 @@
-import offline_rl
+import d4rl
 import gym
 from offline_rl.pointmaze import waypoint_controller
 from offline_rl.pointmaze import maze_model

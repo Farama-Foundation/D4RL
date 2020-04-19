@@ -5,7 +5,7 @@ Instructions:
 2) Place the policies from dapg_policies in the current directory
 3) Run this script passing in the appropriate env_name
 """
-import offline_rl
+import d4rl
 import argparse
 import os
 import gym
