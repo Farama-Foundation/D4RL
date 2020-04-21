@@ -10,7 +10,7 @@ D4RL is an open-source benchmark for offline reinforcement learning. It provides
 D4RL can be installed by cloning the repository as follows:
 ```
 git clone https://github.com/rail-berkeley/d4rl.git
-cd offline_rl
+cd d4rl
 pip install -e .
 ```
 
@@ -34,7 +34,7 @@ import d4rl # Import required to register environments
 # Create the environment
 env = gym.make('maze2d-umaze-v0')
 
-# offline_rl abides by the OpenAI gym interface
+# d4rl abides by the OpenAI gym interface
 env.reset()
 env.step(env.action_space.sample())
 
