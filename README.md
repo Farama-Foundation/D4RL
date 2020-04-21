@@ -54,8 +54,8 @@ We would like to thank the authors of [hand_dapg](https://github.com/aravindr93/
 Please use the following bibtex for citations:
 
 ```
-@misc{fu2020datasets,
-    title={Datasets for Data-Driven Reinforcement Learning},
+@misc{fu2020d4rl,
+    title={D4RL: Datasets for Deep Data-Driven Reinforcement Learning},
     author={Justin Fu and Aviral Kumar and Ofir Nachum and George Tucker and Sergey Levine},
     year={2020},
     eprint={2004.07219},
