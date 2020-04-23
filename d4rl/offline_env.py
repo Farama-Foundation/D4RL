@@ -23,7 +23,7 @@ class OfflineEnv(gym.Env):
     """
     Base class for offline RL envs.
 
-    Arhttp:
+    Args:
         dataset_url: URL pointing to the dataset.
         ref_max_score: Maximum score (for score normalization)
         ref_min_score: Minimum score (for score normalization)
@@ -78,4 +78,13 @@ class OfflineEnv(gym.Env):
             data_dict['terminals'] = data_dict['terminals'][:,0]
         assert data_dict['terminals'].shape == (N_samples,), 'Terminals has wrong shape: %s' % (str(data_dict['rewards'].shape))
         return data_dict
+
+
+class OfflineEnvWrapper(gym.Wrapper, OfflineEnv):
+    """
+    Wrapper class for offline RL envs.
+    """
+    def __init__(self, env, **kwargs):
+        gym.Wrapper.__init__(self, env)
+        OfflineEnv.__init__(self, **kwargs)
 
