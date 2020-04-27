@@ -262,8 +262,8 @@ register(
     kwargs={
         'flow_params': ring_env(render=False),
         'dataset_url': None,
-        'ref_min_score': None,
-        'ref_max_score': None
+        'ref_min_score': -165.22,
+        'ref_max_score': 24.42
     }
 )
 
@@ -275,8 +275,32 @@ register(
     kwargs={
         'flow_params': ring_env(render='drgb'),
         'dataset_url': None,
-        'ref_min_score': None,
-        'ref_max_score': None
+        'ref_min_score': -165.22,
+        'ref_max_score': 24.42
+    }
+)
+
+register(
+    id='flow-ring-random-v0',
+    entry_point='d4rl.flow:flow_register',
+    max_episode_steps=500,
+    kwargs={
+        'flow_params': ring_env(render=False),
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/flow/flow-ring-v0-random.hdf5',
+        'ref_min_score': -165.22,
+        'ref_max_score': 24.42
+    }
+)
+
+register(
+    id='flow-ring-controller-v0',
+    entry_point='d4rl.flow:flow_register',
+    max_episode_steps=500,
+    kwargs={
+        'flow_params': ring_env(render=False),
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/flow/flow-ring-v0-idm.hdf5',
+        'ref_min_score': -165.22,
+        'ref_max_score': 24.42
     }
 )
 
@@ -288,8 +312,8 @@ register(
     kwargs={
         'flow_params': traffic_light_grid.gen_env(render=False),
         'dataset_url': None,
-        'ref_min_score': None,
-        'ref_max_score': None
+        'ref_min_score': -106.968754,
+        'ref_max_score': -114.76
     }
 )
 
@@ -301,8 +325,20 @@ register(
     kwargs={
         'flow_params': traffic_light_grid.gen_env(render='drgb'),
         'dataset_url': None,
-        'ref_min_score': None,
-        'ref_max_score': None
+        'ref_min_score': -106.968754,
+        'ref_max_score': -114.76
+    }
+)
+
+register(
+    id='flow-grid-random-v0',
+    entry_point='d4rl.flow:flow_register',
+    max_episode_steps=200,
+    kwargs={
+        'flow_params': traffic_light_grid.gen_env(render=False),
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/flow/flow-grid-v0-random.hdf5',
+        'ref_min_score': -106.968754,
+        'ref_max_score': -114.76
     }
 )
 
@@ -313,8 +349,8 @@ register(
     kwargs={
         'flow_params': merge.gen_env(render=False),
         'dataset_url': None,
-        'ref_min_score': None,
-        'ref_max_score': None
+        'ref_min_score': 97.53361,
+        'ref_max_score': 266.07
     }
 )
 
@@ -326,8 +362,32 @@ register(
     kwargs={
         'flow_params': merge.gen_env(render='drgb'),
         'dataset_url': None,
-        'ref_min_score': None,
-        'ref_max_score': None
+        'ref_min_score': 97.53361,
+        'ref_max_score': 266.07
+    }
+)
+
+register(
+    id='flow-merge-random-v0',
+    entry_point='d4rl.flow:flow_register',
+    max_episode_steps=600,
+    kwargs={
+        'flow_params': merge.gen_env(render=False),
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/flow/flow-merge-v0-random.hdf5',
+        'ref_min_score': 97.53361,
+        'ref_max_score': 266.07
+    }
+)
+
+register(
+    id='flow-merge-controller-v0',
+    entry_point='d4rl.flow:flow_register',
+    max_episode_steps=600,
+    kwargs={
+        'flow_params': merge.gen_env(render=False),
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/flow/flow-merge-v0-idm.hdf5',
+        'ref_min_score': 97.53361,
+        'ref_max_score': 266.07
     }
 )
 
@@ -339,8 +399,8 @@ register(
     kwargs={
         'flow_params': bottleneck(render=False),
         'dataset_url': None,
-        'ref_min_score': None,
-        'ref_max_score': None
+        'ref_min_score': 736.59240,
+        'ref_max_score': 712.44
     }
 )
 
@@ -352,7 +412,20 @@ register(
     kwargs={
         'flow_params': bottleneck(render='drgb'),
         'dataset_url': None,
-        'ref_min_score': None,
-        'ref_max_score': None
+        'ref_min_score': 736.59240,
+        'ref_max_score': 712.44
     }
 )
+
+register(
+    id='flow-bottleneck-random-v0',
+    entry_point='d4rl.flow:flow_register',
+    max_episode_steps=1000,
+    kwargs={
+        'flow_params': bottleneck(render=False),
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/flow/flow-bottleneck-v0-random.hdf5',
+        'ref_min_score': 736.59240,
+        'ref_max_score': 712.44
+    }
+)
+
