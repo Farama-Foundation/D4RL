@@ -63,7 +63,7 @@ def gen_env(render='drgb'):
             network-specific parameters used to generate the network
         """
         initial = InitialConfig(
-            spacing='custom', lanes_distribution=float('inf'), shuffle=True)
+            spacing='custom', lanes_distribution=float('inf'), shuffle=False)
 
         inflow = InFlows()
         outer_edges = gen_edges(col_num, row_num)
@@ -72,8 +72,8 @@ def gen_env(render='drgb'):
                 veh_type='idm',
                 edge=outer_edges[i],
                 probability=0.25,
-                departLane='free',
-                departSpeed=10)
+                depart_lane='free',
+                depart_speed=10)
 
         net = NetParams(
             inflows=inflow,
@@ -109,16 +109,16 @@ def gen_env(render='drgb'):
         return initial, net
 
 
-    V_ENTER = 15
+    V_ENTER = 10
     INNER_LENGTH = 300
     LONG_LENGTH = 100
     SHORT_LENGTH = 300
     N_ROWS = 3
     N_COLUMNS = 3
-    NUM_CARS_LEFT = 2
-    NUM_CARS_RIGHT = 2
-    NUM_CARS_TOP = 2
-    NUM_CARS_BOT = 2
+    NUM_CARS_LEFT = 1
+    NUM_CARS_RIGHT = 1
+    NUM_CARS_TOP = 1
+    NUM_CARS_BOT = 1
     tot_cars = (NUM_CARS_LEFT + NUM_CARS_RIGHT) * N_COLUMNS \
                + (NUM_CARS_BOT + NUM_CARS_TOP) * N_ROWS
 
@@ -154,7 +154,7 @@ def gen_env(render='drgb'):
         veh_id='idm',
         acceleration_controller=(SimCarFollowingController, {}),
         car_following_params=SumoCarFollowingParams(
-            minGap=2.5,
+            min_gap=2.5,
             decel=7.5,  # avoid collisions at emergency stops
             max_speed=V_ENTER,
             speed_mode="all_checks",
@@ -193,6 +193,7 @@ def gen_env(render='drgb'):
             sim_step=1,
             render=render,
             save_render=True,
+            restart_instance=True,  # Necessary to avoid departLane bug.
         ),
 
         # environment related parameters (see flow.core.params.EnvParams)

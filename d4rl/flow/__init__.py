@@ -28,6 +28,7 @@ from flow.envs import BottleneckDesiredVelocityEnv
 from flow.networks import BottleneckNetwork
 
 import d4rl.flow.traffic_light_grid as traffic_light_grid
+import d4rl.flow.merge as merge
 
 def flow_register(flow_params, render=None, **kwargs):
     exp_tag = flow_params["exp_tag"]
@@ -76,7 +77,7 @@ def ring_env(render='drgb'):
     env_name = WaveAttenuationPOEnv
 
     net_params = NetParams(additional_params=ADDITIONAL_NET_PARAMS)
-    initial_config = InitialConfig(spacing="uniform", perturbation=1)
+    initial_config = InitialConfig(spacing="uniform", shuffle=False)
 
     vehicles = VehicleParams()
     vehicles.add("human",
@@ -138,7 +139,7 @@ def bottleneck(render='drgb', SCALING=1):
         ),
         num_vehicles=1 * SCALING)
     vehicles.add(
-        veh_id="followerstopper",
+        veh_id="rl", #"followerstopper",
         acceleration_controller=(RLController, {}),
         lane_change_controller=(SimLaneChangeController, {}),
         routing_controller=(ContinuousRouter, {}),
@@ -176,14 +177,14 @@ def bottleneck(render='drgb', SCALING=1):
         veh_type="human",
         edge="1",
         vehs_per_hour=flow_rate * (1 - AV_FRAC),
-        departLane="random",
-        departSpeed=10)
+        depart_lane="random",
+        depart_speed=10)
     inflow.add(
-        veh_type="followerstopper",
+        veh_type="rl", #"followerstopper",
         edge="1",
         vehs_per_hour=flow_rate * AV_FRAC,
-        departLane="random",
-        departSpeed=10)
+        depart_lane="random",
+        depart_speed=10)
 
     traffic_lights = TrafficLightParams()
     if not DISABLE_TB:
@@ -281,7 +282,7 @@ register(
 
 
 register(
-    id='flow-trafficlight-v0',
+    id='flow-grid-v0',
     entry_point='d4rl.flow:flow_register',
     max_episode_steps=200,
     kwargs={
@@ -294,11 +295,36 @@ register(
 
 
 register(
-    id='flow-trafficlight-render-v0',
+    id='flow-grid-render-v0',
     entry_point='d4rl.flow:flow_register',
     max_episode_steps=200,
     kwargs={
         'flow_params': traffic_light_grid.gen_env(render='drgb'),
+        'dataset_url': None,
+        'ref_min_score': None,
+        'ref_max_score': None
+    }
+)
+
+register(
+    id='flow-merge-v0',
+    entry_point='d4rl.flow:flow_register',
+    max_episode_steps=600,
+    kwargs={
+        'flow_params': merge.gen_env(render=False),
+        'dataset_url': None,
+        'ref_min_score': None,
+        'ref_max_score': None
+    }
+)
+
+
+register(
+    id='flow-merge-render-v0',
+    entry_point='d4rl.flow:flow_register',
+    max_episode_steps=600,
+    kwargs={
+        'flow_params': merge.gen_env(render='drgb'),
         'dataset_url': None,
         'ref_min_score': None,
         'ref_max_score': None

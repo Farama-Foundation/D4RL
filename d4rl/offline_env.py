@@ -88,3 +88,6 @@ class OfflineEnvWrapper(gym.Wrapper, OfflineEnv):
         gym.Wrapper.__init__(self, env)
         OfflineEnv.__init__(self, **kwargs)
 
+    def reset(self):
+        print('reset!')
+        return self.env.reset()
