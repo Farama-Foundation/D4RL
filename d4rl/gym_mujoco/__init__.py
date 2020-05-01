@@ -145,28 +145,6 @@ register(
 
 # Mixtures of random/medium and experts
 register(
-    id='walker2d-random-expert-v0',
-    entry_point='d4rl.gym_mujoco.gym_envs:get_walker_env',
-    max_episode_steps=1000,
-    kwargs={
-        'ref_min_score': WALKER_RANDOM_SCORE,
-        'ref_max_score': WALKER_EXPERT_SCORE,
-        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/walker2d_random_expert.hdf5'
-    }
-)
-
-register(
-    id='halfcheetah-random-expert-v0',
-    entry_point='d4rl.gym_mujoco.gym_envs:get_cheetah_env',
-    max_episode_steps=1000,
-    kwargs={
-        'ref_min_score': HALFCHEETAH_RANDOM_SCORE,
-        'ref_max_score': HALFCHEETAH_EXPERT_SCORE,
-        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/halfcheetah_random_expert.hdf5'
-    }
-)
-
-register(
     id='walker2d-medium-expert-v0',
     entry_point='d4rl.gym_mujoco.gym_envs:get_walker_env',
     max_episode_steps=1000,
