@@ -44,10 +44,6 @@ def main():
                     break
                 actions[i] = car_following_models.IDMController(veh_id, car_following_params=car_following_params).get_accel(env)
             return actions
-            #actions = []
-            #for controller in controllers:
-            #    actions.append(controller.get_accel(env))
-            return np.array(actions)
     elif args.controller == 'random':
         def get_action(s):
             return env.action_space.sample()

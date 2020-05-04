@@ -1,186 +1,70 @@
 """Traffic Light Grid example."""
+from flow.envs import TrafficLightGridBenchmarkEnv
+from flow.networks import TrafficLightGridNetwork
 from flow.core.params import SumoParams, EnvParams, InitialConfig, NetParams, \
     InFlows, SumoCarFollowingParams
 from flow.core.params import VehicleParams
 from flow.controllers import SimCarFollowingController, GridRouter
-from flow.envs import TrafficLightGridPOEnv
-from flow.networks import TrafficLightGridNetwork
 
 def gen_env(render='drgb'):
     # time horizon of a single rollout
-    HORIZON = 200
-    # number of rollouts per training iteration
-    N_ROLLOUTS = 20
-    # number of parallel workers
-    N_CPUS = 2
-    # set to True if you would like to run the experiment with inflows of vehicles
-    # from the edges, and False otherwise
-    USE_INFLOWS = False
-
-
-    def gen_edges(col_num, row_num):
-        """Generate the names of the outer edges in the traffic light grid network.
-        Parameters
-        ----------
-        col_num : int
-            number of columns in the traffic light grid
-        row_num : int
-            number of rows in the traffic light grid
-        Returns
-        -------
-        list of str
-            names of all the outer edges
-        """
-        edges = []
-        for i in range(col_num):
-            edges += ['left' + str(row_num) + '_' + str(i)]
-            edges += ['right' + '0' + '_' + str(i)]
-
-        # build the left and then the right edges
-        for i in range(row_num):
-            edges += ['bot' + str(i) + '_' + '0']
-            edges += ['top' + str(i) + '_' + str(col_num)]
-
-        return edges
-
-
-    def get_inflow_params(col_num, row_num, additional_net_params):
-        """Define the network and initial params in the presence of inflows.
-        Parameters
-        ----------
-        col_num : int
-            number of columns in the traffic light grid
-        row_num : int
-            number of rows in the traffic light grid
-        additional_net_params : dict
-            network-specific parameters that are unique to the traffic light grid
-        Returns
-        -------
-        flow.core.params.InitialConfig
-            parameters specifying the initial configuration of vehicles in the
-            network
-        flow.core.params.NetParams
-            network-specific parameters used to generate the network
-        """
-        initial = InitialConfig(
-            spacing='custom', lanes_distribution=float('inf'), shuffle=False)
-
-        inflow = InFlows()
-        outer_edges = gen_edges(col_num, row_num)
-        for i in range(len(outer_edges)):
-            inflow.add(
-                veh_type='idm',
-                edge=outer_edges[i],
-                probability=0.25,
-                depart_lane='free',
-                depart_speed=10)
-
-        net = NetParams(
-            inflows=inflow,
-            additional_params=additional_net_params)
-
-        return initial, net
-
-
-    def get_non_flow_params(enter_speed, add_net_params):
-        """Define the network and initial params in the absence of inflows.
-        Note that when a vehicle leaves a network in this case, it is immediately
-        returns to the start of the row/column it was traversing, and in the same
-        direction as it was before.
-        Parameters
-        ----------
-        enter_speed : float
-            initial speed of vehicles as they enter the network.
-        add_net_params: dict
-            additional network-specific parameters (unique to the traffic light grid)
-        Returns
-        -------
-        flow.core.params.InitialConfig
-            parameters specifying the initial configuration of vehicles in the
-            network
-        flow.core.params.NetParams
-            network-specific parameters used to generate the network
-        """
-        additional_init_params = {'enter_speed': enter_speed}
-        initial = InitialConfig(
-            spacing='custom', additional_params=additional_init_params)
-        net = NetParams(additional_params=add_net_params)
-
-        return initial, net
-
-
-    V_ENTER = 10
-    INNER_LENGTH = 300
-    LONG_LENGTH = 100
-    SHORT_LENGTH = 300
+    HORIZON = 400
+    # inflow rate of vehicles at every edge
+    EDGE_INFLOW = 300
+    # enter speed for departing vehicles
+    V_ENTER = 30
+    # number of row of bidirectional lanes
     N_ROWS = 3
+    # number of columns of bidirectional lanes
     N_COLUMNS = 3
-    NUM_CARS_LEFT = 1
-    NUM_CARS_RIGHT = 1
-    NUM_CARS_TOP = 1
-    NUM_CARS_BOT = 1
-    tot_cars = (NUM_CARS_LEFT + NUM_CARS_RIGHT) * N_COLUMNS \
-               + (NUM_CARS_BOT + NUM_CARS_TOP) * N_ROWS
+    # length of inner edges in the grid network
+    INNER_LENGTH = 300
+    # length of final edge in route
+    LONG_LENGTH = 100
+    # length of edges that vehicles start on
+    SHORT_LENGTH = 300
+    # number of vehicles originating in the left, right, top, and bottom edges
+    N_LEFT, N_RIGHT, N_TOP, N_BOTTOM = 1, 1, 1, 1
 
-    grid_array = {
-        "short_length": SHORT_LENGTH,
-        "inner_length": INNER_LENGTH,
-        "long_length": LONG_LENGTH,
-        "row_num": N_ROWS,
-        "col_num": N_COLUMNS,
-        "cars_left": NUM_CARS_LEFT,
-        "cars_right": NUM_CARS_RIGHT,
-        "cars_top": NUM_CARS_TOP,
-        "cars_bot": NUM_CARS_BOT
-    }
-
-    additional_env_params = {
-            'target_velocity': 50,
-            'switch_time': 3.0,
-            'num_observed': 2,
-            'discrete': False,
-            'tl_type': 'controlled'
-        }
-
-    additional_net_params = {
-        'speed_limit': 35,
-        'grid_array': grid_array,
-        'horizontal_lanes': 1,
-        'vertical_lanes': 1
-    }
-
+    # we place a sufficient number of vehicles to ensure they confirm with the
+    # total number specified above. We also use a "right_of_way" speed mode to
+    # support traffic light compliance
     vehicles = VehicleParams()
     vehicles.add(
-        veh_id='idm',
+        veh_id="human",
         acceleration_controller=(SimCarFollowingController, {}),
         car_following_params=SumoCarFollowingParams(
             min_gap=2.5,
-            decel=7.5,  # avoid collisions at emergency stops
             max_speed=V_ENTER,
-            speed_mode="all_checks",
+            decel=7.5,  # avoid collisions at emergency stops
+            speed_mode="right_of_way",
         ),
         routing_controller=(GridRouter, {}),
-        num_vehicles=tot_cars)
+        num_vehicles=(N_LEFT + N_RIGHT) * N_COLUMNS + (N_BOTTOM + N_TOP) * N_ROWS)
 
-    # collect the initialization and network-specific parameters based on the
-    # choice to use inflows or not
-    if USE_INFLOWS:
-        initial_config, net_params = get_inflow_params(
-            col_num=N_COLUMNS,
-            row_num=N_ROWS,
-            additional_net_params=additional_net_params)
-    else:
-        initial_config, net_params = get_non_flow_params(
-            enter_speed=V_ENTER,
-            add_net_params=additional_net_params)
+    # inflows of vehicles are place on all outer edges (listed here)
+    outer_edges = []
+    outer_edges += ["left{}_{}".format(N_ROWS, i) for i in range(N_COLUMNS)]
+    outer_edges += ["right0_{}".format(i) for i in range(N_ROWS)]
+    outer_edges += ["bot{}_0".format(i) for i in range(N_ROWS)]
+    outer_edges += ["top{}_{}".format(i, N_COLUMNS) for i in range(N_ROWS)]
 
+    # equal inflows for each edge (as dictate by the EDGE_INFLOW constant)
+    inflow = InFlows()
+    for edge in outer_edges:
+        inflow.add(
+            veh_type="human",
+            edge=edge,
+            vehs_per_hour=EDGE_INFLOW,
+            departLane="free",
+            departSpeed=V_ENTER)
 
     flow_params = dict(
         # name of the experiment
-        exp_tag='traffic_light_grid',
+        exp_tag="grid_0",
 
         # name of the flow environment the experiment is running on
-        env_name=TrafficLightGridPOEnv,
+        env_name=TrafficLightGridBenchmarkEnv,
 
         # name of the network class the experiment is running on
         network=TrafficLightGridNetwork,
@@ -190,30 +74,55 @@ def gen_env(render='drgb'):
 
         # sumo-related parameters (see flow.core.params.SumoParams)
         sim=SumoParams(
+            restart_instance=True,
             sim_step=1,
             render=render,
             save_render=True,
-            restart_instance=True,  # Necessary to avoid departLane bug.
         ),
 
         # environment related parameters (see flow.core.params.EnvParams)
         env=EnvParams(
             horizon=HORIZON,
-            additional_params=additional_env_params,
+            additional_params={
+                "target_velocity": 50,
+                "switch_time": 3,
+                "num_observed": 2,
+                "discrete": False,
+                "tl_type": "actuated"
+            },
         ),
 
         # network-related parameters (see flow.core.params.NetParams and the
-        # network's documentation or ADDITIONAL_NET_PARAMS component). This is
-        # filled in by the setup_exps method below.
-        net=net_params,
+        # network's documentation or ADDITIONAL_NET_PARAMS component)
+        net=NetParams(
+            inflows=inflow,
+            additional_params={
+                "speed_limit": V_ENTER + 5,
+                "grid_array": {
+                    "short_length": SHORT_LENGTH,
+                    "inner_length": INNER_LENGTH,
+                    "long_length": LONG_LENGTH,
+                    "row_num": N_ROWS,
+                    "col_num": N_COLUMNS,
+                    "cars_left": N_LEFT,
+                    "cars_right": N_RIGHT,
+                    "cars_top": N_TOP,
+                    "cars_bot": N_BOTTOM,
+                },
+                "horizontal_lanes": 1,
+                "vertical_lanes": 1,
+            },
+        ),
 
         # vehicles to be placed in the network at the start of a rollout (see
         # flow.core.params.VehicleParams)
         veh=vehicles,
 
         # parameters specifying the positioning of vehicles upon initialization/
-        # reset (see flow.core.params.InitialConfig). This is filled in by the
-        # setup_exps method below.
-        initial=initial_config,
+        # reset (see flow.core.params.InitialConfig)
+        initial=InitialConfig(
+            spacing='custom',
+            shuffle=True,
+        ),
     )
     return flow_params

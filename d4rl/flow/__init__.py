@@ -8,14 +8,12 @@ from copy import deepcopy
 import flow
 import flow.envs
 from flow.networks.ring import RingNetwork
-from flow.networks.minicity import MiniCityNetwork
-from flow.networks.bay_bridge_toll import BayBridgeTollNetwork
 from flow.core.params import NetParams, VehicleParams, EnvParams, InFlows
 from flow.core.params import SumoLaneChangeParams, SumoCarFollowingParams
 from flow.networks.ring import ADDITIONAL_NET_PARAMS
 from flow.controllers.car_following_models import IDMController
 from flow.controllers.routing_controllers import ContinuousRouter 
-from flow.controllers import SimCarFollowingController, BayBridgeRouter, SimLaneChangeController
+from flow.controllers import SimCarFollowingController, SimLaneChangeController
 from flow.controllers import RLController
 from flow.core.params import InitialConfig
 from flow.core.params import TrafficLightParams
@@ -24,11 +22,10 @@ from flow.core.params import SumoParams
 from flow.utils.registry import make_create_env
 from flow.envs import WaveAttenuationPOEnv
 from flow.envs import BayBridgeEnv, TrafficLightGridPOEnv
-from flow.envs import BottleneckDesiredVelocityEnv
-from flow.networks import BottleneckNetwork
 
 import d4rl.flow.traffic_light_grid as traffic_light_grid
 import d4rl.flow.merge as merge
+import d4rl.flow.bottleneck as bottleneck
 
 def flow_register(flow_params, render=None, **kwargs):
     exp_tag = flow_params["exp_tag"]
@@ -120,140 +117,8 @@ def ring_env(render='drgb'):
     return flow_params
 
 
-def bottleneck(render='drgb', SCALING=1):
-    HORIZON=1000
-    DISABLE_TB = True
-    DISABLE_RAMP_METER = True
-    AV_FRAC = 0.10
-
-    vehicles = VehicleParams()
-    vehicles.add(
-        veh_id="human",
-        lane_change_controller=(SimLaneChangeController, {}),
-        routing_controller=(ContinuousRouter, {}),
-        car_following_params=SumoCarFollowingParams(
-            speed_mode="all_checks",
-        ),
-        lane_change_params=SumoLaneChangeParams(
-            lane_change_mode=0,
-        ),
-        num_vehicles=1 * SCALING)
-    vehicles.add(
-        veh_id="rl", #"followerstopper",
-        acceleration_controller=(RLController, {}),
-        lane_change_controller=(SimLaneChangeController, {}),
-        routing_controller=(ContinuousRouter, {}),
-        car_following_params=SumoCarFollowingParams(
-            speed_mode=9,
-        ),
-        lane_change_params=SumoLaneChangeParams(
-            lane_change_mode=0,
-        ),
-    num_vehicles=1 * SCALING)
-
-    controlled_segments = [("1", 1, False), ("2", 2, True), ("3", 2, True),
-                           ("4", 2, True), ("5", 1, False)]
-    num_observed_segments = [("1", 1), ("2", 3), ("3", 3), ("4", 3), ("5", 1)]
-    additional_env_params = {
-        "target_velocity": 40,
-        "disable_tb": True,
-        "disable_ramp_metering": True,
-        "controlled_segments": controlled_segments,
-        "symmetric": False,
-        "observed_segments": num_observed_segments,
-        "reset_inflow": False,
-        "lane_change_duration": 5,
-        "max_accel": 3,
-        "max_decel": 3,
-        "inflow_range": [1000, 2000]
-    }
-
-    # flow rate
-    flow_rate = 2300 * SCALING
-
-    # percentage of flow coming out of each lane
-    inflow = InFlows()
-    inflow.add(
-        veh_type="human",
-        edge="1",
-        vehs_per_hour=flow_rate * (1 - AV_FRAC),
-        depart_lane="random",
-        depart_speed=10)
-    inflow.add(
-        veh_type="rl", #"followerstopper",
-        edge="1",
-        vehs_per_hour=flow_rate * AV_FRAC,
-        depart_lane="random",
-        depart_speed=10)
-
-    traffic_lights = TrafficLightParams()
-    if not DISABLE_TB:
-        traffic_lights.add(node_id="2")
-    if not DISABLE_RAMP_METER:
-        traffic_lights.add(node_id="3")
-
-    additional_net_params = {"scaling": SCALING, "speed_limit": 23}
-    net_params = NetParams(
-        inflows=inflow,
-        additional_params=additional_net_params)
-
-    flow_params = dict(
-        # name of the experiment
-        exp_tag="bottleneck",
-
-        # name of the flow environment the experiment is running on
-        env_name=BottleneckDesiredVelocityEnv,
-
-        # name of the network class the experiment is running on
-        network=BottleneckNetwork,
-
-        # simulator that is used by the experiment
-        simulator='traci',
-
-        # sumo-related parameters (see flow.core.params.SumoParams)
-        sim=SumoParams(
-            sim_step=0.5,
-            render=render,
-            save_render=True,
-            print_warnings=False,
-            restart_instance=True,
-        ),
-
-        # environment related parameters (see flow.core.params.EnvParams)
-        env=EnvParams(
-            warmup_steps=40,
-            sims_per_step=1,
-            horizon=HORIZON,
-            additional_params=additional_env_params,
-        ),
-
-        # network-related parameters (see flow.core.params.NetParams and the
-        # network's documentation or ADDITIONAL_NET_PARAMS component)
-        net=NetParams(
-            inflows=inflow,
-            additional_params=additional_net_params,
-        ),
-
-        # vehicles to be placed in the network at the start of a rollout (see
-        # flow.core.params.VehicleParams)
-        veh=vehicles,
-
-        # parameters specifying the positioning of vehicles upon initialization/
-        # reset (see flow.core.params.InitialConfig)
-        initial=InitialConfig(
-            spacing="uniform",
-            min_gap=5,
-            lanes_distribution=float("inf"),
-            edges_distribution=["2", "3", "4", "5"],
-        ),
-
-        # traffic lights to be introduced to specific nodes (see
-        # flow.core.params.TrafficLightParams)
-        tls=traffic_lights,
-    )
-
-    return flow_params
-
+RING_RANDOM_SCORE = -165.22
+RING_EXPERT_SCORE = 24.42
 
 register(
     id='flow-ring-v0',
@@ -262,8 +127,8 @@ register(
     kwargs={
         'flow_params': ring_env(render=False),
         'dataset_url': None,
-        'ref_min_score': -165.22,
-        'ref_max_score': 24.42
+        'ref_min_score': RING_RANDOM_SCORE,
+        'ref_max_score': RING_EXPERT_SCORE
     }
 )
 
@@ -275,8 +140,8 @@ register(
     kwargs={
         'flow_params': ring_env(render='drgb'),
         'dataset_url': None,
-        'ref_min_score': -165.22,
-        'ref_max_score': 24.42
+        'ref_min_score': RING_RANDOM_SCORE,
+        'ref_max_score': RING_EXPERT_SCORE
     }
 )
 
@@ -287,10 +152,11 @@ register(
     kwargs={
         'flow_params': ring_env(render=False),
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/flow/flow-ring-v0-random.hdf5',
-        'ref_min_score': -165.22,
-        'ref_max_score': 24.42
+        'ref_min_score': RING_RANDOM_SCORE,
+        'ref_max_score': RING_EXPERT_SCORE
     }
 )
+
 
 register(
     id='flow-ring-controller-v0',
@@ -299,21 +165,23 @@ register(
     kwargs={
         'flow_params': ring_env(render=False),
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/flow/flow-ring-v0-idm.hdf5',
-        'ref_min_score': -165.22,
-        'ref_max_score': 24.42
+        'ref_min_score': RING_RANDOM_SCORE,
+        'ref_max_score': RING_EXPERT_SCORE
     }
 )
 
 
+GRID_RANDOM_SCORE = -106.968754
+GRID_EXPERT_SCORE = -114.76
 register(
     id='flow-grid-v0',
     entry_point='d4rl.flow:flow_register',
-    max_episode_steps=200,
+    max_episode_steps=400,
     kwargs={
         'flow_params': traffic_light_grid.gen_env(render=False),
         'dataset_url': None,
-        'ref_min_score': -106.968754,
-        'ref_max_score': -114.76
+        'ref_min_score': GRID_RANDOM_SCORE,
+        'ref_max_score': GRID_EXPERT_SCORE
     }
 )
 
@@ -321,36 +189,39 @@ register(
 register(
     id='flow-grid-render-v0',
     entry_point='d4rl.flow:flow_register',
-    max_episode_steps=200,
+    max_episode_steps=400,
     kwargs={
         'flow_params': traffic_light_grid.gen_env(render='drgb'),
         'dataset_url': None,
-        'ref_min_score': -106.968754,
-        'ref_max_score': -114.76
+        'ref_min_score': GRID_RANDOM_SCORE,
+        'ref_max_score': GRID_EXPERT_SCORE
     }
 )
 
 register(
     id='flow-grid-random-v0',
     entry_point='d4rl.flow:flow_register',
-    max_episode_steps=200,
+    max_episode_steps=400,
     kwargs={
         'flow_params': traffic_light_grid.gen_env(render=False),
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/flow/flow-grid-v0-random.hdf5',
-        'ref_min_score': -106.968754,
-        'ref_max_score': -114.76
+        'ref_min_score': GRID_RANDOM_SCORE,
+        'ref_max_score': GRID_EXPERT_SCORE
     }
 )
 
+
+MERGE_RANDOM_SCORE = 97.53361
+MERGE_EXPERT_SCORE = 266.07
 register(
     id='flow-merge-v0',
     entry_point='d4rl.flow:flow_register',
-    max_episode_steps=600,
+    max_episode_steps=750,
     kwargs={
         'flow_params': merge.gen_env(render=False),
         'dataset_url': None,
-        'ref_min_score': 97.53361,
-        'ref_max_score': 266.07
+        'ref_min_score': MERGE_RANDOM_SCORE,
+        'ref_max_score': MERGE_EXPERT_SCORE
     }
 )
 
@@ -358,49 +229,51 @@ register(
 register(
     id='flow-merge-render-v0',
     entry_point='d4rl.flow:flow_register',
-    max_episode_steps=600,
+    max_episode_steps=750,
     kwargs={
         'flow_params': merge.gen_env(render='drgb'),
         'dataset_url': None,
-        'ref_min_score': 97.53361,
-        'ref_max_score': 266.07
+        'ref_min_score': MERGE_RANDOM_SCORE,
+        'ref_max_score': MERGE_EXPERT_SCORE
     }
 )
 
 register(
     id='flow-merge-random-v0',
     entry_point='d4rl.flow:flow_register',
-    max_episode_steps=600,
+    max_episode_steps=750,
     kwargs={
         'flow_params': merge.gen_env(render=False),
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/flow/flow-merge-v0-random.hdf5',
-        'ref_min_score': 97.53361,
-        'ref_max_score': 266.07
+        'ref_min_score': MERGE_RANDOM_SCORE,
+        'ref_max_score': MERGE_EXPERT_SCORE
     }
 )
 
 register(
     id='flow-merge-controller-v0',
     entry_point='d4rl.flow:flow_register',
-    max_episode_steps=600,
+    max_episode_steps=750,
     kwargs={
         'flow_params': merge.gen_env(render=False),
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/flow/flow-merge-v0-idm.hdf5',
-        'ref_min_score': 97.53361,
-        'ref_max_score': 266.07
+        'ref_min_score': MERGE_RANDOM_SCORE,
+        'ref_max_score': MERGE_EXPERT_SCORE
     }
 )
 
+BOTTLENECK_RANDOM_SCORE = 736.59240
+BOTTLENECK_EXPERT_SCORE = 712.44
 
 register(
     id='flow-bottleneck-v0',
     entry_point='d4rl.flow:flow_register',
-    max_episode_steps=1000,
+    max_episode_steps=1500,
     kwargs={
-        'flow_params': bottleneck(render=False),
+        'flow_params': bottleneck.bottleneck(render=False),
         'dataset_url': None,
-        'ref_min_score': 736.59240,
-        'ref_max_score': 712.44
+        'ref_min_score': BOTTLENECK_RANDOM_SCORE,
+        'ref_max_score': BOTTLENECK_EXPERT_SCORE
     }
 )
 
@@ -408,24 +281,24 @@ register(
 register(
     id='flow-bottleneck-render-v0',
     entry_point='d4rl.flow:flow_register',
-    max_episode_steps=1000,
+    max_episode_steps=1500,
     kwargs={
-        'flow_params': bottleneck(render='drgb'),
+        'flow_params': bottleneck.bottleneck(render='drgb'),
         'dataset_url': None,
-        'ref_min_score': 736.59240,
-        'ref_max_score': 712.44
+        'ref_min_score': BOTTLENECK_RANDOM_SCORE,
+        'ref_max_score': BOTTLENECK_EXPERT_SCORE
     }
 )
 
 register(
     id='flow-bottleneck-random-v0',
     entry_point='d4rl.flow:flow_register',
-    max_episode_steps=1000,
+    max_episode_steps=1500,
     kwargs={
-        'flow_params': bottleneck(render=False),
+        'flow_params': bottleneck.bottleneck(render=False),
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/flow/flow-bottleneck-v0-random.hdf5',
-        'ref_min_score': 736.59240,
-        'ref_max_score': 712.44
+        'ref_min_score': BOTTLENECK_RANDOM_SCORE,
+        'ref_max_score': BOTTLENECK_EXPERT_SCORE
     }
 )
 
