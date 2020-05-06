@@ -1,3 +1,4 @@
+import gym
 import logging
 from d4rl.pointmaze import waypoint_controller
 from d4rl.pointmaze import maze_model
@@ -40,23 +41,14 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--render', action='store_true', help='Render trajectories')
     parser.add_argument('--noisy', action='store_true', help='Noisy actions')
-    parser.add_argument('--maze', type=str, default='umaze', help='Maze type. small or default')
+    parser.add_argument('--env_name', type=str, default='maze2d-umaze-v1', help='Maze type')
     parser.add_argument('--num_samples', type=int, default=int(1e6), help='Num samples to collect')
     args = parser.parse_args()
 
+    env = gym.make(args.env_name)
+    maze = env.str_maze_spec
+    max_episode_steps = env._max_episode_steps
 
-    if args.maze == 'umaze':
-        maze = maze_model.U_MAZE
-        max_episode_steps = 300
-    elif args.maze == 'open':
-        maze = maze_model.OPEN
-        max_episode_steps = 150
-    elif args.maze == 'medium':
-        maze = maze_model.MEDIUM_MAZE
-        max_episode_steps = 600
-    else:
-        maze = maze_model.LARGE_MAZE
-        max_episode_steps = 800
     controller = waypoint_controller.WaypointController(maze)
     env = maze_model.MazeEnv(maze)
 
@@ -97,9 +89,9 @@ def main():
 
     
     if args.noisy:
-        fname = 'maze2d-%s-noisy.hdf5' % args.maze
+        fname = '%s-noisy.hdf5' % args.env_name
     else:
-        fname = 'maze2d-%s.hdf5' % args.maze
+        fname = '%s.hdf5' % args.env_name
     dataset = h5py.File(fname, 'w')
     npify(data)
     for k in data:
