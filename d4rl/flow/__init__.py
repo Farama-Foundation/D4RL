@@ -171,48 +171,9 @@ register(
 )
 
 
-GRID_RANDOM_SCORE = -106.968754
-GRID_EXPERT_SCORE = -114.76
-register(
-    id='flow-grid-v0',
-    entry_point='d4rl.flow:flow_register',
-    max_episode_steps=400,
-    kwargs={
-        'flow_params': traffic_light_grid.gen_env(render=False),
-        'dataset_url': None,
-        'ref_min_score': GRID_RANDOM_SCORE,
-        'ref_max_score': GRID_EXPERT_SCORE
-    }
-)
+MERGE_RANDOM_SCORE = 118.67993
+MERGE_EXPERT_SCORE = 330.03179
 
-
-register(
-    id='flow-grid-render-v0',
-    entry_point='d4rl.flow:flow_register',
-    max_episode_steps=400,
-    kwargs={
-        'flow_params': traffic_light_grid.gen_env(render='drgb'),
-        'dataset_url': None,
-        'ref_min_score': GRID_RANDOM_SCORE,
-        'ref_max_score': GRID_EXPERT_SCORE
-    }
-)
-
-register(
-    id='flow-grid-random-v0',
-    entry_point='d4rl.flow:flow_register',
-    max_episode_steps=400,
-    kwargs={
-        'flow_params': traffic_light_grid.gen_env(render=False),
-        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/flow/flow-grid-v0-random.hdf5',
-        'ref_min_score': GRID_RANDOM_SCORE,
-        'ref_max_score': GRID_EXPERT_SCORE
-    }
-)
-
-
-MERGE_RANDOM_SCORE = 97.53361
-MERGE_EXPERT_SCORE = 266.07
 register(
     id='flow-merge-v0',
     entry_point='d4rl.flow:flow_register',
@@ -259,46 +220,6 @@ register(
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/flow/flow-merge-v0-idm.hdf5',
         'ref_min_score': MERGE_RANDOM_SCORE,
         'ref_max_score': MERGE_EXPERT_SCORE
-    }
-)
-
-BOTTLENECK_RANDOM_SCORE = 736.59240
-BOTTLENECK_EXPERT_SCORE = 712.44
-
-register(
-    id='flow-bottleneck-v0',
-    entry_point='d4rl.flow:flow_register',
-    max_episode_steps=1500,
-    kwargs={
-        'flow_params': bottleneck.bottleneck(render=False),
-        'dataset_url': None,
-        'ref_min_score': BOTTLENECK_RANDOM_SCORE,
-        'ref_max_score': BOTTLENECK_EXPERT_SCORE
-    }
-)
-
-
-register(
-    id='flow-bottleneck-render-v0',
-    entry_point='d4rl.flow:flow_register',
-    max_episode_steps=1500,
-    kwargs={
-        'flow_params': bottleneck.bottleneck(render='drgb'),
-        'dataset_url': None,
-        'ref_min_score': BOTTLENECK_RANDOM_SCORE,
-        'ref_max_score': BOTTLENECK_EXPERT_SCORE
-    }
-)
-
-register(
-    id='flow-bottleneck-random-v0',
-    entry_point='d4rl.flow:flow_register',
-    max_episode_steps=1500,
-    kwargs={
-        'flow_params': bottleneck.bottleneck(render=False),
-        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/flow/flow-bottleneck-v0-random.hdf5',
-        'ref_min_score': BOTTLENECK_RANDOM_SCORE,
-        'ref_max_score': BOTTLENECK_EXPERT_SCORE
     }
 )
 
