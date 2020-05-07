@@ -1,5 +1,5 @@
-from offline_rl.pointmaze import MazeEnv, maze_model
-from offline_rl.offline_env import get_keys
+from d4rl.pointmaze import MazeEnv, maze_model
+from d4rl.offline_env import get_keys
 import os
 import argparse
 import numpy as np
