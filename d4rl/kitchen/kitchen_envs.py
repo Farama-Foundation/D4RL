@@ -31,8 +31,11 @@ class KitchenBase(KitchenTaskRelaxV1, OfflineEnv):
     # A string of element names. The robot's task is then to modify each of
     # these elements appropriately.
     TASK_ELEMENTS = []
+    REMOVE_TASKS_WHEN_COMPLETE = True
+    TERMINATE_ON_TASK_COMPLETE = True
 
     def __init__(self, dataset_url=None, ref_max_score=None, ref_min_score=None, **kwargs):
+        self.tasks_to_complete = set(self.TASK_ELEMENTS)
         super(KitchenBase, self).__init__(**kwargs)
         OfflineEnv.__init__(
             self,
@@ -49,6 +52,10 @@ class KitchenBase(KitchenTaskRelaxV1, OfflineEnv):
 
         return new_goal
 
+    def reset_model(self):
+        self.tasks_to_complete = set(self.TASK_ELEMENTS)
+        return super(KitchenBase, self).reset_model()
+
     def _get_reward_n_score(self, obs_dict):
         reward_dict, score = super(KitchenBase, self)._get_reward_n_score(obs_dict)
         reward = 0.
@@ -56,18 +63,36 @@ class KitchenBase(KitchenTaskRelaxV1, OfflineEnv):
         next_obj_obs = obs_dict['obj_qp']
         next_goal = obs_dict['goal']
         idx_offset = len(next_q_obs)
-        for element in self.TASK_ELEMENTS:
+        completions = []
+        for element in self.tasks_to_complete:
             element_idx = OBS_ELEMENT_INDICES[element]
             distance = np.linalg.norm(
                 next_obj_obs[..., element_idx - idx_offset] -
                 next_goal[element_idx])
-            sparse_reward = np.asarray(distance < BONUS_THRESH)
-            reward += sparse_reward
-        reward_dict['bonus'] += reward
-        reward_dict['r_total'] += reward
-        score += reward
+            complete = distance < BONUS_THRESH
+            if complete:
+                completions.append(element)
+        if self.REMOVE_TASKS_WHEN_COMPLETE:
+            [self.tasks_to_complete.remove(element) for element in completions]
+        bonus = float(len(completions))
+        reward_dict['bonus'] = bonus
+        reward_dict['r_total'] = bonus
+        score = bonus
         return reward_dict, score
+
+    def step(self, a, b=None):
+        obs, reward, done, env_info = super(KitchenBase, self).step(a, b=b)
+        if self.TERMINATE_ON_TASK_COMPLETE:
+            done = not self.tasks_to_complete
+        return obs, reward, done, env_info
+
+    def render(self, mode='human'):
+        # Disable rendering to speed up environment evaluation.
+        return []
 
 
 class KitchenMicrowaveKettleLightSliderV0(KitchenBase):
     TASK_ELEMENTS = ['microwave', 'kettle', 'light switch', 'slide cabinet']
+
+class KitchenMicrowaveKettleBottomBurnerLightV0(KitchenBase):
+    TASK_ELEMENTS = ['microwave', 'kettle', 'bottom burner', 'light switch']
