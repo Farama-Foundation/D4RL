@@ -11,6 +11,13 @@ np.set_printoptions(precision=2, suppress=True)
 
 SAVE_DIRECTORY = '~/.offline_rl/datasets'
 DEMOS_DIRECTORY = '~/relay-policy-learning/kitchen_demos_multitask'
+DEMOS_SUBDIR_PATTERN = '*'
+ENVIRONMENTS = ['kitchen_microwave_kettle_light_slider-v0',
+                'kitchen_microwave_kettle_bottomburner_light-v0']
+# Uncomment lines below for "mini_kitchen_microwave_kettle_light_slider-v0'".
+DEMOS_SUBDIR_PATTERN = '*microwave_kettle_switch_slide'
+ENVIRONMENTS = ['mini_kitchen_microwave_kettle_light_slider-v0']
+
 OBS_ELEMENT_INDICES = [
     [11, 12],  # Bottom burners.
     [15, 16],  # Top burners.
@@ -21,9 +28,6 @@ OBS_ELEMENT_INDICES = [
     [23, 24, 25, 26, 27, 28, 29],  # Kettle.
 ]
 FLAT_OBS_ELEMENT_INDICES = sum(OBS_ELEMENT_INDICES, [])
-
-ENVIRONMENTS = ['kitchen_microwave_kettle_light_slider-v0']
-
 
 def _relabel_obs_with_goal(obs_array, goal):
     obs_array[..., 30:] = goal
@@ -42,7 +46,8 @@ def _obs_array_to_obs_dict(obs_array, goal=None):
 
 
 def main():
-    demo_subdirs = sorted(glob.glob(os.path.join(DEMOS_DIRECTORY, '*')))
+    pattern = os.path.join(DEMOS_DIRECTORY, DEMOS_SUBDIR_PATTERN)
+    demo_subdirs = sorted(glob.glob(pattern))
     print('Found %d demo subdirs.' % len(demo_subdirs))
     all_demos = {}
     for demo_subdir in demo_subdirs:
@@ -65,6 +70,7 @@ def main():
 
     for env_name in ENVIRONMENTS:
         env = gym.make(env_name).unwrapped
+        env.REMOVE_TASKS_WHEN_COMPLETE = False  # This enables a Markovian reward.
         all_obs = []
         all_actions = []
         all_rewards = []
@@ -87,10 +93,12 @@ def main():
                         _obs_array_to_obs_dict(obs))
 
                     rewards.append(reward_dict['r_total'])
-                demos_obs.append(relabelled_obs)
-                demos_actions.append(demo['actions'])
+                terminate_at = len(rewards)
+                rewards = rewards[:terminate_at]
+                demos_obs.append(relabelled_obs[:terminate_at])
+                demos_actions.append(demo['actions'][:terminate_at])
                 demos_rewards.append(np.array(rewards))
-                demos_terminals.append(np.arange(len(rewards)) < len(rewards) - 1)
+                demos_terminals.append(np.arange(len(rewards)) >= len(rewards) - 1)
                 demos_infos.append([idx] * len(rewards))
 
             all_obs.append(np.concatenate(demos_obs))
