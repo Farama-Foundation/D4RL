@@ -3,6 +3,7 @@ A quick script to run a sanity check on all environments.
 """
 import gym
 import d4rl
+import d4rl.kitchen
 
 ENVS = [
     'maze2d-open-v0',
@@ -48,6 +49,9 @@ ENVS = [
     'antmaze-medium-diverse-v0',
     'antmaze-large-play-v0',
     'antmaze-large-diverse-v0',
+    'mini-kitchen-microwave-kettle-light-slider-v0',
+    'kitchen-microwave-kettle-light-slider-v0',
+    'kitchen-microwave-kettle-bottomburner-light-v0',
 ]
 
 if __name__ == '__main__':
