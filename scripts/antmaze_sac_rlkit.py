@@ -1,3 +1,7 @@
+# Script to run antmaze environments in D4RL with rlkit: https://github.com/vitchyr/rlkit/
+# Version differences in rlkit may raise an assertion error, `assert set(d.keys()) == set(keys)`
+# To prevent this error, comment out the `for info_key in ...` for loop in rlkit/core/eval_util.py.
+
 from gym.envs.mujoco import HalfCheetahEnv
 
 import rlkit.torch.pytorch_util as ptu
