@@ -29,6 +29,8 @@ import gin
 import gym
 import numpy as np
 import d4rl
+import d4rl.flow
+import tensorflow as tf0
 import tensorflow.compat.v1 as tf
 
 from behavior_regularized_offline_rl.brac import agents
@@ -36,7 +38,7 @@ from behavior_regularized_offline_rl.brac import utils
 
 import train_eval_offline
 
-tf.compat.v1.enable_v2_behavior()
+tf0.compat.v1.enable_v2_behavior()
 
 
 # Flags for offline training.
@@ -51,6 +53,11 @@ flags.DEFINE_integer('seed', 0, 'random seed, mainly for training samples.')
 flags.DEFINE_integer('total_train_steps', int(5e5), '')
 flags.DEFINE_integer('n_eval_episodes', 20, '')
 flags.DEFINE_integer('n_train', int(1e6), '')
+flags.DEFINE_integer('model_arch', 0, '')
+flags.DEFINE_integer('save_freq', 1000, '')
+flags.DEFINE_integer('opt_params', 0, '')
+flags.DEFINE_string('b_ckpt', 'placeholder', '')
+flags.DEFINE_integer('value_penalty', 0, '')
 flags.DEFINE_multi_string('gin_file', None, 'Paths to the gin-config files.')
 flags.DEFINE_multi_string('gin_bindings', None, 'Gin binding parameters.')
 
@@ -75,6 +82,26 @@ def main(_):
       str(FLAGS.seed),
       )
   utils.maybe_makedirs(log_dir)
+
+  model_arch = None
+  if FLAGS.model_arch == 0:
+      model_arch = ((200,200),)
+  elif FLAGS.model_arch == 1:
+      model_arch = (((300, 300), (200, 200),), 2)
+  else:
+      raise ValueError()
+
+  if FLAGS.opt_params == 0:
+    opt_params = (('adam', 1e-5),)
+  elif FLAGS.opt_params == 1:
+    opt_params = (('adam', 1e-3), ('adam', 3e-5), ('adam', 1e-5))
+  elif FLAGS.opt_params == 2:
+    opt_params = (('adam', 1e-3), ('adam', 3e-4), ('adam', 1e-5))
+  elif FLAGS.opt_params == 3:
+    opt_params = (('adam', 0e-3), ('adam', 0e-4), ('adam', 0e-5))
+  else:
+      raise ValueError()
+
   eval_results = train_eval_offline.train_eval_offline(
       log_dir=log_dir,
       data_file=None,
@@ -83,6 +110,11 @@ def main(_):
       n_train=FLAGS.n_train,
       total_train_steps=FLAGS.total_train_steps,
       n_eval_episodes=FLAGS.n_eval_episodes,
+      model_params=model_arch,
+      optimizers=opt_params,
+      value_penalty=bool(FLAGS.value_penalty),
+      behavior_ckpt_file=FLAGS.b_ckpt,
+      save_freq=FLAGS.save_freq
       )
 
   results_file = os.path.join(log_dir, 'results.npy')

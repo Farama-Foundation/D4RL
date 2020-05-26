@@ -13,9 +13,10 @@
 # limitations under the License.
 
 #!/bin/bash
-ENV=walker2d-medium-v0
+#ENV=walker2d-medium-v0
+ENV=flow-merge-random-v0
 
-python scripts/brac/train_offline.py \
+python train_offline.py \
   --alsologtostderr --sub_dir=0 \
   --env_name=$ENV --identifier="train_bc" \
   --agent_name=bc \
