@@ -32,7 +32,7 @@ import gym
 import d4rl # Import required to register environments
 
 # Create the environment
-env = gym.make('maze2d-umaze-v0')
+env = gym.make('maze2d-umaze-v1')
 
 # d4rl abides by the OpenAI gym interface
 env.reset()
@@ -47,7 +47,12 @@ Datasets are automatically downloaded to the `~/.d4rl/datasets` directory. If yo
 
 ## Acknowledgements
 
-We would like to thank the authors of [hand_dapg](https://github.com/aravindr93/hand_dapg) and [gym-minigrid](https://github.com/maximecb/gym-minigrid) for their implementations of the respective environments.
+D4RL builds on top of several excellent domains and environments built by various researchers. We would like to thank the authors of:
+- [hand_dapg](https://github.com/aravindr93/hand_dapg) 
+- [gym-minigrid](https://github.com/maximecb/gym-minigrid)
+- [carla](https://github.com/carla-simulator/carla)
+- [flow](https://github.com/flow-project/flow)
+- [adept_envs](https://github.com/google-research/relay-policy-learning)
 
 ## Citation
 
