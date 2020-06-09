@@ -3,7 +3,7 @@ from setuptools import find_packages
 
 setup(
     name='d4rl',
-    version='1.0',
+    version='1.1',
     install_requires=['gym', 
                       'numpy', 
                       'mujoco_py', 
