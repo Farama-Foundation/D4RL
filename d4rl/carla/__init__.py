@@ -80,7 +80,7 @@ register(
     entry_point='d4rl.carla:CarlaObsEnv',
     max_episode_steps=TOWN_STEPS,
     kwargs={
-        'ref_min_score': -122.228455,
+        'ref_min_score': -114.81579500772153,
         'ref_max_score': -64.62967840318221,
         'dataset_url': 'http://rail.eecs.berkeley.edu/datasets/offline_rl/carla/carla_town_subsamp_flat-v0.hdf5',
         'reward_type': 'goal_reaching',
@@ -103,7 +103,7 @@ register(
     entry_point='d4rl.carla:CarlaObsEnv',
     max_episode_steps=TOWN_STEPS,
     kwargs={
-        'ref_min_score': -122.228455,
+        'ref_min_score': -114.81579500772153,
         'ref_max_score': -64.62967840318221,
         'dataset_url': 'http://rail.eecs.berkeley.edu/datasets/offline_rl/carla/carla_town_flat-v0.hdf5',
         'reward_type': 'goal_reaching',
@@ -127,7 +127,7 @@ register(
     entry_point='d4rl.carla:CarlaObsDictEnv',
     max_episode_steps=TOWN_STEPS,
     kwargs={
-        'ref_min_score': -122.228455,
+        'ref_min_score': -114.81579500772153,
         'ref_max_score': -64.62967840318221,
         'dataset_url': 'http://rail.eecs.berkeley.edu/datasets/offline_rl/carla/carla_town_subsamp-v0.hdf5',
         'reward_type': 'goal_reaching',
@@ -174,8 +174,8 @@ register(
     entry_point='d4rl.carla:CarlaObsEnv',
     max_episode_steps=TOWN_STEPS,
     kwargs={
-        'ref_min_score': -122.228455,
-        'ref_max_score': -64.62967840318221,
+        'ref_min_score': None,
+        'ref_max_score': None,
         'dataset_url': 'http://rail.eecs.berkeley.edu/datasets/offline_rl/carla/carla_town_flat-v0.hdf5',
         'render_images': True,
         'reward_type': 'goal_reaching',

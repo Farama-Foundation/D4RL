@@ -419,12 +419,23 @@ class CarlaEnv(object):
         #self.reset_other_vehicles()
         #self.world.tick()
         #self.count = 0
-
         # get obs:
-        for _ in range(5):
-            self.world.tick()
+        #for _ in range(5):
+        #    self.world.tick()
             #obs, _, _, _ = self.step()
-        obs, _, _, _ = self.step()
+
+        obs, _, done, _ = self.step()
+
+        # keep resetting until vehicle is not collided
+        total_resets = 0
+        while done:
+            self.reset_vehicle()
+            self.world.tick()
+            obs, _, done, _ = self.step()
+            total_resets += 1
+            if total_resets > 10:
+                break
+
         return obs
     
     def reset_vehicle(self):
@@ -952,8 +963,8 @@ class CarlaEnv(object):
         done = False
         for key in done_dict:
             done = (done or done_dict[key])
-        if done:
-            print('done_dict:', done_dict, 'r:', reward)
+        #if done:
+        #    print('done_dict:', done_dict, 'r:', reward)
         return next_obs, reward, done, info
 
     def finish(self):
