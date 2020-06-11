@@ -30,7 +30,7 @@ register(
 # solves the task, but each demonstration partially solves different
 # components of the task.
 register(
-    id='kitchen-undirected-v0',
+    id='kitchen-mixed-v0',
     entry_point='d4rl.kitchen:KitchenMicrowaveKettleBottomBurnerLightV0',
     max_episode_steps=280,
     kwargs={

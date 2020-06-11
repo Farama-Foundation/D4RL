@@ -1,6 +1,8 @@
 # D4RL: Datasets for Deep Data-Driven Reinforcement Learning
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+[![License](https://licensebuttons.net/l/by/3.0/88x31.png)](https://creativecommons.org/licenses/by/4.0/)
+
 Status: Beta (stable release expected June 2020)
 
 D4RL is an open-source benchmark for offline reinforcement learning. It provides standardized environments and datasets for training and benchmarking algorithms. A supplementary [whitepaper](https://arxiv.org/abs/2004.07219) and [website](https://sites.google.com/view/d4rl/home) are also available.
@@ -32,7 +34,7 @@ import gym
 import d4rl # Import required to register environments
 
 # Create the environment
-env = gym.make('maze2d-umaze-v0')
+env = gym.make('maze2d-umaze-v1')
 
 # d4rl abides by the OpenAI gym interface
 env.reset()
@@ -47,7 +49,12 @@ Datasets are automatically downloaded to the `~/.d4rl/datasets` directory. If yo
 
 ## Acknowledgements
 
-We would like to thank the authors of [hand_dapg](https://github.com/aravindr93/hand_dapg) and [gym-minigrid](https://github.com/maximecb/gym-minigrid) for their implementations of the respective environments.
+D4RL builds on top of several excellent domains and environments built by various researchers. We would like to thank the authors of:
+- [hand_dapg](https://github.com/aravindr93/hand_dapg) 
+- [gym-minigrid](https://github.com/maximecb/gym-minigrid)
+- [carla](https://github.com/carla-simulator/carla)
+- [flow](https://github.com/flow-project/flow)
+- [adept_envs](https://github.com/google-research/relay-policy-learning)
 
 ## Citation
 
@@ -63,4 +70,9 @@ Please use the following bibtex for citations:
     primaryClass={cs.LG}
 }
 ```
+
+## Licenses
+
+Unless otherwise noted, all datasets are licensed under the [Creative Commons Attribution 4.0 License](https://creativecommons.org/licenses/by/4.0/), and code is licensed under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0.html).
+
 

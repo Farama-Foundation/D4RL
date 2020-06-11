@@ -19,6 +19,22 @@ def get_keys(h5file):
     return keys
 
 
+def filepath_from_url(dataset_url):
+    _, dataset_name = os.path.split(dataset_url)
+    dataset_filepath = os.path.join(DATASET_PATH, dataset_name)
+    return dataset_filepath
+
+
+def download_dataset_from_url(dataset_url):
+    dataset_filepath = filepath_from_url(dataset_url)
+    if not os.path.exists(dataset_filepath):
+        print('Downloading dataset:', dataset_url, 'to', dataset_filepath)
+        urllib.request.urlretrieve(dataset_url, dataset_filepath)
+    if not os.path.exists(dataset_filepath):
+        raise IOError("Failed to download dataset from %s" % dataset_url)
+    return dataset_filepath
+
+
 class OfflineEnv(gym.Env):
     """
     Base class for offline RL envs.
@@ -41,22 +57,13 @@ class OfflineEnv(gym.Env):
 
     @property
     def dataset_filepath(self):
-        _, dataset_name = os.path.split(self._dataset_url)
-        dataset_filepath = os.path.join(DATASET_PATH, dataset_name)
-        return dataset_filepath
+        return filepath_from_url(self.dataset_url)
 
     def get_dataset(self, h5path=None):
         if h5path is None:
             if self._dataset_url is None:
                 raise ValueError("Offline env not configured with a dataset URL.")
-
-            if not os.path.exists(self.dataset_filepath):
-                print('Downloading dataset:', self._dataset_url, 'to', self.dataset_filepath)
-                urllib.request.urlretrieve(self._dataset_url, self.dataset_filepath)
-
-            if not os.path.exists(self.dataset_filepath):
-                raise IOError("Failed to download dataset from %s" % self._dataset_url)
-            h5path = self.dataset_filepath
+            h5path = download_dataset_from_url(self.dataset_url)
 
         dataset_file = h5py.File(h5path, 'r')
         data_dict = {k: dataset_file[k][:] for k in get_keys(dataset_file)}
@@ -80,6 +87,35 @@ class OfflineEnv(gym.Env):
         return data_dict
 
 
+    def get_dataset_chunk(self, chunk_id, h5path=None):
+        """
+        Returns a slice of the full dataset.
+
+        Args:
+            chunk_id (int): An integer representing which slice of the dataset to return.
+
+        Returns:
+            A dictionary containing observtions, actions, rewards, and terminals.
+        """
+        if h5path is None:
+            if self._dataset_url is None:
+                raise ValueError("Offline env not configured with a dataset URL.")
+            h5path = download_dataset_from_url(self.dataset_url)
+
+        dataset_file = h5py.File(h5path, 'r')
+
+        if 'virtual' not in dataset_file.keys():
+            raise ValueError('Dataset is not a chunked dataset')
+        available_chunks = [int(_chunk) for _chunk in list(dataset_file['virtual'].keys())]
+        if chunk_id not in available_chunks:
+            raise ValueError('Chunk id not found: %d. Available chunks: %s' % (chunk_id, str(available_chunks)))
+
+        load_keys = ['observations', 'actions', 'rewards', 'terminals']
+        data_dict = {k: dataset_file['virtual/%d/%s' % (chunk_id, k)][:] for k in load_keys}
+        dataset_file.close()
+        return data_dict
+
+
 class OfflineEnvWrapper(gym.Wrapper, OfflineEnv):
     """
     Wrapper class for offline RL envs.
@@ -89,5 +125,5 @@ class OfflineEnvWrapper(gym.Wrapper, OfflineEnv):
         OfflineEnv.__init__(self, **kwargs)
 
     def reset(self):
-        print('reset!')
         return self.env.reset()
+

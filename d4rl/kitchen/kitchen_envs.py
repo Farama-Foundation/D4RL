@@ -1,8 +1,8 @@
 """Environments using kitchen and Franka robot."""
 import os
 import numpy as np
-from adept_envs.utils.configurable import configurable
-from adept_envs.franka.kitchen_multitask_v0 import KitchenTaskRelaxV1
+from d4rl.kitchen.adept_envs.utils.configurable import configurable
+from d4rl.kitchen.adept_envs.franka.kitchen_multitask_v0 import KitchenTaskRelaxV1
 
 from d4rl.offline_env import OfflineEnv
 
