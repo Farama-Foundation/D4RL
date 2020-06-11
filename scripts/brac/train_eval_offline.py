@@ -28,6 +28,7 @@ from absl import logging
 import gin
 import gym
 import numpy as np
+import tensorflow as tf0
 import tensorflow.compat.v1 as tf
 
 from behavior_regularized_offline_rl.brac import dataset
@@ -42,7 +43,8 @@ from tf_agents.environments import gym_wrapper
 
 def get_offline_data(tf_env):
   gym_env = tf_env.pyenv.envs[0]
-  offline_dataset = gym_env.unwrapped.get_dataset()
+  #offline_dataset = gym_env.unwrapped.get_dataset()
+  offline_dataset = gym_env.get_dataset()
   dataset_size = len(offline_dataset['observations'])
   tf_dataset = dataset.Dataset(
       tf_env.observation_spec(),
@@ -112,6 +114,9 @@ def train_eval_offline(
     n_eval_episodes=20,
     # Agent args.
     model_params=(((200, 200),), 2),
+    behavior_ckpt_file=None,
+    value_penalty=True,
+    #model_params=((200, 200),),
     optimizers=(('adam', 0.001),),
     batch_size=256,
     weight_decays=(0.0,),
@@ -121,6 +126,14 @@ def train_eval_offline(
     ):
   """Training a policy with a fixed dataset."""
   # Create tf_env to get specs.
+  print('[train_eval_offline.py] env_name=', env_name)
+  print('[train_eval_offline.py] data_file=', data_file)
+  print('[train_eval_offline.py] agent_module=', agent_module)
+  print('[train_eval_offline.py] model_params=', model_params)
+  print('[train_eval_offline.py] optimizers=', optimizers)
+  print('[train_eval_offline.py] bckpt_file=', behavior_ckpt_file)
+  print('[train_eval_offline.py] value_penalty=', value_penalty)
+
   tf_env = env_factory(env_name)
   observation_spec = tf_env.observation_spec()
   action_spec = tf_env.action_spec()
@@ -153,7 +166,14 @@ def train_eval_offline(
       discount=discount,
       train_data=train_data)
   agent_args = agent_module.Config(agent_flags).agent_args
-  agent = agent_module.Agent(**vars(agent_args))
+  my_agent_arg_dict = {}
+  for k in vars(agent_args):
+      my_agent_arg_dict[k] = vars(agent_args)[k]
+  my_agent_arg_dict['behavior_ckpt_file'] = behavior_ckpt_file
+  my_agent_arg_dict['value_penalty'] = value_penalty
+  print('agent_args:', my_agent_arg_dict)
+  #agent = agent_module.Agent(**vars(agent_args))
+  agent = agent_module.Agent(**my_agent_arg_dict)
   agent_ckpt_name = os.path.join(log_dir, 'agent')
 
   # Restore agent from checkpoint if there exists one.
@@ -164,11 +184,11 @@ def train_eval_offline(
   # Train agent.
   train_summary_dir = os.path.join(log_dir, 'train')
   eval_summary_dir = os.path.join(log_dir, 'eval')
-  train_summary_writer = tf.compat.v2.summary.create_file_writer(
+  train_summary_writer = tf0.compat.v2.summary.create_file_writer(
       train_summary_dir)
   eval_summary_writers = collections.OrderedDict()
   for policy_key in agent.test_policies.keys():
-    eval_summary_writer = tf.compat.v2.summary.create_file_writer(
+    eval_summary_writer = tf0.compat.v2.summary.create_file_writer(
         os.path.join(eval_summary_dir, policy_key))
     eval_summary_writers[policy_key] = eval_summary_writer
   eval_results = []

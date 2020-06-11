@@ -3,7 +3,7 @@ from gym.envs.registration import register
 
 # Smaller dataset with only positive demonstrations.
 register(
-    id='mini-kitchen-microwave-kettle-light-slider-v0',
+    id='kitchen-complete-v0',
     entry_point='d4rl.kitchen:KitchenMicrowaveKettleLightSliderV0',
     max_episode_steps=280,
     kwargs={
@@ -16,7 +16,7 @@ register(
 # Whole dataset with undirected demonstrations. A subset of the demonstrations
 # solve the task.
 register(
-    id='kitchen-microwave-kettle-light-slider-v0',
+    id='kitchen-partial-v0',
     entry_point='d4rl.kitchen:KitchenMicrowaveKettleLightSliderV0',
     max_episode_steps=280,
     kwargs={
@@ -30,7 +30,7 @@ register(
 # solves the task, but each demonstration partially solves different
 # components of the task.
 register(
-    id='kitchen-microwave-kettle-bottomburner-light-v0',
+    id='kitchen-mixed-v0',
     entry_point='d4rl.kitchen:KitchenMicrowaveKettleBottomBurnerLightV0',
     max_episode_steps=280,
     kwargs={
