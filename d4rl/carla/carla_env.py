@@ -943,6 +943,12 @@ class CarlaEnv(object):
 
             im.save(image_name, "PNG", pnginfo=metadata)
 
+        info = {}
+        location = self.vehicle.get_location()
+        velocity = self.vehicle.get_velocity()
+        info['location_xyz'] = np.array([location.x, location.y, location.z])
+        info['velocity_xyz'] = np.array([velocity.x, velocity.y, velocity.z])
+
         self.count += 1
 
         next_obs = rgb 
@@ -958,7 +964,7 @@ class CarlaEnv(object):
         else:
             raise ValueError('unknown reward type:', self.reward_type)
 
-        info = reward_dict
+        info.update(reward_dict)
         info.update(done_dict)
         done = False
         for key in done_dict:
@@ -1113,6 +1119,76 @@ class CarlaObsEnv(OfflineEnv):
 
     def __str__(self):
         return '{}({})'.format(type(self).__name__, self.wrapped_env)
+
+
+class CarlaStateEnv(OfflineEnv):
+    def __init__(self, carla_args=None, carla_port=2000, reward_type='lane_follow', render_images=False, **kwargs):
+        self._wrapped_env = CarlaEnv(carla_port=carla_port, args=carla_args, reward_type=reward_type, record_vision=render_images)
+        self.action_space = self._wrapped_env.action_space
+        #self.observation_space = self._wrapped_env.observation_space
+        self.observation_size = 7 #int(np.prod(self._wrapped_env.observation_space.shape))
+        self.observation_space = spaces.Box(low=np.array([-100.0] * self.observation_size), high=np.array([100.0,] * self.observation_size))
+        #self.observation_space = spaces.Dict({
+        #    'image':spaces.Box(low=np.array([0.0] * self.observation_size), high=np.array([256.0,] * self.observation_size))
+        #})
+        super(CarlaStateEnv, self).__init__(**kwargs)
+
+    @property
+    def wrapped_env(self):
+        return self._wrapped_env
+
+    def reset(self, **kwargs):
+        self._wrapped_env.reset_init()
+        obs = (self._wrapped_env.reset(**kwargs))
+        obs_dict = dict()
+        # Also normalize obs
+        obs_dict = (obs.astype(np.float32) / 255.0).flatten()
+        return obs_dict
+
+    def step(self, action):
+        #print ('Action: ', action)
+        _, reward, done, info = self._wrapped_env.step(action)
+        #next_obs_dict = dict()
+        #next_obs_dict['image'] = (next_obs.astype(np.float32) / 255.0).flatten()
+        #next_obs_dict = (next_obs.astype(np.float32) / 255.0).flatten()
+        collision = np.array([info['collision']])
+        obs = info['location_xyz']
+        vel = info['velocity_xyz']
+        next_obs = np.concatenate([obs, vel, collision])
+        return next_obs, reward, done, info
+
+    def render(self, *args, **kwargs):
+        return self._wrapped_env.render(*args, **kwargs)
+
+    @property
+    def horizon(self):
+        return self._wrapped_env.horizon
+
+    def terminate(self):
+        if hasattr(self.wrapped_env, "terminate"):
+            self._wrapped_env.terminate()
+
+    def __getattr__(self, attr):
+        if attr == '_wrapped_env':
+            raise AttributeError()
+        return getattr(self._wrapped_env, attr)
+
+    def __getstate__(self):
+        """
+        This is useful to override in case the wrapped env has some funky
+        __getstate__ that doesn't play well with overriding __getattr__.
+
+        The main problematic case is/was gym's EzPickle serialization scheme.
+        :return:
+        """
+        return self.__dict__
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+
+    def __str__(self):
+        return '{}({})'.format(type(self).__name__, self.wrapped_env)
+
 
 if __name__ == '__main__':
     variant = dict()
