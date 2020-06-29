@@ -56,8 +56,8 @@ def gen_env(render='drgb'):
             veh_type="human",
             edge=edge,
             vehs_per_hour=EDGE_INFLOW,
-            departLane="free",
-            departSpeed=V_ENTER)
+            depart_lane="free",
+            depart_speed=V_ENTER)
 
     flow_params = dict(
         # name of the experiment
