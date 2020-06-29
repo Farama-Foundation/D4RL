@@ -26,6 +26,9 @@ class ProxyEnv(Env):
     def render(self, *args, **kwargs):
         return self._wrapped_env.render(*args, **kwargs)
 
+    def seed(self, seed=0):
+        return self._wrapped_env.seed(seed=seed)
+
     @property
     def horizon(self):
         return self._wrapped_env.horizon

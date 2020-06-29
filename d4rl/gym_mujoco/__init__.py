@@ -113,7 +113,7 @@ register(
 
 # Mixed datasets
 register(
-    id='hopper-mixed-v0',
+    id='hopper-medium-replay-v0',
     entry_point='d4rl.gym_mujoco.gym_envs:get_hopper_env',
     max_episode_steps=1000,
     kwargs={
@@ -124,7 +124,7 @@ register(
 )
 
 register(
-    id='walker2d-mixed-v0',
+    id='walker2d-medium-replay-v0',
     entry_point='d4rl.gym_mujoco.gym_envs:get_walker_env',
     max_episode_steps=1000,
     kwargs={
@@ -135,7 +135,7 @@ register(
 )
 
 register(
-    id='halfcheetah-mixed-v0',
+    id='halfcheetah-medium-replay-v0',
     entry_point='d4rl.gym_mujoco.gym_envs:get_cheetah_env',
     max_episode_steps=1000,
     kwargs={
@@ -184,12 +184,14 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_ant_env',
     max_episode_steps=1000,
     kwargs={
+        'ref_min_score': ANT_RANDOM_SCORE,
+        'ref_max_score': ANT_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/ant_medium_expert.hdf5'
     }
 )
 
 register(
-    id='ant-mixed-v0',
+    id='ant-medium-replay-v0',
     entry_point='d4rl.gym_mujoco.gym_envs:get_ant_env',
     max_episode_steps=1000,
     kwargs={
