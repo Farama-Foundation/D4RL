@@ -49,6 +49,14 @@ print(dataset['observations']) # An N x dim_observation Numpy array of observati
 
 Datasets are automatically downloaded to the `~/.d4rl/datasets` directory. If you would like to change the location of this directory, you can set the `$D4RL_DATASET_DIR` environment variable to the directory of your choosing, or pass in the dataset filepath directly into the `get_dataset` method.
 
+## Algorithm Implementations
+
+We have aggregated implementations of various offline RL algorithms in a [separate repository](https://github.com/rail-berkeley/d4rl_evaluations). 
+
+## Off-Policy Evaluations
+
+D4RL currently has limited support for off-policy evaluation methods, on a select few locomotion tasks. We provide trained reference policies and a set of performance metrics. Additional details can be found in the [wiki](https://github.com/rail-berkeley/d4rl/wiki/Off-Policy-Evaluation).
+
 ## Acknowledgements
 
 D4RL builds on top of several excellent domains and environments built by various researchers. We would like to thank the authors of:
