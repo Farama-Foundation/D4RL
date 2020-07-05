@@ -1,4 +1,5 @@
 from .carla_env import CarlaObsDictEnv
+from .carla_env import CarlaFlatObsDiscreteActionEnv
 from .carla_env import CarlaObsEnv
 from gym.envs.registration import register
 
@@ -37,6 +38,29 @@ register(
         'dataset_url': 'http://rail.eecs.berkeley.edu/datasets/offline_rl/carla/carla_lane_follow-v0.hdf5',
         'reward_type': 'lane_follow',
         'render_images': True,
+        'carla_args': dict(
+            vision_size=48,
+            vision_fov=48,
+            weather=False,
+            frame_skip=1,
+            steps=250,
+            multiagent=True,
+            lane=0,
+            lights=False,
+            record_dir="None",
+        )
+    }
+)
+
+register(
+    id='carla-lane-discrete-v0',
+    entry_point='d4rl.carla:CarlaFlatObsDiscreteActionEnv',
+    max_episode_steps=250,
+    kwargs={
+        'ref_min_score': -42.575674,
+        'ref_max_score': 929.5353428257262,
+        'dataset_url': 'http://rail.eecs.berkeley.edu/datasets/offline_rl/carla/carla_lane_discrete_flat.hdf5',
+        'reward_type': 'lane_follow',
         'carla_args': dict(
             vision_size=48,
             vision_fov=48,

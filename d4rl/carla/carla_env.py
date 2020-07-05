@@ -5,6 +5,7 @@ import os
 import random
 import sys
 import time
+import itertools
 from PIL import Image
 from PIL.PngImagePlugin import PngInfo
 import gym
@@ -817,6 +818,9 @@ class CarlaEnv(object):
         done_dict['object_collided_done'] = object_collided_done
         done_dict['base_done'] = done
         return total_reward, reward_dict, done_dict
+
+    def write_metadata(self, metadata, **kwargs):
+        pass
     
     def _simulator_step(self, action, traffic_light_color):
         
@@ -881,6 +885,7 @@ class CarlaEnv(object):
             metadata.add_text("steer", str(steer))
             metadata.add_text("brake", str(brake))
             metadata.add_text("lights", traffic_light_color)
+            self.write_metadata(metadata, throttle=throttle, steer=steer, brake=brake)
 
             # acceleration
             acceleration = self.vehicle.get_acceleration()
@@ -1055,9 +1060,6 @@ class CarlaObsEnv(OfflineEnv):
         self.observation_space = self._wrapped_env.observation_space
         self.observation_size = int(np.prod(self._wrapped_env.observation_space.shape))
         self.observation_space = spaces.Box(low=np.array([0.0] * self.observation_size), high=np.array([256.0,] * self.observation_size))
-        #self.observation_space = spaces.Dict({
-        #    'image':spaces.Box(low=np.array([0.0] * self.observation_size), high=np.array([256.0,] * self.observation_size))
-        #})
         super(CarlaObsEnv, self).__init__(**kwargs)
 
     @property
@@ -1073,13 +1075,8 @@ class CarlaObsEnv(OfflineEnv):
         return obs_dict
 
     def step(self, action):
-        #print ('Action: ', action)
         next_obs, reward, done, info = self._wrapped_env.step(action)
-        #next_obs_dict = dict()
-        #next_obs_dict['image'] = (next_obs.astype(np.float32) / 255.0).flatten()
         next_obs_dict = (next_obs.astype(np.float32) / 255.0).flatten()
-        # print ('Reward: ', reward)
-        # print ('Done dict: ', info)
         return next_obs_dict, reward, done, info
 
     def render(self, *args, **kwargs):
@@ -1113,6 +1110,40 @@ class CarlaObsEnv(OfflineEnv):
 
     def __str__(self):
         return '{}({})'.format(type(self).__name__, self.wrapped_env)
+
+
+class CarlaFlatObsDiscreteActionEnv(CarlaObsEnv):
+    def __init__(self, *args, **kwargs):
+        super(CarlaFlatObsDiscreteActionEnv, self).__init__(*args, **kwargs)
+        self.num_steer = 9
+        self.num_throttle = 3
+        self.action_space = spaces.Discrete(self.num_steer * self.num_throttle)
+
+        self.throttle_values = np.linspace(-1.0, 1.0, num=self.num_throttle, endpoint=True)
+        self.steer_values = np.linspace(-1.0, 1.0, num=self.num_steer, endpoint=True)
+        self.values = list(itertools.product(self.throttle_values, self.steer_values))
+
+    def discretized_action(self, cont_action):
+        throttle = cont_action[0]
+        steer = cont_action[1]
+        throttle_idx = np.digitize(throttle, self.throttle_values) - 1
+        steer_idx = np.digitize(steer, self.steer_values) - 1
+        return throttle_idx * self.num_steer + steer_idx
+
+    def continuous_action(self, disc_action):
+        return self.values[disc_action]
+
+    def step(self, action):
+        # Convert action to (throttle, steer)
+        cont_action = self.values[action]
+        return super(CarlaFlatObsDiscreteActionEnv, self).step(cont_action)
+
+    def write_metadata(self, metadata, throttle=None, brake=None):
+        disc_action = self.discretized_action((throttle, brake))
+        cont_action = self.continuous_action(disc_action)
+        disc_check = self.discretized_action(cont_action)
+        assert disc_action == disc_check
+        metadata.add_text("discrete_action", str(disc_action))
 
 if __name__ == '__main__':
     variant = dict()
