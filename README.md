@@ -29,7 +29,7 @@ The Flow and CARLA tasks also require additional installation steps:
 
 d4rl uses the [OpenAI Gym](https://github.com/openai/gym) API. Tasks are created via the `gym.make` function. A full list of all tasks is [available here](https://github.com/rail-berkeley/d4rl/wiki/Tasks).
 
-Each task is associated with a fixed offline dataset, which can be obtained with the `get_dataset` method. This method returns a dictionary with `observations`, `actions`, `rewards`, `terminals`, and `infos` as keys. 
+Each task is associated with a fixed offline dataset, which can be obtained with the `env.get_dataset()` method. This method returns a dictionary with `observations`, `actions`, `rewards`, `terminals`, and `infos` as keys. You can also load data using `d4rl.qlearning_dataset(env)`, which formats the data for use by typical Q-learning algorithms by adding a `next_observations` key.
 
 ```python
 import gym
@@ -43,11 +43,16 @@ env.reset()
 env.step(env.action_space.sample())
 
 # Each task is associated with a dataset
+# dataset contains observations, actions, rewards, terminals, and infos
 dataset = env.get_dataset()
 print(dataset['observations']) # An N x dim_observation Numpy array of observations
+
+# Alternatively, use d4rl.qlearning_dataset which
+# also adds next_observations.
+dataset = d4rl.qlearning_dataset(env)
 ```
 
-Datasets are automatically downloaded to the `~/.d4rl/datasets` directory. If you would like to change the location of this directory, you can set the `$D4RL_DATASET_DIR` environment variable to the directory of your choosing, or pass in the dataset filepath directly into the `get_dataset` method.
+Datasets are automatically downloaded to the `~/.d4rl/datasets` directory when `get_dataset()` is called. If you would like to change the location of this directory, you can set the `$D4RL_DATASET_DIR` environment variable to the directory of your choosing, or pass in the dataset filepath directly into the `get_dataset` method.
 
 ## Algorithm Implementations
 
