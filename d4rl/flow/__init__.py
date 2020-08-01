@@ -23,9 +23,9 @@ from flow.utils.registry import make_create_env
 from flow.envs import WaveAttenuationPOEnv
 from flow.envs import BayBridgeEnv, TrafficLightGridPOEnv
 
-import d4rl.flow.traffic_light_grid as traffic_light_grid
-import d4rl.flow.merge as merge
-import d4rl.flow.bottleneck as bottleneck
+from d4rl.flow import traffic_light_grid
+from d4rl.flow import merge
+from d4rl.flow import bottleneck
 
 def flow_register(flow_params, render=None, **kwargs):
     exp_tag = flow_params["exp_tag"]
