@@ -29,7 +29,15 @@ The Flow and CARLA tasks also require additional installation steps:
 
 d4rl uses the [OpenAI Gym](https://github.com/openai/gym) API. Tasks are created via the `gym.make` function. A full list of all tasks is [available here](https://github.com/rail-berkeley/d4rl/wiki/Tasks).
 
-Each task is associated with a fixed offline dataset, which can be obtained with the `env.get_dataset()` method. This method returns a dictionary with `observations`, `actions`, `rewards`, `terminals`, and `infos` as keys. You can also load data using `d4rl.qlearning_dataset(env)`, which formats the data for use by typical Q-learning algorithms by adding a `next_observations` key.
+Each task is associated with a fixed offline dataset, which can be obtained with the `env.get_dataset()` method. This method returns a dictionary with:
+- `observations`: An N by observation dimensional array of observations.
+- `actions`: An N by action dimensional array of actions.
+- `rewards`: An N dimensional array of rewards.
+- `terminals`: An N dimensional array of episode termination flags. This is true when episodes end due to termination conditions such as falling over. 
+- `timeouts`: An N dimensional array of termination flags. This is true when episodes end due to reaching the maximum episode length.
+- `infos`: Contains optional task-specific debugging information.
+
+You can also load data using `d4rl.qlearning_dataset(env)`, which formats the data for use by typical Q-learning algorithms by adding a `next_observations` key.
 
 ```python
 import gym
