@@ -233,3 +233,14 @@ register(
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/ant_expert.hdf5'
     }
 )
+
+register(
+    id='ant-random-expert-v0',
+    entry_point='d4rl.gym_mujoco.gym_envs:get_ant_env',
+    max_episode_steps=1000,
+    kwargs={
+        'ref_min_score': ANT_RANDOM_SCORE,
+        'ref_max_score': ANT_EXPERT_SCORE,
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/ant_random_expert.hdf5'
+    }
+)

@@ -68,6 +68,11 @@ def qlearning_dataset(env, dataset=None, terminate_on_end=False, **kwargs):
     reward_ = []
     done_ = []
 
+    # The newer version of the dataset adds an explicit
+    # timeouts field. Keep old method for backwards compatability.
+    if 'timeouts' in dataset:
+        use_timeouts = True
+
     episode_step = 0
     for i in range(N-1):
         obs = dataset['observations'][i]
@@ -76,7 +81,10 @@ def qlearning_dataset(env, dataset=None, terminate_on_end=False, **kwargs):
         reward = dataset['rewards'][i]
         done_bool = bool(dataset['terminals'][i])
 
-        final_timestep = (episode_step == env._max_episode_steps - 1)
+        if use_timeouts:
+            final_timestep = dataset['timeouts'][i]
+        else:
+            final_timestep = (episode_step == env._max_episode_steps - 1)
         if (not terminate_on_end) and final_timestep:
             # Skip this transition and don't apply terminals on the last step of an episode
             episode_step = 0
