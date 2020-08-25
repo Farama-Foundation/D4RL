@@ -70,6 +70,7 @@ def qlearning_dataset(env, dataset=None, terminate_on_end=False, **kwargs):
 
     # The newer version of the dataset adds an explicit
     # timeouts field. Keep old method for backwards compatability.
+    use_timeouts = False
     if 'timeouts' in dataset:
         use_timeouts = True
 
