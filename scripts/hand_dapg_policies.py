@@ -39,6 +39,7 @@ def pol_playback(env_name, pi, num_trajs=100, clip=True):
     info_qvel_ = []
     info_mean_ = []
     info_logstd_ = []
+    info_env_state_ = []
 
     ravg = []
     
@@ -50,6 +51,7 @@ def pol_playback(env_name, pi, num_trajs=100, clip=True):
             obs_.append(obs)
             info_qpos_.append(e.env.data.qpos.ravel().copy())
             info_qvel_.append(e.env.data.qvel.ravel().copy())
+            info_env_state_.append(e.get_env_state())
             action, infos = pi.get_action(obs)
             action = pi.get_action(obs)[0] # eval
             
@@ -98,6 +100,7 @@ def pol_playback(env_name, pi, num_trajs=100, clip=True):
     dataset.create_dataset('infos/qvel', data=info_qvel_, compression='gzip')
     dataset.create_dataset('infos/action_mean', data=info_mean_, compression='gzip')
     dataset.create_dataset('infos/action_logstd', data=info_logstd_, compression='gzip')
+    dataset.create_dataset('infos/env_state', data=info_env_state, compression='gzip')
 
 if __name__ == '__main__':
     main()
