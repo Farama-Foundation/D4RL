@@ -26,12 +26,12 @@ class OfflineWalker2dEnv(Walker2DBulletEnv, offline_env.OfflineEnv):
 def get_ant_env(**kwargs):
     return NormalizedBoxEnv(OfflineAntEnv(**kwargs))
 
-def get_cheetah_env(**kwargs):
+def get_halfcheetah_env(**kwargs):
     return NormalizedBoxEnv(OfflineHalfCheetahEnv(**kwargs))
 
 def get_hopper_env(**kwargs):
     return NormalizedBoxEnv(OfflineHopperEnv(**kwargs))
 
-def get_walker_env(**kwargs):
+def get_walker2d_env(**kwargs):
     return NormalizedBoxEnv(OfflineWalker2dEnv(**kwargs))
 
