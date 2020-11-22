@@ -27,9 +27,10 @@ def append_data(data, s, a, tgt, done, timeout, robot):
     data['actions'].append(a)
     data['rewards'].append(0.0)
     data['terminals'].append(False)
-    data['timeouts'].append(timeout)
+    data['timeouts'].append(False)
     data['infos/goal'].append(tgt)
-
+    data['infos/goal_reached'].append(done)
+    data['infos/goal_timeout'].append(timeout)
     data['infos/qpos'].append(robot.qpos.copy())
     data['infos/qvel'].append(robot.qvel.copy())
 
@@ -55,7 +56,7 @@ def main():
     max_episode_steps = env._max_episode_steps
 
     # default: p=10, d=-1
-    controller = waypoint_controller.WaypointController(maze, p_gain=10.0, d_gain=-1.5)
+    controller = waypoint_controller.WaypointController(maze, p_gain=10.0, d_gain=-2.0)
     env = bullet_maze.Maze2DBulletEnv(maze)
     if args.render:
         env.render('human')
@@ -73,7 +74,7 @@ def main():
         velocity = s[2:4]
 
         # subtract 1.0 due to offset between tabular maze representation and bullet state
-        act, done = controller.get_action(position - 1.0, velocity, env._target)
+        act, done = controller.get_action(position , velocity, env._target)
         if args.noisy:
             act = act + np.random.randn(*act.shape)*0.5
 

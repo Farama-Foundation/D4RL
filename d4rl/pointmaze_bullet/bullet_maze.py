@@ -41,7 +41,7 @@ class MazeRobot(bullet_robot.MJCFBasedRobot):
 
     def calc_state(self):
         #import pdb; pdb.set_trace()
-        return np.concatenate([self.qpos, self.qvel])
+        return np.concatenate([self.qpos - 1.0, self.qvel])
 
     def set_state(self, qpos, qvel):
         self.particle.reset_position(np.array([qpos[0], qpos[1], 0.0]))
@@ -67,8 +67,8 @@ class MazeRobot(bullet_robot.MJCFBasedRobot):
     def apply_action(self, a):
         assert (np.isfinite(a).all())
         self.last_qpos = self.qpos
-        self.ball_x.set_motor_torque(a[0]*20)
-        self.ball_y.set_motor_torque(a[1]*20)
+        self.ball_x.set_motor_torque(a[0]*10)
+        self.ball_y.set_motor_torque(a[1]*10)
 
 
 class Maze2DBulletEnv(env_bases.MJCFBaseBulletEnv):
