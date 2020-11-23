@@ -67,7 +67,13 @@ class OfflineEnv(gym.Env):
             h5path = download_dataset_from_url(self.dataset_url)
 
         dataset_file = h5py.File(h5path, 'r')
-        data_dict = {k: dataset_file[k][:] for k in get_keys(dataset_file)}
+        data_dict = {}
+        for k in get_keys(dataset_file):
+            try:
+                # first try loading as an array
+                data_dict[k] = dataset_file[k][:]
+            except ValueError as e: # try loading as a scalar
+                data_dict[k] = dataset_file[k][()]
         dataset_file.close()
 
         # Run a few quick sanity checks

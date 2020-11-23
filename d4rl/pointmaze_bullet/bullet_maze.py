@@ -71,13 +71,15 @@ class MazeRobot(bullet_robot.MJCFBasedRobot):
         self.ball_y.set_motor_torque(a[1]*10)
 
 
-class Maze2DBulletEnv(env_bases.MJCFBaseBulletEnv):
+class Maze2DBulletEnv(env_bases.MJCFBaseBulletEnv, offline_env.OfflineEnv):
 
     def __init__(self, maze_spec, 
                  reward_type='dense',
-                 reset_target=False):
+                 reset_target=False,
+                 **kwargs):
         self.robot = MazeRobot(maze_spec)
         env_bases.MJCFBaseBulletEnv.__init__(self, self.robot)
+        offline_env.OfflineEnv.__init__(self, **kwargs)
         self.stateId = -1
 
         self.reset_target = reset_target
