@@ -124,7 +124,7 @@ REF_MIN_SCORE = {
     'flow-merge-random-v0' : 118.67993 ,
     'flow-merge-controller-v0' : 118.67993 ,
     'carla-lane-v0': -0.8503839912088142,
-    'carla-town-v0': -122.228455,
+    'carla-town-v0': -114.81579500772153, # random score
 }
 
 REF_MAX_SCORE = {
@@ -179,5 +179,5 @@ REF_MAX_SCORE = {
     'flow-merge-random-v0' : 330.03179 ,
     'flow-merge-controller-v0' : 330.03179 ,
     'carla-lane-v0': 1023.5784385429523,
-    'carla-town-v0': -64.62967840318221,
+    'carla-town-v0': 2440.1772022247314, # avg dataset score
 }
