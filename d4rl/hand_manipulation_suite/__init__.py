@@ -4,6 +4,24 @@ from d4rl.hand_manipulation_suite.door_v0 import DoorEnvV0
 from d4rl.hand_manipulation_suite.hammer_v0 import HammerEnvV0
 from d4rl.hand_manipulation_suite.pen_v0 import PenEnvV0
 from d4rl.hand_manipulation_suite.relocate_v0 import RelocateEnvV0
+from d4rl import infos
+
+# V1 envs
+MAX_STEPS = {'hammer': 200, 'relocate': 200, 'door': 200, 'pen': 100}
+ENV_MAPPING = {'hammer': 'HammerEnvV0', 'relocate': 'RelocateEnvV0', 'door': 'DoorEnvV0', 'pen': 'PenEnvV0'}
+for agent in ['hammer', 'pen', 'relocate', 'door']:
+    for dataset in ['human', 'expert', 'cloned']:
+        env_name = '%s-%s-v1' % (agent, dataset)
+        register(
+            id=env_name,
+            entry_point='d4rl.hand_manipulation_suite:' + ENV_MAPPING[agent],
+            max_episode_steps=MAX_STEPS[agent],
+            kwargs={
+                'ref_min_score': infos.REF_MIN_SCORE[env_name],
+                'ref_max_score': infos.REF_MAX_SCORE[env_name],
+                'dataset_url': infos.DATASET_URLS[env_name]
+            }
+        )
 
 DOOR_RANDOM_SCORE = -56.512833
 DOOR_EXPERT_SCORE = 2880.5693087298737

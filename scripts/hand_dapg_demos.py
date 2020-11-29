@@ -5,6 +5,7 @@ import gym
 import numpy as np
 import pickle
 import h5py
+import collections
 from mjrl.utils.gym_env import GymEnv
 
 DESC = '''
@@ -23,7 +24,7 @@ def main(env_name):
         return
     demos = pickle.load(open('./demonstrations/'+env_name+'_demos.pickle', 'rb'))
     # render demonstrations
-    demo_playback(env_name, demos)
+    demo_playback(env_name, demos, clip=True)
 
 def demo_playback(env_name, demo_paths, clip=False):
     e = gym.make(env_name)
@@ -33,8 +34,10 @@ def demo_playback(env_name, demo_paths, clip=False):
     act_ = []
     rew_ = []
     term_ = []
+    timeout_ = []
     info_qpos_ = []
     info_qvel_ = []
+    info_env_state_ = collections.defaultdict(list)
     
     for i, path in enumerate(demo_paths):
         e.set_env_state(path['init_state_dict'])
@@ -44,6 +47,7 @@ def demo_playback(env_name, demo_paths, clip=False):
             obs_.append(e.get_obs())
             info_qpos_.append(e.env.data.qpos.ravel().copy())
             info_qvel_.append(e.env.data.qvel.ravel().copy())
+            [info_env_state_[k].append(v) for k,v in e.get_env_state().items()]
             commanded_action = actions[t]
             if clip:
                 commanded_action = np.clip(commanded_action, -1.0, 1.0)
@@ -55,9 +59,15 @@ def demo_playback(env_name, demo_paths, clip=False):
             rew_.append(rew)
 
             done = False
+            timeout = False
             if t == (actions.shape[0]-1):
-                done = True
+                timeout = True
+            #if t == (e._max_episode_steps-1):
+            #    timeout = True
+            #    done = False
+
             term_.append(done)
+            timeout_.append(timeout)
 
             #e.env.mj_render() # this is much faster
             #e.render()
@@ -68,6 +78,7 @@ def demo_playback(env_name, demo_paths, clip=False):
     act_ = np.array(act_).astype(np.float32)
     rew_ = np.array(rew_).astype(np.float32)
     term_ = np.array(term_).astype(np.bool_)
+    timeout_ = np.array(timeout_).astype(np.bool_)
     info_qpos_ = np.array(info_qpos_).astype(np.float32)
     info_qvel_ = np.array(info_qvel_).astype(np.float32)
 
@@ -76,12 +87,15 @@ def demo_playback(env_name, demo_paths, clip=False):
     else:
         dataset = h5py.File('%s_demos.hdf5' % env_name, 'w')
     #dataset.create_dataset('observations', obs_.shape, dtype='f4')
-    dataset['observations'] = obs_
-    dataset['actions'] = act_
-    dataset['rewards'] = rew_
-    dataset['terminals'] = term_
-    dataset['infos/qpos'] = info_qpos_
-    dataset['infos/qvel'] = info_qvel_
+    dataset.create_dataset('observations', data=obs_, compression='gzip')
+    dataset.create_dataset('actions', data=act_, compression='gzip')
+    dataset.create_dataset('rewards', data=rew_, compression='gzip')
+    dataset.create_dataset('terminals', data=term_, compression='gzip')
+    dataset.create_dataset('timeouts', data=timeout_, compression='gzip')
+    #dataset['infos/qpos'] = info_qpos_
+    #dataset['infos/qvel'] = info_qvel_
+    for k in info_env_state_:
+        dataset.create_dataset('infos/%s' % k, data=np.array(info_env_state_[k], dtype=np.float32), compression='gzip')
 
 if __name__ == '__main__':
     main()

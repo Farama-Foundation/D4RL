@@ -31,8 +31,10 @@ def pol_playback(env_name, num_trajs=100):
     act_ = []
     rew_ = []
     term_ = []
+    timeout_ = []
     info_qpos_ = []
     info_qvel_ = []
+    info_env_state_ = []
 
     ravg = []
     
@@ -44,17 +46,25 @@ def pol_playback(env_name, num_trajs=100):
             obs_.append(obs)
             info_qpos_.append(e.env.data.qpos.ravel().copy())
             info_qvel_.append(e.env.data.qvel.ravel().copy())
+            info_env_state_.append(e.get_env_state())
             action = e.action_space.sample()
             act_.append(action)
 
-            _, rew, _, info = e.step(action)
+            _, rew, done, info = e.step(action)
             returns += rew
             rew_.append(rew)
 
-            done = False
             if t == (e._horizon-1):
-                done = True
+                timeout = True
+                done = False
+            else:
+                timeout = False
+
             term_.append(done)
+            timeout_.append(timeout)
+
+            if done or timeout:
+                e.reset()
 
             #e.env.mj_render() # this is much faster
             # e.render()
@@ -65,6 +75,7 @@ def pol_playback(env_name, num_trajs=100):
     act_ = np.array(act_).astype(np.float32)
     rew_ = np.array(rew_).astype(np.float32)
     term_ = np.array(term_).astype(np.bool_)
+    timeout_ = np.array(timeout_).astype(np.bool_)
     info_qpos_ = np.array(info_qpos_).astype(np.float32)
     info_qvel_ = np.array(info_qvel_).astype(np.float32)
 
@@ -75,11 +86,10 @@ def pol_playback(env_name, num_trajs=100):
     dataset.create_dataset('actions', data=act_, compression='gzip')
     dataset.create_dataset('rewards', data=rew_, compression='gzip')
     dataset.create_dataset('terminals', data=term_, compression='gzip')
+    dataset.create_dataset('timeouts', data=timeout_, compression='gzip')
     dataset.create_dataset('infos/qpos', data=info_qpos_, compression='gzip')
     dataset.create_dataset('infos/qvel', data=info_qvel_, compression='gzip')
-
-if __name__ == '__main__':
-    main()
+    dataset.create_dataset('infos/env_state', data=np.array(info_env_state_, dtype=np.float32), compression='gzip')
 
 if __name__ == '__main__':
     main()

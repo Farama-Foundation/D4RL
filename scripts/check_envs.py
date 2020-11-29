@@ -5,22 +5,17 @@ import gym
 import d4rl
 import numpy as np
 
-ENVS = [
-    'halfcheetah-random-v0',
-    'halfcheetah-medium-v0',
-    'halfcheetah-expert-v0',
-    'halfcheetah-mixed-v0',
-    'halfcheetah-medium-expert-v0',
-    'walker2d-random-v0',
-    'walker2d-medium-v0',
-    'walker2d-expert-v0',
-    'walker2d-mixed-v0',
-    'walker2d-medium-expert-v0',
-    'hopper-random-v0',
-    'hopper-medium-v0',
-    'hopper-expert-v0',
-    'hopper-mixed-v0',
-    'hopper-medium-expert-v0',
+ENVS = []
+
+for agent in ['halfcheetah', 'hopper', 'walker2d', 'ant']:
+    for dataset in ['random', 'medium', 'expert', 'medium-replay', 'full-replay', 'medium-expert']:
+        ENVS.append(agent+'-'+dataset+'-v1')
+
+for agent in ['door', 'pen', 'relocate', 'hammer']:
+    for dataset in ['expert', 'cloned', 'human']:
+        ENVS.append(agent+'-'+dataset+'-v1')
+
+ENVS.extend([
     'maze2d-open-v0',
     'maze2d-umaze-v1',
     'maze2d-medium-v1',
@@ -52,14 +47,15 @@ ENVS = [
     'mini-kitchen-microwave-kettle-light-slider-v0',
     'kitchen-microwave-kettle-light-slider-v0',
     'kitchen-microwave-kettle-bottomburner-light-v0',
-]
+])
 
 if __name__ == '__main__':
     for env_name in ENVS:
         print('Checking', env_name)
         try:
             env = gym.make(env_name)
-        except:
+        except Exception as e:
+            print(e)
             continue
         dset = env.get_dataset()
         print('\t Max episode steps:', env._max_episode_steps)
@@ -73,6 +69,7 @@ if __name__ == '__main__':
         assert dset['actions'].shape[0] == N, 'Action number does not match (%d vs %d)' % (dset['actions'].shape[0], N)
         assert dset['rewards'].shape[0] == N, 'Reward number does not match (%d vs %d)' % (dset['rewards'].shape[0], N)
         assert dset['terminals'].shape[0] == N, 'Terminals number does not match (%d vs %d)' % (dset['terminals'].shape[0], N)
+        orig_terminals = np.sum(dset['terminals'])
         print('\t num terminals: %d' % np.sum(dset['terminals']))
 
         env.reset()
@@ -92,3 +89,4 @@ if __name__ == '__main__':
         assert dset['rewards'].shape[0] == N, 'Reward number does not match (%d vs %d)' % (dset['rewards'].shape[0], N)
         assert dset['terminals'].shape[0] == N, 'Terminals number does not match (%d vs %d)' % (dset['terminals'].shape[0], N)
         print('\t num terminals: %d' % np.sum(dset['terminals']))
+        assert orig_terminals == np.sum(dset['terminals']), 'Qlearining terminals doesnt match original terminals'
