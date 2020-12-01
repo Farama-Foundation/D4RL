@@ -42,5 +42,8 @@ if __name__ == "__main__":
         if k == 'rewards':
             wdataset.create_dataset(k, data=_rew, compression='gzip')
         else:
-            wdataset.create_dataset(k, data=rdataset[k], compression='gzip')
+            if k.startswith('metadata'):
+                wdataset[k] = rdataset[k][()]
+            else:
+                wdataset.create_dataset(k, data=rdataset[k], compression='gzip')
 

@@ -3,7 +3,6 @@ Generate "minimum" reference scores by averaging the score for a random
 policy over 100 episodes.
 """
 import d4rl
-import d4rl.flow
 import argparse 
 import gym
 import numpy as np
@@ -17,7 +16,10 @@ def main():
 
     env = gym.make(args.env_name)
     env.seed(0)
-    env.action_space.seed(0)
+    try:
+        env.action_space.seed(0)
+    except:
+        pass
 
     ravg = []
     for n in range(args.num_episodes):
