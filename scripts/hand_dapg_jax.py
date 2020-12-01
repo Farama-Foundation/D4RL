@@ -5,6 +5,7 @@ import os
 import gym
 import numpy as np
 import pickle
+import gzip
 import collections
 from mjrl.utils.gym_env import GymEnv
 
@@ -18,42 +19,19 @@ USAGE:\n
 # MAIN =========================================================
 @click.command(help=DESC)
 @click.option('--env_name', type=str, help='environment to load', required= True)
-#@click.option('--policy', type=str, help='absolute path of the policy file', required=True)
+@click.option('--snapshot_file', type=str, help='absolute path of the policy file', required=True)
 @click.option('--num_trajs', type=int, help='Num trajectories', default=5000)
 @click.option('--mode', type=str, help='exploration or evaluation mode for policy', default='evaluation')
-def main(env_name, mode, num_trajs, clip=True):
+def main(env_name, snapshot_file, mode, num_trajs, clip=True):
     e = GymEnv(env_name)
-    policy = './policies/'+env_name+'.pickle'
-    pi = pickle.load(open(policy, 'rb'))
+    pi = pickle.load(gzip.open(snapshot_file, 'rb'))
+    import pdb; pdb.set_trace()
+    pass
     # render policy
-    pol_playback(env_name, pi, num_trajs, clip=clip)
+    #pol_playback(env_name, pi, num_trajs, clip=clip)
 
 
 def extract_params(policy):
-    params = policy.trainable_params
-
-    in_shift = policy.model.in_shift.data.numpy()
-    in_scale = policy.model.in_scale.data.numpy()
-    out_shift = policy.model.out_shift.data.numpy()
-    out_scale = policy.model.out_scale.data.numpy()
-
-    fc0w = params[0].data.numpy()
-    fc0b = params[1].data.numpy()
-
-    _fc0w = np.dot(fc0w, np.diag(1.0 / in_scale))
-    _fc0b = fc0b - np.dot(_fc0w, in_shift)
-    
-    assert _fc0w.shape == fc0w.shape
-    assert _fc0b.shape == fc0b.shape
-
-    fclw = params[4].data.numpy()
-    fclb = params[5].data.numpy()
-
-    _fclw = np.dot(np.diag(out_scale), fclw)
-    _fclb = fclb * out_scale + out_shift
-
-    assert _fclw.shape == fclw.shape
-    assert _fclb.shape == fclb.shape
 
     out_dict = {
         'fc0/weight': _fc0w,
@@ -66,6 +44,7 @@ def extract_params(policy):
         'last_fc_log_std/bias': _fclb,
     }
     return out_dict
+
 
 def pol_playback(env_name, pi, num_trajs=100, clip=True):
     e = gym.make(env_name)

@@ -96,6 +96,7 @@ DATASET_URLS = {
     'bullet-maze2d-large-v0': 'http://rail.eecs.berkeley.edu/datasets/offline_rl/bullet/bullet-maze2d-large-sparse.hdf5',
 }
 
+
 REF_MIN_SCORE = {
     'maze2d-open-v0' : 0.01 ,
     'maze2d-umaze-v1' : 23.85 ,
@@ -134,6 +135,11 @@ REF_MIN_SCORE = {
     'hopper-expert-v0' : -20.272305 ,
     'hopper-medium-replay-v0' : -20.272305 ,
     'hopper-medium-expert-v0' : -20.272305 ,
+    'ant-random-v0' : -325.6,
+    'ant-medium-v0' : -325.6,
+    'ant-expert-v0' : -325.6,
+    'ant-medium-replay-v0' : -325.6,
+    'ant-medium-expert-v0' : -325.6,
     'antmaze-umaze-v0' : 0.0 ,
     'antmaze-umaze-diverse-v0' : 0.0 ,
     'antmaze-medium-play-v0' : 0.0 ,
@@ -213,6 +219,11 @@ REF_MAX_SCORE = {
     'hopper-expert-v0' : 3234.3 ,
     'hopper-medium-replay-v0' : 3234.3 ,
     'hopper-medium-expert-v0' : 3234.3 ,
+    'ant-random-v0' : 3879.7,
+    'ant-medium-v0' : 3879.7,
+    'ant-expert-v0' : 3879.7,
+    'ant-medium-replay-v0' : 3879.7,
+    'ant-medium-expert-v0' : 3879.7,
     'antmaze-umaze-v0' : 1.0 ,
     'antmaze-umaze-diverse-v0' : 1.0 ,
     'antmaze-medium-play-v0' : 1.0 ,
@@ -253,3 +264,22 @@ REF_MAX_SCORE = {
     'bullet-maze2d-medium-v0': 238.05,
     'bullet-maze2d-large-v0': 285.92,
 }
+
+
+#Gym-MuJoCo V1 envs
+for env in ['halfcheetah', 'hopper', 'walker2d', 'ant']:
+    for dset in ['random', 'medium', 'expert', 'medium-replay', 'full-replay', 'medium-expert']:
+        dset_name = env+'_'+dset.replace('-', '_')+'-v1'
+        env_name = dset_name.replace('_', '-')
+        DATASET_URLS[env_name] = 'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco_v1/%s.hdf5' % dset_name
+        REF_MIN_SCORE[env_name] = REF_MIN_SCORE[env+'-random-v0']
+        REF_MAX_SCORE[env_name] = REF_MAX_SCORE[env+'-random-v0']
+
+#Adroit v1 envs
+for env in ['hammer', 'pen', 'relocate', 'door']:
+    for dset in ['human', 'expert', 'cloned']:
+        env_name = env+'-'+dset+'-v1'
+        DATASET_URLS[env_name] = 'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg_v1/%s.hdf5' % env_name
+        REF_MIN_SCORE[env_name] = REF_MIN_SCORE[env+'-human-v0']
+        REF_MAX_SCORE[env_name] = REF_MAX_SCORE[env+'-human-v0']
+

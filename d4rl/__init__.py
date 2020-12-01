@@ -50,7 +50,6 @@ except ImportError as e:
         print(_ERROR_MESSAGE % 'GymBullet', file=sys.stderr)
         print(e, file=sys.stderr)
 
-
 def reverse_normalized_score(env_name, normalized_score):
     ref_min_score = d4rl.infos.REF_MIN_SCORE[env_name]
     ref_max_score = d4rl.infos.REF_MAX_SCORE[env_name]
