@@ -50,7 +50,6 @@ except ImportError as e:
         print(_ERROR_MESSAGE % 'GymBullet', file=sys.stderr)
         print(e, file=sys.stderr)
 
-
 def reverse_normalized_score(env_name, normalized_score):
     ref_min_score = d4rl.infos.REF_MIN_SCORE[env_name]
     ref_max_score = d4rl.infos.REF_MAX_SCORE[env_name]
@@ -101,6 +100,10 @@ def qlearning_dataset(env, dataset=None, terminate_on_end=False, **kwargs):
     if 'timeouts' in dataset:
         use_timeouts = True
 
+    obs_shape = (N-1,)+ dataset['observations'][0].shape
+    observations_ = np.zeros(obs_shape, dtype=np.float32)
+    next_observations_ = np.zeros(obs_shape, dtype=np.float32)
+
     episode_step = 0
     for i in range(N-1):
         obs = dataset['observations'][i].astype(np.float32)
@@ -120,17 +123,21 @@ def qlearning_dataset(env, dataset=None, terminate_on_end=False, **kwargs):
         if done_bool or final_timestep:
             episode_step = 0
 
-        obs_.append(obs)
-        next_obs_.append(new_obs)
+        #obs_.append(obs)
+        #next_obs_.append(new_obs)
+        observations_[i] = obs
+        next_observations_[i] = new_obs
         action_.append(action)
         reward_.append(reward)
         done_.append(done_bool)
         episode_step += 1
 
     return {
-        'observations': np.array(obs_),
+        #'observations': np.array(obs_),
+        'observations': observations_,
         'actions': np.array(action_),
-        'next_observations': np.array(next_obs_),
+        #'next_observations': np.array(next_obs_),
+        'next_observations': next_observations_,
         'rewards': np.array(reward_),
         'terminals': np.array(done_),
     }
