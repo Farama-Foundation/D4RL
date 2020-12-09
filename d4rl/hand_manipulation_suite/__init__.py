@@ -23,6 +23,18 @@ for agent in ['hammer', 'pen', 'relocate', 'door']:
             }
         )
 
+        env_name = '%s-%s-vision-v1' % (agent, dataset)
+        register(
+            id=env_name,
+            entry_point='d4rl.hand_manipulation_suite.wrappers:get_%s_vision_env' % agent,
+            max_episode_steps=MAX_STEPS[agent],
+            kwargs={
+                'ref_min_score': infos.REF_MIN_SCORE[env_name],
+                'ref_max_score': infos.REF_MAX_SCORE[env_name],
+                'dataset_url': infos.DATASET_URLS[env_name]
+            }
+        )
+
 DOOR_RANDOM_SCORE = -56.512833
 DOOR_EXPERT_SCORE = 2880.5693087298737
 

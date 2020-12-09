@@ -5,6 +5,7 @@ from mjrl.envs import mujoco_env
 from mujoco_py import MjViewer
 from d4rl.utils.quatmath import quat2euler
 from d4rl import offline_env
+import mujoco_py
 import os
 
 ADD_BONUS_REWARDS = True
@@ -123,6 +124,12 @@ class HammerEnvV0(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
         self.viewer.cam.azimuth = 45
         self.viewer.cam.distance = 2.0
         self.sim.forward()
+
+    def offscreen_viewer_setup(self):
+        self.viewer = mujoco_py.MjRenderContextOffscreen(self.sim, -1)
+        self.viewer.cam.distance = 0.9
+        self.viewer.cam.elevation = -55.0
+        self.viewer.cam.azimuth = 90.0
 
     def evaluate_success(self, paths):
         num_success = 0

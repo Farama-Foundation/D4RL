@@ -275,6 +275,12 @@ for env in ['halfcheetah', 'hopper', 'walker2d', 'ant']:
         REF_MIN_SCORE[env_name] = REF_MIN_SCORE[env+'-random-v0']
         REF_MAX_SCORE[env_name] = REF_MAX_SCORE[env+'-random-v0']
 
+    for dset in ['random', 'medium', 'expert']:
+        image_env_name = env+'-'+dset+'-vision-v1'
+        DATASET_URLS[image_env_name] = 'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco_vision/%s.hdf5' % env_name
+        REF_MIN_SCORE[image_env_name] = REF_MIN_SCORE[env+'-random-v0']
+        REF_MAX_SCORE[image_env_name] = REF_MAX_SCORE[env+'-random-v0']
+
 #Adroit v1 envs
 for env in ['hammer', 'pen', 'relocate', 'door']:
     for dset in ['human', 'expert', 'cloned']:
@@ -283,3 +289,7 @@ for env in ['hammer', 'pen', 'relocate', 'door']:
         REF_MIN_SCORE[env_name] = REF_MIN_SCORE[env+'-human-v0']
         REF_MAX_SCORE[env_name] = REF_MAX_SCORE[env+'-human-v0']
 
+        image_env_name = env+'-'+dset+'-vision-v1'
+        DATASET_URLS[image_env_name] = 'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg_vision/%s.hdf5' % env_name
+        REF_MIN_SCORE[image_env_name] = REF_MIN_SCORE[env+'-human-v0']
+        REF_MAX_SCORE[image_env_name] = REF_MAX_SCORE[env+'-human-v0']

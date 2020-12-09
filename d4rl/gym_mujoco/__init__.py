@@ -17,6 +17,21 @@ for agent in ['hopper', 'halfcheetah', 'ant', 'walker2d']:
             }
         )
 
+# Image envs
+for agent in ['hopper', 'halfcheetah', 'ant', 'walker2d']:
+    for dataset in ['random', 'medium', 'expert']:
+        env_name = '%s-%s-vision-v1' % (agent, dataset)
+        register(
+            id=env_name,
+            entry_point='d4rl.gym_mujoco.gym_envs:get_%s_vision_env' % agent,
+            max_episode_steps=1000,
+            kwargs={
+                'ref_min_score': infos.REF_MIN_SCORE[env_name],
+                'ref_max_score': infos.REF_MAX_SCORE[env_name],
+                'dataset_url': infos.DATASET_URLS[env_name]
+            }
+        )
+
 
 HOPPER_RANDOM_SCORE = -20.272305
 HALFCHEETAH_RANDOM_SCORE = -280.178953

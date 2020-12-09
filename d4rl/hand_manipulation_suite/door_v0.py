@@ -4,6 +4,7 @@ from gym import spaces
 from mjrl.envs import mujoco_env
 from mujoco_py import MjViewer
 from d4rl import offline_env
+import mujoco_py
 import os
 
 ADD_BONUS_REWARDS = True
@@ -118,6 +119,12 @@ class DoorEnvV0(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
         self.viewer.cam.azimuth = 90
         self.sim.forward()
         self.viewer.cam.distance = 1.5
+
+    def offscreen_viewer_setup(self):
+        self.viewer = mujoco_py.MjRenderContextOffscreen(self.sim, -1)
+        self.viewer.cam.distance = 1.2
+        self.viewer.cam.elevation = -30.0
+        self.viewer.cam.azimuth = 60.0
 
     def evaluate_success(self, paths):
         num_success = 0
