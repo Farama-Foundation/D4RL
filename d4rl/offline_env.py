@@ -1,7 +1,11 @@
 import os
+import io
 import gym
 import h5py
 import urllib.request
+from PIL import Image
+
+from d4rl.utils import h5util
 
 def set_dataset_path(path):
     global DATASET_PATH
@@ -9,14 +13,6 @@ def set_dataset_path(path):
     os.makedirs(path, exist_ok=True)
 
 set_dataset_path(os.environ.get('D4RL_DATASET_DIR', os.path.expanduser('~/.d4rl/datasets')))
-
-def get_keys(h5file):
-    keys = []
-    def visitor(name, item):
-        if isinstance(item, h5py.Dataset):
-            keys.append(name)
-    h5file.visititems(visitor)
-    return keys
 
 
 def filepath_from_url(dataset_url):
@@ -34,6 +30,23 @@ def download_dataset_from_url(dataset_url):
         raise IOError("Failed to download dataset from %s" % dataset_url)
     return dataset_filepath
 
+
+def check_dataset(data_dict):
+    """Run sanity checks on dataset."""
+    for key in ['observations', 'actions', 'rewards', 'terminals']:
+        assert key in data_dict, 'Dataset is missing key %s' % key
+    N_samples = data_dict['observations'].shape[0]
+    if self.observation_space.shape is not None:
+        assert data_dict['observations'].shape[1:] == self.observation_space.shape, \
+                'Observation shape does not match env: %s vs %s' % (str(data_dict['observations'].shape[1:]), str(self.observation_space.shape))
+    assert data_dict['actions'].shape[1:] == self.action_space.shape, \
+                'Action shape does not match env: %s vs %s' % (str(data_dict['actions'].shape[1:]), str(self.action_space.shape))
+    if data_dict['rewards'].shape == (N_samples, 1):
+        data_dict['rewards'] = data_dict['rewards'][:,0]
+    assert data_dict['rewards'].shape == (N_samples,), 'Reward has wrong shape: %s' % (str(data_dict['rewards'].shape))
+    if data_dict['terminals'].shape == (N_samples, 1):
+        data_dict['terminals'] = data_dict['terminals'][:,0]
+    assert data_dict['terminals'].shape == (N_samples,), 'Terminals has wrong shape: %s' % (str(data_dict['rewards'].shape))
 
 
 class OfflineEnv(gym.Env):
@@ -61,14 +74,37 @@ class OfflineEnv(gym.Env):
         return filepath_from_url(self.dataset_url)
 
     def get_dataset(self, h5path=None):
+        """
+        Return the offline dataset for this environment.
+
+        If dataset does not exist on disk, this method will download the dataset.
+
+        Args:
+            h5path (optional): If specified, will use the dataset specified by 
+                this path. Otherwise, will use a default location.
+
+        Returns:
+            A dataset, which is a dictionary containing the keys:
+            "observations": An array of observations.
+            "actions": An array of actions.
+            "rewards": An array of rewards.
+            "terminals": An array of environment termination indicators. This
+                does not include terminations due to timeouts.
+            "timeouts": An array of environment timeout indicators (terminations due
+                to hitting the maximum trajectory length).
+        """
         if h5path is None:
             if self._dataset_url is None:
                 raise ValueError("Offline env not configured with a dataset URL.")
             h5path = download_dataset_from_url(self.dataset_url)
 
         dataset_file = h5py.File(h5path, 'r')
+
+        if h5util.contains_key(dataset_file, 'metadata/num_chunks'):
+            raise ValueError("Please use get_dataset_chunk to load this dataset")
+
         data_dict = {}
-        for k in get_keys(dataset_file):
+        for k in h5util.get_keys(dataset_file):
             try:
                 # first try loading as an array
                 data_dict[k] = dataset_file[k][:]
@@ -76,21 +112,7 @@ class OfflineEnv(gym.Env):
                 data_dict[k] = dataset_file[k][()]
         dataset_file.close()
 
-        # Run a few quick sanity checks
-        for key in ['observations', 'actions', 'rewards', 'terminals']:
-            assert key in data_dict, 'Dataset is missing key %s' % key
-        N_samples = data_dict['observations'].shape[0]
-        if self.observation_space.shape is not None:
-            assert data_dict['observations'].shape[1:] == self.observation_space.shape, \
-                    'Observation shape does not match env: %s vs %s' % (str(data_dict['observations'].shape[1:]), str(self.observation_space.shape))
-        assert data_dict['actions'].shape[1:] == self.action_space.shape, \
-                    'Action shape does not match env: %s vs %s' % (str(data_dict['actions'].shape[1:]), str(self.action_space.shape))
-        if data_dict['rewards'].shape == (N_samples, 1):
-            data_dict['rewards'] = data_dict['rewards'][:,0]
-        assert data_dict['rewards'].shape == (N_samples,), 'Reward has wrong shape: %s' % (str(data_dict['rewards'].shape))
-        if data_dict['terminals'].shape == (N_samples, 1):
-            data_dict['terminals'] = data_dict['terminals'][:,0]
-        assert data_dict['terminals'].shape == (N_samples,), 'Terminals has wrong shape: %s' % (str(data_dict['rewards'].shape))
+        check_dataset(data_dict)
         return data_dict
 
 
@@ -119,6 +141,16 @@ class OfflineEnv(gym.Env):
 
         load_keys = ['observations', 'actions', 'rewards', 'terminals']
         data_dict = {k: dataset_file['virtual/%d/%s' % (chunk_id, k)][:] for k in load_keys}
+
+        if h5util.contains_key(dataset_file, 'metadata/observation_encoding'):
+            encoding = dataset_file['metadata/observation_encoding']
+            if encoding == 'bytes_jpeg':
+                images = []
+                for t in range(load_byte_imgs.shape[0]):
+                    image = np.asarray(Image.open(io.BytesIO(data_dict['observations'][t])))
+                    images.append(image)
+                images = np.array(images) / 255.0
+                data_dict['observations'] = images
         dataset_file.close()
         return data_dict
 

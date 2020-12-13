@@ -4,7 +4,7 @@ import collections
 import numpy as np
 
 import d4rl.infos
-from d4rl.offline_env import set_dataset_path, get_keys
+from d4rl.offline_env import set_dataset_path
 
 SUPPRESS_MESSAGES = bool(os.environ.get('D4RL_SUPPRESS_IMPORT_ERROR', 0))
 

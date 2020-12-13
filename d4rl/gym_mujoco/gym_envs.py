@@ -4,6 +4,7 @@ from gym.envs.mujoco import HalfCheetahEnv, AntEnv, HopperEnv, Walker2dEnv
 
 from .. import offline_env
 from ..utils.wrappers import NormalizedBoxEnv
+from d4rl.utils import img_utils
 
 class OfflineAntEnv(AntEnv, offline_env.OfflineEnv):
     def __init__(self, **kwargs):
@@ -27,7 +28,7 @@ class OfflineWalker2dEnv(Walker2dEnv, offline_env.OfflineEnv):
 
 
 class MJCVisionWrapper(gym.ObservationWrapper):
-    def __init__(self, env, image_size=84):
+    def __init__(self, env, image_size=84, jpg=False, jpg_quality=95):
         super(MJCVisionWrapper, self).__init__(env)
         self.image_size = image_size
         self.observation_space = gym.spaces.Box(
@@ -35,10 +36,14 @@ class MJCVisionWrapper(gym.ObservationWrapper):
                 high=1.0,
                 shape=(image_size, image_size, 3),
                 dtype=np.float32)
+        self.jpg = jpg
+        self.jpg_quality = jpg_quality
 
     def observation(self, s):
         image = self.env.render('rgb_array', width=self.image_size, height=self.image_size)
         image = image / 255.0
+        if self.jpg:
+            image = img_utils.encode_jpg(image, quality=self.jpg_quality)
         return image
 
 
@@ -55,16 +60,16 @@ def get_walker_env(**kwargs):
     return NormalizedBoxEnv(OfflineWalker2dEnv(**kwargs))
 
 def get_ant_vision_env(**kwargs):
-    return MJCVisionWrapper(NormalizedBoxEnv(OfflineAntEnv(**kwargs)))
+    return MJCVisionWrapper(NormalizedBoxEnv(OfflineAntEnv(**kwargs)), jpg=True)
 
 def get_halfcheetah_vision_env(**kwargs):
-    return MJCVisionWrapper(NormalizedBoxEnv(OfflineHalfCheetahEnv(**kwargs)))
+    return MJCVisionWrapper(NormalizedBoxEnv(OfflineHalfCheetahEnv(**kwargs)), jpg=True)
 
 def get_hopper_vision_env(**kwargs):
-    return MJCVisionWrapper(NormalizedBoxEnv(OfflineHopperEnv(**kwargs)))
+    return MJCVisionWrapper(NormalizedBoxEnv(OfflineHopperEnv(**kwargs)), jpg=True)
 
 def get_walker2d_vision_env(**kwargs):
-    return MJCVisionWrapper(NormalizedBoxEnv(OfflineWalker2dEnv(**kwargs)))
+    return MJCVisionWrapper(NormalizedBoxEnv(OfflineWalker2dEnv(**kwargs)), jpg=True)
 
 if __name__ == '__main__':
     """Example usage of these envs"""
