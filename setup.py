@@ -8,6 +8,7 @@ setup(
                       'numpy', 
                       'mujoco_py', 
                       'pybullet',
+                      'Pillow',
                       'h5py', 
                       'termcolor', # adept_envs dependency
                       'click',  # adept_envs dependency

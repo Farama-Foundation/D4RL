@@ -12,15 +12,27 @@ import argparse
 import tqdm
 import os
 import numpy as np
+import io
+from PIL import Image
 
-from d4rl.offline_env import get_keys
+from d4rl.utils.h5util import get_keys
+
+def to_bytes(img, quality=95):
+    img = Image.fromarray(np.uint8(img))
+    bytesio = io.BytesIO()
+    img.save(bytesio, format='jpeg', quality=quality)
+    img_bytes = bytesio.getvalue()
+    #img_bytes = np.frombuffer(img_bytes, dtype=np.int8)
+    return img_bytes
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('env', type=str)
     parser.add_argument('dataset', type=str)
-    parser.add_argument('--image_size', type=int, default=84)
+    parser.add_argument('--image_size', type=int, default=128)
     parser.add_argument('--adroit', action='store_true')
+    parser.add_argument('--jpg', action='store_true')
+    parser.add_argument('--jpg_quality', type=int, default=95)
     parser.add_argument('--output_file', type=str, default=None)
     args = parser.parse_args()
 
@@ -54,23 +66,24 @@ if __name__ == "__main__":
                 out_dataset[k] = data
 
 
-    total_shape = (dset['observations'].shape[0], args.image_size, args.image_size, 3)
-    layout = h5py.VirtualLayout(shape=total_shape, dtype=np.float32)
+    #total_shape = (dset['observations'].shape[0], )
+    #layout = h5py.VirtualLayout(shape=total_shape, dtype=np.string_)
+    layout = None
 
     def create_virtual(index, data, offset, layout):
         virtual_k = 'virtual/%d/observations' % (index)
         out_dataset.create_dataset(virtual_k, data=data, compression='gzip')
-        vsource = h5py.VirtualSource(out_dataset[virtual_k])
-        length = vsource.shape[0]
-        layout[offset : offset + length] = vsource
-        offset += length
+        #vsource = h5py.VirtualSource(out_dataset[virtual_k])
+        #length = vsource.shape[0]
+        #layout[offset : offset + length] = vsource
+        #offset += length
         return offset
 
     print('Rendering images...')
     images = []
     offset = 0
     virt_idx = 0
-
+    
     for n in tqdm.tqdm(range(N)):
         if args.adroit:
             state_dict = {k: state_datasets[k][n] for k in info_keys}
@@ -83,7 +96,8 @@ if __name__ == "__main__":
             qvel = state_datasets['qvel'][n]
             env.set_state(qpos, qvel)
             image = env.render('rgb_array', width=args.image_size, height=args.image_size)
-        image = image / 255.0
+
+        image = to_bytes(image, quality=args.jpg_quality)
         # TODO: resize
         images.append(image)
         if len(images) >= 10000:
@@ -91,9 +105,14 @@ if __name__ == "__main__":
             offset = create_virtual(virt_idx, data, offset, layout)
             virt_idx += 1
             images = []
+
     if len(images) > 0:
         data = np.array(images)
         print('shape:', data.shape)
         create_virtual(virt_idx, data, offset, layout)
-    out_dataset.create_virtual_dataset('observations', layout, fillvalue=0.0)
+        virt_idx += 1
+    #out_dataset.create_virtual_dataset('observations', layout, fillvalue=0.0)
+    out_dataset['metadata/observation_encoding'] = 'bytes_jpeg'
+    out_dataset['metadata/num_chunks'] = virt_idx
+    out_dataset['metadata/jpg_quality'] = args.jpg_quality
 
