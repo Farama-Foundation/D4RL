@@ -65,7 +65,7 @@ Datasets are automatically downloaded to the `~/.d4rl/datasets` directory when `
 ### Normalizing Scores
 You can use the `env.get_normalized_score(returns)` function to compute a normalized score for an episode, where `returns` is the undiscounted total sum of rewards accumulated during an episode.
 
-The individual min and max reference scores are stored in `d4rl/infos.py' for reference.
+The individual min and max reference scores are stored in `d4rl/infos.py` for reference.
 
 ## Algorithm Implementations
 
