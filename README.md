@@ -62,6 +62,11 @@ dataset = d4rl.qlearning_dataset(env)
 
 Datasets are automatically downloaded to the `~/.d4rl/datasets` directory when `get_dataset()` is called. If you would like to change the location of this directory, you can set the `$D4RL_DATASET_DIR` environment variable to the directory of your choosing, or pass in the dataset filepath directly into the `get_dataset` method.
 
+### Normalizing Scores
+You can use the `env.get_normalized_score(returns)` function to compute a normalized score for an episode, where `returns` is the undiscounted total sum of rewards accumulated during an episode.
+
+The individual min and max reference scores are stored in `d4rl/infos.py' for reference.
+
 ## Algorithm Implementations
 
 We have aggregated implementations of various offline RL algorithms in a [separate repository](https://github.com/rail-berkeley/d4rl_evaluations). 
