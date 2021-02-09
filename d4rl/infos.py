@@ -266,12 +266,20 @@ REF_MAX_SCORE = {
 }
 
 
-#Gym-MuJoCo V1 envs
+#Gym-MuJoCo V1/V2 envs
 for env in ['halfcheetah', 'hopper', 'walker2d', 'ant']:
     for dset in ['random', 'medium', 'expert', 'medium-replay', 'full-replay', 'medium-expert']:
+        #v1 envs
         dset_name = env+'_'+dset.replace('-', '_')+'-v1'
         env_name = dset_name.replace('_', '-')
         DATASET_URLS[env_name] = 'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco_v1/%s.hdf5' % dset_name
+        REF_MIN_SCORE[env_name] = REF_MIN_SCORE[env+'-random-v0']
+        REF_MAX_SCORE[env_name] = REF_MAX_SCORE[env+'-random-v0']
+
+        #v2 envs
+        dset_name = env+'_'+dset.replace('-', '_')+'-v2'
+        env_name = dset_name.replace('_', '-')
+        DATASET_URLS[env_name] = 'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco_v2/%s.hdf5' % dset_name
         REF_MIN_SCORE[env_name] = REF_MIN_SCORE[env+'-random-v0']
         REF_MAX_SCORE[env_name] = REF_MAX_SCORE[env+'-random-v0']
 
