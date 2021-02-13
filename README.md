@@ -75,6 +75,13 @@ We have aggregated implementations of various offline RL algorithms in a [separa
 
 D4RL currently has limited support for off-policy evaluation methods, on a select few locomotion tasks. We provide trained reference policies and a set of performance metrics. Additional details can be found in the [wiki](https://github.com/rail-berkeley/d4rl/wiki/Off-Policy-Evaluation).
 
+## Recent Updates
+
+### 2-12-2020
+- Added new Gym-MuJoCo datasets (labeled v2) which fixed Hopper's performance and the qpos/qvel fields.
+- Added additional wiki documentation on [generating datasets](https://github.com/rail-berkeley/d4rl/wiki/Dataset-Reproducibility-Guide).
+
+
 ## Acknowledgements
 
 D4RL builds on top of several excellent domains and environments built by various researchers. We would like to thank the authors of:
