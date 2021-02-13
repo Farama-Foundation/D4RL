@@ -16,7 +16,7 @@ import argparse
 
 
 def check_identical_values(dset):
-    """ Check that not all values are identical """
+    """ Check that values are not identical """
     check_keys = ['actions', 'observations', 'infos/qpos', 'infos/qvel']
 
     for k in check_keys:
@@ -32,7 +32,7 @@ def check_identical_values(dset):
 
 
 def check_num_samples(dset):
-    """ Check that not all keys have the same # samples """
+    """ Check that all keys have the same # samples """
     check_keys = ['actions', 'observations', 'rewards', 'timeouts', 'terminals', 'infos/qpos', 'infos/qvel']
 
     N = None
@@ -52,7 +52,11 @@ def check_reset_state(dset):
     timeouts = dset['timeouts'][:]
     end_episode = (timeouts + terminals) > 0
 
+    # Use the first observation as a reference initial state
     reset_state = obs[0]
+
+    # Make sure all reset observations are close to the reference initial state
+
     # Take up to [:-1] in case last entry in dataset is terminal
     end_idxs = np.where(end_episode)[0][:-1]
 
@@ -60,13 +64,11 @@ def check_reset_state(dset):
     dists = np.linalg.norm(diffs, axis=1)
 
     min_dist = np.min(dists)
-    reset_dists = dists[end_idxs]  #don't add +1 because we took [:1] slice
+    reset_dists = dists[end_idxs]  #don't add idx +1 because we took the obs[:1] slice
     print('max reset:', np.max(reset_dists))
     print('min reset:', np.min(reset_dists))
 
     assert np.all(reset_dists < (min_dist + 1e-2) * 5)
-
-
 
 
 def print_avg_returns(dset):
@@ -93,7 +95,7 @@ CHECK_FNS = [print_avg_returns, check_reset_state, check_identical_values, check
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('dirname', type=str, required=True, help='Directory containing HDF5 datasets')
+    parser.add_argument('dirname', type=str, help='Directory containing HDF5 datasets')
     args = parser.parse_args()
     dirname = args.dirname
     for fname in os.listdir(dirname):
