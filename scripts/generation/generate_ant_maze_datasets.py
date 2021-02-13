@@ -3,8 +3,8 @@ import pickle
 import gzip
 import h5py
 import argparse
-from offline_rl.locomotion import maze_env, ant, swimmer
-from offline_rl.locomotion.wrappers import NormalizedBoxEnv
+from d4rl.locomotion import maze_env, ant, swimmer
+from d4rl.locomotion.wrappers import NormalizedBoxEnv
 import torch
 from PIL import Image
 import os
@@ -57,7 +57,7 @@ def save_video(save_dir, file_name, frames, episode_id=0):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--noisy', action='store_true', help='Noisy actions')
-    parser.add_argument('--maze', type=str, default='u-maze', help='Maze type. small or default')
+    parser.add_argument('--maze', type=str, default='umaze', help='Maze type. umaze, medium, or large')
     parser.add_argument('--num_samples', type=int, default=int(1e6), help='Num samples to collect')
     parser.add_argument('--env', type=str, default='Ant', help='Environment type')
     parser.add_argument('--policy_file', type=str, default='policy_file', help='file_name')
@@ -67,16 +67,15 @@ def main():
     parser.add_argument('--multigoal', action='store_true')
     args = parser.parse_args()
 
-    if args.maze == 'u-maze':
+    if args.maze == 'umaze':
         maze = maze_env.U_MAZE
-    elif args.maze == 'big-maze':
+    elif args.maze == 'medium':
         maze = maze_env.BIG_MAZE
-    elif args.maze == 'hardest-maze':
+    elif args.maze == 'large':
         maze = maze_env.HARDEST_MAZE
     else:
         raise NotImplementedError
     
-    import ipdb; ipdb.set_trace()
     if args.env == 'Ant':
         env = NormalizedBoxEnv(ant.AntMazeEnv(maze_map=maze, maze_size_scaling=4.0, non_zero_reset=args.multi_start))
     elif args.env == 'Swimmer':
