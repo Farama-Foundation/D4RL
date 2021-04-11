@@ -172,6 +172,9 @@ def sequence_dataset(env, dataset=None, **kwargs):
         else:
             final_timestep = (episode_step == env._max_episode_steps - 1)
 
+        for k in dataset:
+            data_[k].append(dataset[k][i])
+
         if done_bool or final_timestep:
             episode_step = 0
             episode_data = {}
@@ -180,7 +183,5 @@ def sequence_dataset(env, dataset=None, **kwargs):
             yield episode_data
             data_ = collections.defaultdict(list)
 
-        for k in dataset:
-            data_[k].append(dataset[k][i])
         episode_step += 1
 
