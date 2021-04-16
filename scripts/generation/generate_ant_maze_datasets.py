@@ -40,7 +40,7 @@ def npify(data):
 
 def load_policy(policy_file):
     data = torch.load(policy_file)
-    policy = data['exploration/policy']
+    policy = data['exploration/policy'].to('cpu')
     env = data['evaluation/env']
     print("Policy loaded")
     return policy, env
@@ -73,6 +73,12 @@ def main():
         maze = maze_env.BIG_MAZE
     elif args.maze == 'large':
         maze = maze_env.HARDEST_MAZE
+    elif args.maze == 'umaze_eval':
+        maze = maze_env.U_MAZE_EVAL
+    elif args.maze == 'medium_eval':
+        maze = maze_env.BIG_MAZE_EVAL
+    elif args.maze == 'large_eval':
+        maze = maze_env.HARDEST_MAZE_EVAL
     else:
         raise NotImplementedError
     
