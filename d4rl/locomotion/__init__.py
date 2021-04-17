@@ -115,3 +115,99 @@ register(
         'ref_max_score': 1.0,
     }
 )
+
+register(
+    id='antmaze-eval-umaze-v0',
+    entry_point='d4rl.locomotion.ant:make_ant_maze_env',
+    max_episode_steps=700,
+    kwargs={
+        'maze_map': maze_env.U_MAZE_EVAL_TEST,
+        'reward_type':'sparse',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_umaze_eval_noisy_multistart_True_multigoal_False_sparse.hdf5',
+        'non_zero_reset':False, 
+        'eval':True,
+        'maze_size_scaling': 4.0,
+        'ref_min_score': 0.0,
+        'ref_max_score': 1.0,
+    }
+)
+
+register(
+    id='antmaze-eval-umaze-diverse-v0',
+    entry_point='d4rl.locomotion.ant:make_ant_maze_env',
+    max_episode_steps=700,
+    kwargs={
+        'maze_map': maze_env.U_MAZE_EVAL_TEST,
+        'reward_type':'sparse',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_umaze_eval_noisy_multistart_True_multigoal_True_sparse.hdf5',
+        'non_zero_reset':False, 
+        'eval':True,
+        'maze_size_scaling': 4.0,
+        'ref_min_score': 0.0,
+        'ref_max_score': 1.0,
+    }
+)
+
+register(
+    id='antmaze-eval-medium-play-v0',
+    entry_point='d4rl.locomotion.ant:make_ant_maze_env',
+    max_episode_steps=1000,
+    kwargs={
+        'maze_map': maze_env.BIG_MAZE_EVAL_TEST,
+        'reward_type':'sparse',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_medium_eval_noisy_multistart_True_multigoal_True_sparse.hdf5',
+        'non_zero_reset':False, 
+        'eval':True,
+        'maze_size_scaling': 4.0,
+        'ref_min_score': 0.0,
+        'ref_max_score': 1.0,
+    }
+)
+
+register(
+    id='antmaze-eval-medium-diverse-v0',
+    entry_point='d4rl.locomotion.ant:make_ant_maze_env',
+    max_episode_steps=1000,
+    kwargs={
+        'maze_map': maze_env.BIG_MAZE_EVAL_TEST,
+        'reward_type':'sparse',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_medium_eval_noisy_multistart_True_multigoal_False_sparse.hdf5',
+        'non_zero_reset':False, 
+        'eval':True,
+        'maze_size_scaling': 4.0,
+        'ref_min_score': 0.0,
+        'ref_max_score': 1.0,
+    }
+)
+
+register(
+    id='antmaze-eval-large-diverse-v0',
+    entry_point='d4rl.locomotion.ant:make_ant_maze_env',
+    max_episode_steps=1000,
+    kwargs={
+        'maze_map': maze_env.HARDEST_MAZE_EVAL_TEST,
+        'reward_type':'sparse',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_large_eval_noisy_multistart_True_multigoal_False_sparse.hdf5',
+        'non_zero_reset':False, 
+        'eval':True,
+        'maze_size_scaling': 4.0,
+        'ref_min_score': 0.0,
+        'ref_max_score': 1.0,
+    }
+)
+
+register(
+    id='antmaze-eval-large-play-v0',
+    entry_point='d4rl.locomotion.ant:make_ant_maze_env',
+    max_episode_steps=1000,
+    kwargs={
+        'maze_map': maze_env.HARDEST_MAZE_EVAL_TEST,
+        'reward_type':'sparse',
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_large_eval_noisy_multistart_True_multigoal_True_sparse.hdf5',
+        'non_zero_reset':False, 
+        'eval':True,
+        'maze_size_scaling': 4.0,
+        'ref_min_score': 0.0,
+        'ref_max_score': 1.0,
+    }
+)
