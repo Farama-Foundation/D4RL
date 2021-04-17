@@ -14,24 +14,26 @@ def reset_data():
     return {'observations': [],
             'actions': [],
             'terminals': [],
+            'timeouts': [],
             'rewards': [],
             'infos/goal': [],
             'infos/qpos': [],
             'infos/qvel': [],
             }
 
-def append_data(data, s, a, r, tgt, done, env_data):
+def append_data(data, s, a, r, tgt, done, timeout, env_data):
     data['observations'].append(s)
     data['actions'].append(a)
     data['rewards'].append(r)
     data['terminals'].append(done)
+    data['timeouts'].append(timeout)
     data['infos/goal'].append(tgt)
     data['infos/qpos'].append(env_data.qpos.ravel().copy())
     data['infos/qvel'].append(env_data.qvel.ravel().copy())
 
 def npify(data):
     for k in data:
-        if k == 'terminals':
+        if k in ['terminals', 'timeouts']:
             dtype = np.bool_
         else:
             dtype = np.float32
@@ -129,17 +131,19 @@ def main():
             act = np.clip(act, -1.0, 1.0)
 
         ns, r, done, info = env.step(act)
+        timeout = False
         if ts >= args.max_episode_steps:
-            done = True
+            timeout = True
+            #done = True
         
-        append_data(data, s[:-2], act, r, env.target_goal, done, env.physics.data)
+        append_data(data, s[:-2], act, r, env.target_goal, done, timeout, env.physics.data)
 
         if len(data['observations']) % 10000 == 0:
             print(len(data['observations']))
 
         ts += 1
 
-        if done:
+        if done or timeout:
             done = False
             ts = 0
             s = env.reset()

@@ -1,5 +1,5 @@
 import d4rl.locomotion 
-from offline_rl.offline_env import get_keys
+from d4rl.offline_env import get_keys
 import os
 import argparse
 import numpy as np
@@ -22,7 +22,7 @@ if __name__ == '__main__':
     fpath, ext = os.path.splitext(args.filename)
     wdataset = h5py.File(fpath + '_' + args.relabel_type + ext, 'w')
 
-    all_obs = rdataset['observations'].value
+    all_obs = rdataset['observations'][:]
 
     if args.relabel_type == 'dense':
         """reward at the next state = dist(s', g)"""
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     elif args.relabel_type == 'sparse':
         _rew = (np.linalg.norm(all_obs[1:,:2] - target_goal, axis=1) <= 0.5).astype(np.float32)
     else:
-        _rew = rdataset['rewards'].value
+        _rew = rdataset['rewards'][:]
 
     # Also add terminals here
     _terminals = (np.linalg.norm(all_obs[1:,:2] - target_goal, axis=1) <= 0.5).astype(np.float32)
