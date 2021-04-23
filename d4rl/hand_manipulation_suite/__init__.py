@@ -54,6 +54,17 @@ register(
 )
 
 register(
+    id='door-human-longhorizon-v0',
+    entry_point='d4rl.hand_manipulation_suite:DoorEnvV0',
+    max_episode_steps=300,
+    kwargs={
+        'ref_min_score': DOOR_RANDOM_SCORE,
+        'ref_max_score': DOOR_EXPERT_SCORE,
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/door-v0_demos_clipped.hdf5'
+    }
+)
+
+register(
     id='door-cloned-v0',
     entry_point='d4rl.hand_manipulation_suite:DoorEnvV0',
     max_episode_steps=200,
@@ -86,6 +97,17 @@ register(
     id='hammer-human-v0',
     entry_point='d4rl.hand_manipulation_suite:HammerEnvV0',
     max_episode_steps=200,
+    kwargs={
+        'ref_min_score': HAMMER_RANDOM_SCORE,
+        'ref_max_score': HAMMER_EXPERT_SCORE,
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/hammer-v0_demos_clipped.hdf5'
+    }
+)
+
+register(
+    id='hammer-human-longhorizon-v0',
+    entry_point='d4rl.hand_manipulation_suite:HammerEnvV0',
+    max_episode_steps=600,
     kwargs={
         'ref_min_score': HAMMER_RANDOM_SCORE,
         'ref_max_score': HAMMER_EXPERT_SCORE,
@@ -135,6 +157,17 @@ register(
 )
 
 register(
+    id='pen-human-longhorizon-v0',
+    entry_point='d4rl.hand_manipulation_suite:PenEnvV0',
+    max_episode_steps=200,
+    kwargs={
+        'ref_min_score': PEN_RANDOM_SCORE,
+        'ref_max_score': PEN_EXPERT_SCORE,
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/pen-v0_demos_clipped.hdf5'
+    }
+)
+
+register(
     id='pen-cloned-v0',
     entry_point='d4rl.hand_manipulation_suite:PenEnvV0',
     max_episode_steps=100,
@@ -168,6 +201,17 @@ register(
     id='relocate-human-v0',
     entry_point='d4rl.hand_manipulation_suite:RelocateEnvV0',
     max_episode_steps=200,
+    kwargs={
+        'ref_min_score': RELOCATE_RANDOM_SCORE,
+        'ref_max_score': RELOCATE_EXPERT_SCORE,
+        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/relocate-v0_demos_clipped.hdf5'
+    }
+)
+
+register(
+    id='relocate-human-longhorizon-v0',
+    entry_point='d4rl.hand_manipulation_suite:RelocateEnvV0',
+    max_episode_steps=500,
     kwargs={
         'ref_min_score': RELOCATE_RANDOM_SCORE,
         'ref_max_score': RELOCATE_EXPERT_SCORE,
