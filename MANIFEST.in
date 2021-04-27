@@ -1,1 +1,1 @@
-recursive-include *.xml
+recursive-include * *.xml
