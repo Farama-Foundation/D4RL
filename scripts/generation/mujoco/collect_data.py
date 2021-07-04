@@ -72,7 +72,7 @@ def rollout(policy, env_name, max_path, num_data, random=False):
             a = ptu.get_numpy(a).squeeze()
 
         #mujoco only
-        qpos, qvel = env.sim.data.qpos, env.sim.data.qvel
+        qpos, qvel = env.sim.data.qpos.ravel().copy(), env.sim.data.qvel.ravel().copy()
 
         try:
             ns, rew, done, infos = env.step(a)
@@ -104,8 +104,8 @@ def rollout(policy, env_name, max_path, num_data, random=False):
         traj_data['terminals'].append(terminal)
         traj_data['timeouts'].append(timeout)
         traj_data['logprobs'].append(logprob)
-        traj_data['qpos'].append(qpos.ravel().copy())
-        traj_data['qvel'].append(qvel.ravel().copy())
+        traj_data['qpos'].append(qpos)
+        traj_data['qvel'].append(qvel)
 
         s = ns
         if terminal or timeout:
