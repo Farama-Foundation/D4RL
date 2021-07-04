@@ -13,6 +13,7 @@ import scipy.spatial
 import h5py
 import os
 import argparse
+import tqdm
 
 
 def check_identical_values(dset):
@@ -30,6 +31,27 @@ def check_identical_values(dset):
         not_same = dists > 0
         assert np.all(not_same)
 
+
+def check_qpos_qvel(dset):
+    """ Check that qpos/qvel produces correct state"""
+    import gym
+    import d4rl
+
+    N = dset['rewards'].shape[0]
+    qpos = dset['infos/qpos']
+    qvel = dset['infos/qvel']
+    obs = dset['observations']
+
+    reverse_env_map = {v.split('/')[-1]: k for (k, v) in d4rl.infos.DATASET_URLS.items()}
+    env_name = reverse_env_map[dset.filename.split('/')[-1]]
+    env = gym.make(env_name)
+    env.reset()
+    print('checking qpos/qvel')
+    for t in tqdm.tqdm(range(N)):
+        env.set_state(qpos[t], qvel[t])
+        env_obs = env.env.wrapped_env._get_obs()
+        error = ((obs[t] - env_obs)**2).sum()
+        assert error < 1e-8
 
 def check_num_samples(dset):
     """ Check that all keys have the same # samples """
@@ -90,7 +112,7 @@ def print_avg_returns(dset):
     print('# terminals:', np.sum(terminals))
 
 
-CHECK_FNS = [print_avg_returns, check_reset_state, check_identical_values, check_num_samples]
+CHECK_FNS = [print_avg_returns, check_qpos_qvel, check_reset_state, check_identical_values, check_num_samples]
 
 
 if __name__ == "__main__":
