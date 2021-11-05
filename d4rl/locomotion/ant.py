@@ -182,6 +182,10 @@ class AntMazeEnv(maze_env.MazeEnv, GoalReachingAntEnv, offline_env.OfflineEnv):
     ## We set the target foal here for evaluation
     self.set_target()
   
+  def reset(self):
+    self.set_target()
+    return super().reset()
+    
   def set_target(self, target_location=None):
     return self.set_target_goal(target_location)
 
