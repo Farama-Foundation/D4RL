@@ -167,7 +167,7 @@ class AntMazeEnv(maze_env.MazeEnv, GoalReachingAntEnv, offline_env.OfflineEnv):
   LOCOMOTION_ENV = GoalReachingAntEnv
 
   def __init__(self, goal_sampler=None, expose_all_qpos=True,
-               reward_type='dense',
+               reward_type='dense', v2_resets=False,
                *args, **kwargs):
     if goal_sampler is None:
       goal_sampler = lambda np_rand: maze_env.MazeEnv.goal_sampler(self, np_rand)
@@ -181,7 +181,25 @@ class AntMazeEnv(maze_env.MazeEnv, GoalReachingAntEnv, offline_env.OfflineEnv):
 
     ## We set the target foal here for evaluation
     self.set_target()
-  
+    self.v2_resets = v2_resets
+          
+  def reset(self):
+    if self.v2_resets:
+      """
+      The target goal for evaluation in antmazes is randomized.
+      antmazes-v0 and -v1 resulted in really high-variance evaluations
+      because the target goal was set once at the seed level. This led to
+      each run running evaluations with one particular goal. To accurately
+      cover each goal, this requires about 50-100 seeds, which may be impossible.
+      To reduce variance in result reporting, we are creating the v2 environments
+      which use the same offline dataset as v0 environments, with the distinction 
+      that the randomization of goals during evaluation is performed at the level of
+      each rollout. Thus running a few seeds, but performing evaluation over 100-200
+      episodes will give a valid estimate of an algorithms performance.
+      """      
+      self.set_target()
+    return super().reset()
+    
   def set_target(self, target_location=None):
     return self.set_target_goal(target_location)
 
