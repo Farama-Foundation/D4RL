@@ -1,8 +1,9 @@
 import os
 import urllib.request
+import warnings
 
 import gym
-from gym import logger
+from gym.utils import colorize
 import h5py
 from tqdm import tqdm
 
@@ -63,7 +64,8 @@ class OfflineEnv(gym.Env):
         if deprecated:
             if deprecation_message is None:
                 deprecation_message = "This environment is deprecated. Please use the most recent version of this environment."
-            logger.warn(deprecation_message)
+            # stacklevel=2 will bump the warning to the superclass.
+            warnings.warn(colorize(deprecation_message, 'yellow'), stacklevel=2)
  
 
     def get_normalized_score(self, score):

@@ -101,18 +101,6 @@ register(
         'deprecated': True,
         'ref_min_score': DOOR_RANDOM_SCORE,
         'ref_max_score': DOOR_EXPERT_SCORE,
-        'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/door-demos-v0-bc-combined.hdf5'
-    }
-)
-
-register(
-    id='door-expert-v0',
-    entry_point='d4rl.hand_manipulation_suite:DoorEnvV0',
-    max_episode_steps=200,
-    kwargs={
-        'deprecated': True,
-        'ref_min_score': DOOR_RANDOM_SCORE,
-        'ref_max_score': DOOR_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/hand_dapg/door-v0_expert_clipped.hdf5'
     }
 )
