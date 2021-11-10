@@ -1,7 +1,9 @@
 import os
 import urllib.request
+import warnings
 
 import gym
+from gym.utils import colorize
 import h5py
 from tqdm import tqdm
 
@@ -50,13 +52,21 @@ class OfflineEnv(gym.Env):
         dataset_url: URL pointing to the dataset.
         ref_max_score: Maximum score (for score normalization)
         ref_min_score: Minimum score (for score normalization)
+        deprecated: If True, will display a warning that the environment is deprecated.
     """
 
-    def __init__(self, dataset_url=None, ref_max_score=None, ref_min_score=None, **kwargs):
+    def __init__(self, dataset_url=None, ref_max_score=None, ref_min_score=None, 
+                       deprecated=False, deprecation_message=None, **kwargs):
         super(OfflineEnv, self).__init__(**kwargs)
         self.dataset_url = self._dataset_url = dataset_url
         self.ref_max_score = ref_max_score
         self.ref_min_score = ref_min_score
+        if deprecated:
+            if deprecation_message is None:
+                deprecation_message = "This environment is deprecated. Please use the most recent version of this environment."
+            # stacklevel=2 will bump the warning to the superclass.
+            warnings.warn(colorize(deprecation_message, 'yellow'), stacklevel=2)
+ 
 
     def get_normalized_score(self, score):
         if (self.ref_max_score is None) or (self.ref_min_score is None):

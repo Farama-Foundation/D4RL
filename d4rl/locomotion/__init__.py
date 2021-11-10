@@ -25,6 +25,7 @@ register(
     entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=700,
     kwargs={
+        'deprecated': True,
         'maze_map': maze_env.U_MAZE_TEST,
         'reward_type':'sparse',
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_u-maze_noisy_multistart_False_multigoal_False_sparse.hdf5',
@@ -41,6 +42,7 @@ register(
     entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=700,
     kwargs={
+        'deprecated': True,
         'maze_map': maze_env.U_MAZE_TEST,
         'reward_type':'sparse',
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_u-maze_noisy_multistart_True_multigoal_True_sparse.hdf5',
@@ -57,6 +59,7 @@ register(
     entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'maze_map': maze_env.BIG_MAZE_TEST,
         'reward_type':'sparse',
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_big-maze_noisy_multistart_True_multigoal_False_sparse.hdf5',
@@ -73,6 +76,7 @@ register(
     entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'maze_map': maze_env.BIG_MAZE_TEST,
         'reward_type':'sparse',
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_big-maze_noisy_multistart_True_multigoal_True_sparse.hdf5',
@@ -89,6 +93,7 @@ register(
     entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'maze_map': maze_env.HARDEST_MAZE_TEST,
         'reward_type':'sparse',
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_hardest-maze_noisy_multistart_True_multigoal_True_sparse.hdf5',
@@ -105,6 +110,7 @@ register(
     entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'maze_map': maze_env.HARDEST_MAZE_TEST,
         'reward_type':'sparse',
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_new/Ant_maze_hardest-maze_noisy_multistart_True_multigoal_False_sparse.hdf5',
@@ -121,6 +127,7 @@ register(
     entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=700,
     kwargs={
+        'deprecated': True,
         'maze_map': maze_env.U_MAZE_TEST,
         'reward_type':'sparse',
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_v1/Ant_maze_umaze_noisy_multistart_False_multigoal_False_sparse.hdf5',
@@ -137,6 +144,7 @@ register(
     entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=700,
     kwargs={
+        'deprecated': True,
         'maze_map': maze_env.U_MAZE_TEST,
         'reward_type':'sparse',
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_v1/Ant_maze_umaze_noisy_multistart_True_multigoal_True_sparse.hdf5',
@@ -153,6 +161,7 @@ register(
     entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'maze_map': maze_env.BIG_MAZE_TEST,
         'reward_type':'sparse',
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_v1/Ant_maze_medium_noisy_multistart_True_multigoal_False_sparse.hdf5',
@@ -169,6 +178,7 @@ register(
     entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'maze_map': maze_env.BIG_MAZE_TEST,
         'reward_type':'sparse',
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_v1/Ant_maze_medium_noisy_multistart_True_multigoal_True_sparse.hdf5',
@@ -185,6 +195,7 @@ register(
     entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'maze_map': maze_env.HARDEST_MAZE_TEST,
         'reward_type':'sparse',
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_v1/Ant_maze_large_noisy_multistart_True_multigoal_True_sparse.hdf5',
@@ -201,6 +212,7 @@ register(
     entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'maze_map': maze_env.HARDEST_MAZE_TEST,
         'reward_type':'sparse',
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_maze_v1/Ant_maze_large_noisy_multistart_True_multigoal_False_sparse.hdf5',
