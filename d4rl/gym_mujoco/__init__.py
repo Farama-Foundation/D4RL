@@ -12,6 +12,7 @@ for agent in ['hopper', 'halfcheetah', 'ant', 'walker2d']:
                 entry_point='d4rl.gym_mujoco.gym_envs:get_%s_env' % agent.replace('halfcheetah', 'cheetah').replace('walker2d', 'walker'),
                 max_episode_steps=1000,
                 kwargs={
+                    'deprecated': version != 'v2',
                     'ref_min_score': infos.REF_MIN_SCORE[env_name],
                     'ref_max_score': infos.REF_MAX_SCORE[env_name],
                     'dataset_url': infos.DATASET_URLS[env_name]
@@ -35,6 +36,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_hopper_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': HOPPER_RANDOM_SCORE,
         'ref_max_score': HOPPER_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/hopper_medium.hdf5'
@@ -46,6 +48,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_cheetah_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': HALFCHEETAH_RANDOM_SCORE,
         'ref_max_score': HALFCHEETAH_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/halfcheetah_medium.hdf5'
@@ -57,6 +60,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_walker_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': WALKER_RANDOM_SCORE,
         'ref_max_score': WALKER_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/walker2d_medium.hdf5'
@@ -68,6 +72,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_hopper_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': HOPPER_RANDOM_SCORE,
         'ref_max_score': HOPPER_EXPERT_SCORE,
         'dataset_url': 'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/hopper_expert.hdf5'
@@ -79,6 +84,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_cheetah_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': HALFCHEETAH_RANDOM_SCORE,
         'ref_max_score': HALFCHEETAH_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/halfcheetah_expert.hdf5'
@@ -90,6 +96,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_walker_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': WALKER_RANDOM_SCORE,
         'ref_max_score': WALKER_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/walker2d_expert.hdf5'
@@ -101,6 +108,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_hopper_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': HOPPER_RANDOM_SCORE,
         'ref_max_score': HOPPER_EXPERT_SCORE,
         'dataset_url': 'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/hopper_random.hdf5'
@@ -112,6 +120,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_cheetah_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': HALFCHEETAH_RANDOM_SCORE,
         'ref_max_score': HALFCHEETAH_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/halfcheetah_random.hdf5'
@@ -123,6 +132,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_walker_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': WALKER_RANDOM_SCORE,
         'ref_max_score': WALKER_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/walker2d_random.hdf5'
@@ -135,6 +145,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_hopper_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': HOPPER_RANDOM_SCORE,
         'ref_max_score': HOPPER_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/hopper_mixed.hdf5'
@@ -146,6 +157,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_walker_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': WALKER_RANDOM_SCORE,
         'ref_max_score': WALKER_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/walker_mixed.hdf5'
@@ -157,6 +169,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_cheetah_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': HALFCHEETAH_RANDOM_SCORE,
         'ref_max_score': HALFCHEETAH_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/halfcheetah_mixed.hdf5'
@@ -169,6 +182,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_walker_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': WALKER_RANDOM_SCORE,
         'ref_max_score': WALKER_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/walker2d_medium_expert.hdf5'
@@ -180,6 +194,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_cheetah_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': HALFCHEETAH_RANDOM_SCORE,
         'ref_max_score': HALFCHEETAH_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/halfcheetah_medium_expert.hdf5'
@@ -191,6 +206,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_hopper_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': HOPPER_RANDOM_SCORE,
         'ref_max_score': HOPPER_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/hopper_medium_expert.hdf5'
@@ -202,6 +218,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_ant_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': ANT_RANDOM_SCORE,
         'ref_max_score': ANT_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/ant_medium_expert.hdf5'
@@ -213,6 +230,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_ant_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': ANT_RANDOM_SCORE,
         'ref_max_score': ANT_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/ant_mixed.hdf5'
@@ -224,6 +242,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_ant_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': ANT_RANDOM_SCORE,
         'ref_max_score': ANT_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/ant_medium.hdf5'
@@ -235,6 +254,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_ant_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': ANT_RANDOM_SCORE,
         'ref_max_score': ANT_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/ant_random.hdf5'
@@ -246,6 +266,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_ant_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': ANT_RANDOM_SCORE,
         'ref_max_score': ANT_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/ant_expert.hdf5'
@@ -257,6 +278,7 @@ register(
     entry_point='d4rl.gym_mujoco.gym_envs:get_ant_env',
     max_episode_steps=1000,
     kwargs={
+        'deprecated': True,
         'ref_min_score': ANT_RANDOM_SCORE,
         'ref_max_score': ANT_EXPERT_SCORE,
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/gym_mujoco/ant_random_expert.hdf5'
