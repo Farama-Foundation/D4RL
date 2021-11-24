@@ -981,17 +981,14 @@ class CarlaEnv(object):
 class CarlaObsDictEnv(OfflineEnv):
     def __init__(self, carla_args=None, carla_port=2000, reward_type='lane_follow', render_images=False, **kwargs):
         self._wrapped_env = CarlaEnv(carla_port=carla_port, args=carla_args, reward_type=reward_type, record_vision=render_images)
-        print('[CarlaObsDictEnv] render_images:', render_images)
         self._wrapped_env = CarlaEnv(carla_port=carla_port, args=carla_args, record_vision=render_images)
         self.action_space = self._wrapped_env.action_space
         self.observation_space = self._wrapped_env.observation_space
 
-        self.observation_size = int(np.prod(self._wrapped_env.observation_space.shape))
-
+        obs_shape = self._wrapped_env.observation_space.shape
         self.observation_space = spaces.Dict({
-            'image':spaces.Box(low=np.array([0.0] * self.observation_size), high=np.array([256.0,] * self.observation_size))
+            'image':spaces.Box(low=np.zeros(obs_shape, dtype=np.float32), high=np.ones(obs_shape, dtype=np.float32))
         })
-        print (self.observation_space)
         super(CarlaObsDictEnv, self).__init__(**kwargs)
 
     @property
@@ -1003,14 +1000,14 @@ class CarlaObsDictEnv(OfflineEnv):
         obs = (self._wrapped_env.reset(**kwargs))
         obs_dict = dict()
         # Also normalize obs
-        obs_dict['image'] = (obs.astype(np.float32) / 255.0).flatten()
+        obs_dict['image'] = (obs.astype(np.float32) / 255.0)
         return obs_dict
 
     def step(self, action):
         #print ('Action: ', action)
         next_obs, reward, done, info = self._wrapped_env.step(action)
         next_obs_dict = dict()
-        next_obs_dict['image'] = (next_obs.astype(np.float32) / 255.0).flatten()
+        next_obs_dict['image'] = (next_obs.astype(np.float32) / 255.0)
         # print ('Reward: ', reward)
         # print ('Done dict: ', info)
         return next_obs_dict, reward, done, info
@@ -1053,11 +1050,10 @@ class CarlaObsEnv(OfflineEnv):
         self._wrapped_env = CarlaEnv(carla_port=carla_port, args=carla_args, reward_type=reward_type, record_vision=render_images)
         self.action_space = self._wrapped_env.action_space
         self.observation_space = self._wrapped_env.observation_space
-        self.observation_size = int(np.prod(self._wrapped_env.observation_space.shape))
-        self.observation_space = spaces.Box(low=np.array([0.0] * self.observation_size), high=np.array([256.0,] * self.observation_size))
-        #self.observation_space = spaces.Dict({
-        #    'image':spaces.Box(low=np.array([0.0] * self.observation_size), high=np.array([256.0,] * self.observation_size))
-        #})
+        obs_shape = self._wrapped_env.observation_space.shape
+        self.observation_space = spaces.Dict({
+            'image':spaces.Box(low=np.zeros(obs_shape, dtype=np.float32), high=np.ones(obs_shape, dtype=np.float32))
+        })
         super(CarlaObsEnv, self).__init__(**kwargs)
 
     @property
@@ -1069,17 +1065,12 @@ class CarlaObsEnv(OfflineEnv):
         obs = (self._wrapped_env.reset(**kwargs))
         obs_dict = dict()
         # Also normalize obs
-        obs_dict = (obs.astype(np.float32) / 255.0).flatten()
+        obs_dict = (obs.astype(np.float32) / 255.0)
         return obs_dict
 
     def step(self, action):
-        #print ('Action: ', action)
         next_obs, reward, done, info = self._wrapped_env.step(action)
-        #next_obs_dict = dict()
-        #next_obs_dict['image'] = (next_obs.astype(np.float32) / 255.0).flatten()
-        next_obs_dict = (next_obs.astype(np.float32) / 255.0).flatten()
-        # print ('Reward: ', reward)
-        # print ('Done dict: ', info)
+        next_obs_dict = (next_obs.astype(np.float32) / 255.0)
         return next_obs_dict, reward, done, info
 
     def render(self, *args, **kwargs):
