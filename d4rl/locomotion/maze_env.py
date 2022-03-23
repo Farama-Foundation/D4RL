@@ -198,8 +198,9 @@ class MazeEnv(gym.Env):
     torso = tree.find(".//body[@name='torso']")
     geoms = torso.findall(".//geom")
 
-    _, file_path = tempfile.mkstemp(text=True, suffix='.xml')
+    fd, file_path = tempfile.mkstemp(text=True, suffix='.xml')
     tree.write(file_path)
+    os.close(fd)
 
     self.LOCOMOTION_ENV.__init__(self, *args, file_path=file_path, non_zero_reset=non_zero_reset, reward_type=reward_type, **kwargs)
 
