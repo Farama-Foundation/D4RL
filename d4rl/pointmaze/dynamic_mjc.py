@@ -51,9 +51,10 @@ class MJCModel(object):
         with model.asfile() as f:
             print f.read()  # prints a dump of the model
         """
-        with tempfile.NamedTemporaryFile(mode='w+', suffix='.xml', delete=True) as f:
+        with tempfile.NamedTemporaryFile(mode='w+', suffix='.xml', delete=False) as f:
             self.root.write(f)
             f.seek(0)
+            f.close()
             yield f
 
     def open(self):
