@@ -1,0 +1,44 @@
+{
+
+# general inputs
+
+'env_name'      :   'mjrl_point_mass-v0',
+'seed'          :   123,
+'debug_mode'    :   False,
+'num_iter'      :   5,
+'paths_per_iter':   5,
+'eval_rollouts' :   10,
+'num_models'    :   3,
+'exp_notes'     :   'Toy experiment for initial trial.',
+'save_freq'     :   5,
+'device'        :   'cpu',
+
+# dynamics learning
+
+'hidden_size'   :   (64, 64),
+'activation'    :   'relu',
+'fit_lr'        :   1e-3,
+'fit_wd'        :   1e-5,
+'max_paths'     :   1000,
+'fit_mb_size'   :   16,
+'fit_epochs'    :   25,
+'refresh_fit'   :   True,
+
+# initial data
+
+'init_log_std'  :   -0.5,
+'n_init_paths'  :   25,
+'use_demos'     :   False,
+'demo_file'     :   None,
+
+# model predictive control
+
+'noisy_mpc'     :   True,     # when collecting data for exploration
+'noise_level'   :   0.1,
+'filter_coefs'  :   {'f1': 0.5, 'f2': 1.0, 'f3': 0.0, 'f4': 0.0},
+'plan_paths'    :   200,
+'plan_horizon'  :   10,
+'kappa'         :   2.0,
+'omega'         :   0.0,
+
+}

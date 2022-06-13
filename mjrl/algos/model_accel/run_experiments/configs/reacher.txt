@@ -1,0 +1,43 @@
+{
+
+# general inputs
+
+'env_name'      :   'mjrl_reacher_7dof-v0',
+'seed'          :   123,
+'debug_mode'    :   False,
+'num_iter'      :   25,
+'iter_samples'  :   500,
+'eval_rollouts' :   10,
+'num_models'    :   4,
+'save_freq'     :   1,
+'device'        :   'cpu',
+
+# dynamics learning
+
+'hidden_size'   :   (256, 256),
+'activation'    :   'relu',
+'fit_lr'        :   1e-3,
+'fit_wd'        :   0.0,
+'buffer_size'   :   20000,
+'fit_mb_size'   :   64,
+'fit_epochs'    :   20,
+'refresh_fit'   :   False,
+
+# initial data
+
+'init_log_std'  :   -0.5,
+'min_log_std'   :   -2.5,
+'init_samples'  :   2500,
+'init_policy'   :   None,
+
+
+# NPG params
+
+'policy_size'   :   (64, 64),
+'inner_steps'   :   5,
+'step_size'     :   0.05,
+'update_paths'  :   250,
+'start_state'	:   'init',
+'horizon'       :   50,
+
+}
