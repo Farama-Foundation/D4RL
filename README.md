@@ -67,6 +67,18 @@ You can use the `env.get_normalized_score(returns)` function to compute a normal
 
 The individual min and max reference scores are stored in `d4rl/infos.py` for reference.
 
+## Collect data from batches/simulations
+
+```python
+from d4rl.data_collector import Collector
+
+collector = Collector(env, policy):
+# save batches
+collector.save_batches(batches, parser=BatchToPipelineDT(), file_path=...)
+# or save simulations
+collector.run_and_save(keys_to_track=['observations', 'rewards'], num_episode=10, file_path=...)
+```
+
 ## Algorithm Implementations
 
 We have aggregated implementations of various offline RL algorithms in a [separate repository](https://github.com/rail-berkeley/d4rl_evaluations). 
