@@ -6,7 +6,7 @@ class FeatureEncoder:
         self.active = -1
         self.player_pos_x, self.player_pos_y = 0, 0
         # left agent will delete goal keeper
-        self.n_left_agent = n_left_agent - 1
+        self.n_left_agent = n_left_agent
         self.n_right_agent = n_right_agent
         self.n_action = n_action
 
