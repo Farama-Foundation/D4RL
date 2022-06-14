@@ -1,7 +1,4 @@
 from gym.envs.registration import register
-from importlib_metadata import entry_points
-from d4rl.gym_bullet import gym_envs
-from d4rl import infos
 
 
 scenario_configs = {

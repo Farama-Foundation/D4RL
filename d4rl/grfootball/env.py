@@ -149,7 +149,7 @@ class GRFootball(gym.Env):
 
         # if enable builtin goal keeper, we need to pop its observation
         if self.use_builtin_gk:
-            raise NotImplementedError
+            raw_obs_list = raw_obs_list[:self.n_left - 1] + raw_obs_list[self.n_left:-1]
         obs_list, ava_action_list = list(
             zip(*[encode_obs(r_obs) for r_obs in raw_obs_list])
         )
@@ -192,7 +192,7 @@ class GRFootball(gym.Env):
         elif isinstance(actions, Sequence):
             actions = list(map(int, actions))
 
-        if self.use_builtin_gk and self.num_left > 0:
+        if self.use_builtin_gk and self.n_left > 0:
             actions.insert(0, 19)
         if self.use_builtin_gk and self.n_left > 0:
             actions.insert(self.n_left, 19)
@@ -245,7 +245,10 @@ class GRFootball(gym.Env):
         """
 
         # concat all observations by group
-        assert len(observations) == self.n_agents, (len(observations), self.n_agents)
+        if not self.use_builtin_gk:
+            assert len(observations) == self.n_agents, (len(observations), self.n_agents)
+        else:
+            assert len(observations) == self.n_agents - 2, (len(observations), self.n_agents)
 
         state = np.concatenate(observations).reshape(1, -1)
         states = np.tile(state, (self.n_agents, 1))
