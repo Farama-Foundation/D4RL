@@ -9,8 +9,9 @@ class OfflineGRFEnv(GRFootball, offline_env.OfflineEnv):
     def __init__(self, **kwargs):
         scenario_config = kwargs["scenario_config"]
         args = Namespace(**scenario_config)
-        GRFootball.__init__(args)
+        GRFootball.__init__(self, args)
         offline_env.OfflineEnv.__init__(
+            self,
             dataset_url=kwargs.get("dataset_url", None),
             ref_max_score=kwargs.get("ref_max_score", None),
             ref_min_score=kwargs.get("ref_min_score", None),
