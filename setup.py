@@ -7,7 +7,7 @@ setup(
     name='d4rl',
     version='1.1',
     install_requires=[
-        'gym==0.18.0',
+        'gym==0.20.0',
         'psutil',
         'numpy',
         'mujoco_py',
