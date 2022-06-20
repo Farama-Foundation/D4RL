@@ -50,7 +50,6 @@ class GRFootball(gym.Env):
         debug: bool = False,
         reward_type: str = "basic",
         encoder_type: str = "basic",
-        use_builtin_gk: bool = False,
         representation: str = "raw",
     ) -> None:
         """Create a Google Research Football environment.
@@ -86,6 +85,7 @@ class GRFootball(gym.Env):
         scenario_id = args.map_name
         n_right_players = args.n_right_players
         n_left_players = args.n_left_players
+        use_builtin_gk = args.use_builtin_gk
 
         self.n_players = n_right_players + n_left_players
         self.n_agents = self.n_players
@@ -125,9 +125,10 @@ class GRFootball(gym.Env):
         self.use_builtin_gk = use_builtin_gk
 
         self.action_space = spaces.Discrete(self.num_actions)
-        self.observtion_space = spaces.Box(
+        self.observation_space = spaces.Box(
             low=-10.0, high=10.0, shape=self.encoder.shape, dtype=np.float32
         )
+        self.share_observation_space = spaces.Box(low=-10.0, high=10.0, shape=self.get_state([self.observation_space.sample()] * self.n_agents)[0].shape, dtype=np.float32)
 
         # last frame
         self.last_frame: Frame = None
@@ -247,16 +248,8 @@ class GRFootball(gym.Env):
         """
 
         # concat all observations by group
-        repeats = self.n_players
-        if not self.use_builtin_gk:
-            assert len(observations) == repeats, (len(observations), repeats)
-        else:
-            if self.n_left_control > 0:
-                repeats -= 1
-            if self.n_right_control > 0:
-                repeats -= 1
-
-            assert len(observations) == repeats, (len(observations), repeats)
+        repeats = self.n_agents
+        assert len(observations) == repeats, (len(observations), repeats)
 
         state = np.concatenate(observations).reshape(1, -1)
 

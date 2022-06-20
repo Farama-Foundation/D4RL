@@ -33,7 +33,7 @@ def compute_action(
 if __name__ == "__main__":
     parser = ArgumentParser("Data collection procedure for MAPPO on GRF.")
 
-    parser.add_argument("--scenario_id", default="Half-v0", type=str, help="scenario name.")
+    parser.add_argument("--scenario_id", default="5_vs_5", type=str, help="scenario name.")
     parser.add_argument(
         "--n_episode", default=2, type=int, help="the number of episodes to run."
     )

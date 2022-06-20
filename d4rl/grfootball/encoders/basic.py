@@ -16,7 +16,7 @@ class FeatureEncoder:
             "ball": 18,
             "left_team": self.n_left_agent * 7,
             "left_closest": 7,
-            "right_team": self.n_right_agent * 7,
+            "right_team": (self.n_right_agent + 1) * 7,
             "right_closest": 7,
             "avail": self.n_action,
         }
@@ -29,7 +29,6 @@ class FeatureEncoder:
 
     def encode(self, obs):
         player_num = obs["active"]
-
         player_pos_x, player_pos_y = obs["left_team"][player_num]
         player_direction = np.array(obs["left_team_direction"][player_num])
         player_speed = np.linalg.norm(player_direction)
@@ -146,6 +145,8 @@ class FeatureEncoder:
             "right_closest": right_closest_state,
             "avail": avail,
         }
+
+        # print("-------------", {k: v.shape for k, v in state_dict.items()})
 
         return state_dict
 
