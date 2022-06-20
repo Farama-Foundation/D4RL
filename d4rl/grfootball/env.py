@@ -194,6 +194,8 @@ class GRFootball(gym.Env):
             actions = [int(v) for k, v in sorted(actions)]
         elif isinstance(actions, Sequence):
             actions = list(map(int, actions))
+        elif isinstance(actions, np.ndarray) and len(actions.shape) > 1:
+            actions = actions.squeeze()
 
         # if self.use_builtin_gk and self.n_left_control > 0:
         #     actions.insert(0, 19)
@@ -229,6 +231,9 @@ class GRFootball(gym.Env):
             observations=raw_observations,
             states=states,
         )
+
+        # expand rewards
+        rewards = np.expand_dims(rewards, -1)
 
         # local observation, global state, rewards, done, info, action masks
         return observations, states, rewards, dones, infos, available_actions
