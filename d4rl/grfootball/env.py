@@ -86,13 +86,14 @@ class GRFootball(gym.Env):
         n_right_players = args.n_right_players
         n_left_players = args.n_left_players
         use_builtin_gk = args.use_builtin_gk
+        play_with_bot = args.play_with_bot
 
         self.n_players = n_right_players + n_left_players
         self.n_agents = self.n_players
         self.n_left_players = n_left_players
         self.n_right_players = n_right_players
         self.n_left_control = n_left_players
-        self.n_right_control = n_right_players
+        self.n_right_control = n_right_players if not play_with_bot else 0
 
         if use_builtin_gk and n_left_players > 0:
             self.n_left_control -= 1
