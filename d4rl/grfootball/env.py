@@ -88,20 +88,30 @@ class GRFootball(gym.Env):
         use_builtin_gk = args.use_builtin_gk
         play_with_bot = args.play_with_bot
 
-        self.n_players = n_right_players + n_left_players
-        self.n_agents = self.n_players
+        self.n_players = n_left_players
         self.n_left_players = n_left_players
-        self.n_right_players = n_right_players
         self.n_left_control = n_left_players
-        self.n_right_control = n_right_players if not play_with_bot else 0
 
-        if use_builtin_gk and n_left_players > 0:
+        if not play_with_bot:
+            self.n_players = n_right_players + n_left_players
+            self.n_right_players = n_right_players
+            self.n_right_control = n_right_players
+        else:
+            self.n_players = n_left_players
+            self.n_right_control = 0
+            self.n_right_players = n_right_players
+
+        self.n_agents = self.n_players
+
+        if use_builtin_gk and self.n_left_players > 0:
             self.n_left_control -= 1
             self.n_agents -= 1
 
-        if use_builtin_gk and n_right_players > 0:
+        if use_builtin_gk and self.n_right_players > 0 and not play_with_bot:
             self.n_right_control -= 1
             self.n_agents -= 1
+
+        # print("----------- nfff", self.n_players, self.n_left_control, self.n_left_players, self.n_right_players, self.n_right_control)
 
         self.env = football_env.create_environment(
             env_name=scenario_id,
