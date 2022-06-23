@@ -2,6 +2,7 @@ from argparse import Namespace
 import os
 import tempfile
 import copy
+import traceback
 
 from typing import Tuple, Union, Dict, List, Sequence, Any
 from collections import namedtuple
@@ -19,9 +20,8 @@ try:
     from gfootball.env.football_env_core import FootballEnvCore
     from gfootball import env as football_env
 except ImportError as e:
-    raise e(
-        "Please install Google football evironment before use: https://github.com/google-research/football"
-    ) from None
+    print(traceback.format_exc())
+    raise e
 
 from d4rl.grfootball.encoders import get_encoder
 from d4rl.grfootball.reward_funcs import get_reward_func
@@ -119,7 +119,7 @@ class GRFootball(gym.Env):
         self.reward_func = get_reward_func(reward_type)()
         self.num_actions = 19
         self.encoder = get_encoder(encoder_type)(
-            self.n_left_control, self.n_right_control, self.num_actions
+            self.n_left_control, self.n_right_players, self.num_actions
         )
         self.representation = representation
         self.use_builtin_gk = use_builtin_gk

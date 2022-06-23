@@ -12,6 +12,11 @@ scenario_configs = {
         'n_right_players': 5,
         'n_left_players': 5
     },
+    '5_vs_bot': {
+        'map_name': '5_vs_5',
+        'n_right_players': 0,
+        'n_left_players': 5,
+    },
     '1_vs_1_easy': {
         'map_name': '1_vs_1_easy',
         'n_right_players': 1,

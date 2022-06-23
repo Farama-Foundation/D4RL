@@ -16,7 +16,9 @@ setup(
         'termcolor',  # adept_envs dependency
         'click',  # adept_envs dependency
         'dm_control',
-        'gfootball==2.10.2'
+        'gfootball==2.10.2',
+        'patchelf==0.14.5.0',
+        'six==1.16.0'
     ],
     packages=find_packages(),
     package_data={'d4rl': ['locomotion/assets/*',

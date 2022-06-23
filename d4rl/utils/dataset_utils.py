@@ -123,8 +123,26 @@ class TrajectoryDatasetWriter:
 
     def add_trajectory(self, trajectory: Trajectory):
         self.trajectories.append(trajectory)
+
+    def empty(self) -> bool:
+        """Indicate empty or not.
+
+        Returns:
+            bool: Empty or not.
+        """
+        return len(self.trajectories) == 0
         
-    def write_dataset(self, env_meta_info: Dict[str, Any], fname, max_size_each_trajectory=None, compression='gzip'):
+    def write_dataset(self, env_meta_info: Dict[str, Any], fname, max_size_each_trajectory=None, compression='gzip', flush: bool = False):
+        """Write dataset to local storage.
+
+        Args:
+            env_meta_info (Dict[str, Any]): A dict of environment meta info.
+            fname (_type_): File path.
+            max_size_each_trajectory (int, optional): The maximum length of each trajectory. Defaults to None.
+            compression (str, optional): Use compression or not. Defaults to 'gzip'.
+            flush (bool, optional): Flush data or not. Defaults to False.
+        """
+
         # check env_meta info
         assert "env_id" in env_meta_info
         assert "scenario_id" in env_meta_info
@@ -158,3 +176,9 @@ class TrajectoryDatasetWriter:
                 },
                 'trajectories': data
             }, f)
+
+        if flush:
+            del self.trajectories
+            self.trajectories = []
+
+        

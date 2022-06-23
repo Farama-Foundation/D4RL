@@ -16,7 +16,7 @@ class FeatureEncoder:
             "ball": 18,
             "left_team": self.n_left_agent * 7,
             "left_closest": 7,
-            "right_team": (self.n_right_agent + 1) * 7,
+            "right_team": self.n_right_agent * 7,
             "right_closest": 7,
             "avail": self.n_action,
         }
