@@ -111,8 +111,6 @@ class GRFootball(gym.Env):
             self.n_right_control -= 1
             self.n_agents -= 1
 
-        # print("----------- nfff", self.n_players, self.n_left_control, self.n_left_players, self.n_right_players, self.n_right_control)
-
         self.env = football_env.create_environment(
             env_name=scenario_id,
             stacked=stacked,
@@ -129,17 +127,14 @@ class GRFootball(gym.Env):
         self.env_core = retrieve_env_core(self.env)
         self.reward_func = get_reward_func(reward_type)()
         self.num_actions = 19
-        self.encoder = get_encoder(encoder_type)(
-            self.n_left_control, self.n_right_players, self.num_actions
-        )
+        self.encoder = get_encoder(encoder_type)()
         self.representation = representation
         self.use_builtin_gk = use_builtin_gk
 
         self.action_space = spaces.Discrete(self.num_actions)
-        self.observation_space = spaces.Box(
-            low=-10.0, high=10.0, shape=self.encoder.shape, dtype=np.float32
-        )
-        self.share_observation_space = spaces.Box(low=-10.0, high=10.0, shape=self.get_state([self.observation_space.sample()] * self.n_agents)[0].shape, dtype=np.float32)
+        observations, states, _ = self.reset()
+        self.observation_space = spaces.Box(low=float("-inf"), high=float("inf"), shape=observations[0].shape, dtype=np.float32)
+        self.share_observation_space = self.observation_space
 
         # last frame
         self.last_frame: Frame = None
@@ -181,10 +176,7 @@ class GRFootball(gym.Env):
             obs, action_masks = self._build_observation_from_raw()
         else:
             raise NotImplementedError("only raw representation is supported.")
-            # assert not self.use_builtin_gk
-            # obs = self.env.observation()
-            # # all one
-            # action_masks = [np.ones(self.action_space.n) for _ in range(self.n_agents)]
+
         return obs, action_masks
 
     def step(self, actions: Union[Dict[AgentID, int], Sequence[int]]) -> Tuple:
@@ -267,9 +259,7 @@ class GRFootball(gym.Env):
         repeats = self.n_agents
         assert len(observations) == repeats, (len(observations), repeats)
 
-        state = np.concatenate(observations).reshape(1, -1)
-
-        states = np.tile(state, (repeats, 1))
+        states = observations.copy()
 
         return states
 

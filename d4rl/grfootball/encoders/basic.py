@@ -2,30 +2,9 @@ import numpy as np
 
 
 class FeatureEncoder:
-    def __init__(self, n_left_agent: int, n_right_agent: int, n_action: int):
+    def __init__(self):
         self.active = -1
         self.player_pos_x, self.player_pos_y = 0, 0
-        # left agent will delete goal keeper
-        self.n_left_agent = n_left_agent
-        self.n_right_agent = n_right_agent
-        self.n_action = n_action
-
-    def get_feature_dims(self):
-        dims = {
-            "player": 19,
-            "ball": 18,
-            "left_team": self.n_left_agent * 7,
-            "left_closest": 7,
-            "right_team": self.n_right_agent * 7,
-            "right_closest": 7,
-            "avail": self.n_action,
-        }
-        return dims
-
-    @property
-    def shape(self):
-        dims = sum(self.get_feature_dims().values())
-        return (dims,)
 
     def encode(self, obs):
         player_num = obs["active"]
@@ -145,8 +124,6 @@ class FeatureEncoder:
             "right_closest": right_closest_state,
             "avail": avail,
         }
-
-        # print("-------------", {k: v.shape for k, v in state_dict.items()})
 
         return state_dict
 
