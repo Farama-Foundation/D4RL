@@ -138,6 +138,8 @@ class GRFootball(gym.Env):
 
         # last frame
         self.last_frame: Frame = None
+        self.max_episode_length: int = 3000
+        self.cnt = 0
 
     def _build_observation_from_raw(self) -> List[np.ndarray]:
         """
@@ -193,6 +195,8 @@ class GRFootball(gym.Env):
             A tuple of (observations, states, rewards, dones, infos, available_actions), all of them are `np.ndarray`, except info.
         """
 
+        self.cnt += 1
+
         if isinstance(actions, Dict):
             actions = [int(v) for k, v in sorted(actions)]
         elif isinstance(actions, Sequence):
@@ -225,6 +229,24 @@ class GRFootball(gym.Env):
         observations, available_actions = list(map(np.asarray, self.get_obs()))
         dones = np.asarray([done] * len(observations), dtype=bool)
         infos = [info.copy() for _ in range(len(observations))]
+
+        if self.cnt == self.max_episode_length:
+            dones = np.asarray([True] * len(observations))
+
+        if any(dones):
+            for i, _obs in enumerate(raw_observations):
+                my_score, opponent_score = _obs["score"]
+                if my_score > opponent_score:
+                    score = 1.0
+                elif my_score == opponent_score:
+                    score = 0.5
+                else:
+                    score = 0.0
+                goal_diff = my_score - opponent_score
+                infos[i]["score"] = score
+                infos[i]["win"] = int(score == 1.0)
+                infos[i]["goal_diff"] = goal_diff
+
         states = self.get_state(observations)
 
         # update last frame
@@ -281,6 +303,8 @@ class GRFootball(gym.Env):
             observations=raw_observations,
             states=states,
         )
+        self.cnt = 0
+
         return observations, states, available_actions
 
     def render(self):
