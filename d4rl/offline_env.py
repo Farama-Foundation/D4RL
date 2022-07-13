@@ -1,11 +1,28 @@
 import os
 import urllib.request
 import warnings
+import progressbar
 
 import gym
 from gym.utils import colorize
 import h5py
 from tqdm import tqdm
+
+
+class MyProgressBar():
+    def __init__(self):
+        self.pbar = None
+
+    def __call__(self, block_num, block_size, total_size):
+        if not self.pbar:
+            self.pbar=progressbar.ProgressBar(maxval=total_size)
+            self.pbar.start()
+
+        downloaded = block_num * block_size
+        if downloaded < total_size:
+            self.pbar.update(downloaded)
+        else:
+            self.pbar.finish()
 
 
 def set_dataset_path(path):
@@ -38,7 +55,8 @@ def download_dataset_from_url(dataset_url):
     dataset_filepath = filepath_from_url(dataset_url)
     if not os.path.exists(dataset_filepath):
         print('Downloading dataset:', dataset_url, 'to', dataset_filepath)
-        urllib.request.urlretrieve(dataset_url, dataset_filepath)
+        show_percentage = MyProgressBar()
+        urllib.request.urlretrieve(dataset_url, dataset_filepath, reporthook=show_percentage)
     if not os.path.exists(dataset_filepath):
         raise IOError("Failed to download dataset from %s" % dataset_url)
     return dataset_filepath
@@ -84,6 +102,7 @@ class OfflineEnv(gym.Env):
             h5path = download_dataset_from_url(self.dataset_url)
 
         data_dict = {}
+        print("Load dataset from:", h5path)
         with h5py.File(h5path, 'r') as dataset_file:
             for k in tqdm(get_keys(dataset_file), desc="load datafile"):
                 try:  # first try loading as an array
