@@ -5,7 +5,7 @@ from setuptools import find_packages
 setup(
     name='d4rl',
     version='1.1',
-    install_requires=['gym',
+    install_requires=['gym<0.25.0',
                       'numpy',
                       'mujoco_py',
                       'pybullet',
