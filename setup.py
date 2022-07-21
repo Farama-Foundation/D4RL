@@ -18,7 +18,8 @@ setup(
         'dm_control',
         'gfootball==2.10.2',
         'patchelf==0.14.5.0',
-        'six==1.16.0'
+        'six==1.16.0',
+        "progressbar==2.5"
     ],
     packages=find_packages(),
     package_data={'d4rl': ['locomotion/assets/*',
