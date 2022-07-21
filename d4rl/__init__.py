@@ -164,6 +164,8 @@ def sequence_dataset(env, dataset=None, **kwargs):
         use_timeouts = True
 
     episode_step = 0
+    candidates = kwargs.get("candidates", None) or ["observations", "actions", "rewards", "terminals"]
+
     for i in range(N):
         done_bool = bool(dataset['terminals'][i])
         if use_timeouts:
@@ -171,7 +173,7 @@ def sequence_dataset(env, dataset=None, **kwargs):
         else:
             final_timestep = (episode_step == env._max_episode_steps - 1)
 
-        for k in dataset:
+        for k in candidates:
             data_[k].append(dataset[k][i])
 
         if done_bool or final_timestep:
