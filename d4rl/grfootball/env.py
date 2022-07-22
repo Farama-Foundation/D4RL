@@ -43,323 +43,102 @@ def retrieve_env_core(env) -> FootballEnvCore:
 class GRFootball(gym.Env):
     def __init__(
         self,
-        args: Namespace,
-        stacked: bool = False,
-        render: bool = False,
-        channel_dimensions: Tuple[int, int] = (42, 42),
-        debug: bool = False,
-        reward_type: str = "basic",
-        encoder_type: str = "basic",
-        representation: str = "raw",
+        scenario: str,
+        n_agent: int,
+        reward_type: str = "scoring"
     ) -> None:
-        """Create a Google Research Football environment.
-
-        Parameters
-        ----------
-        scenario_id : str
-            The scenario id, refer to ...
-        n_right_agents : int
-            Number of moving player at right side.
-        n_left_agents : int
-            Number of moving player at left side.
-        stacked : bool, optional
-            Stack observation or not, by default False
-        render : bool, optional
-            Enable render or not, by default False
-        channel_dimensions : Tuple[int, int], optional
-            Channel dimensions specification, by default (42, 42)
-        debug : bool, optional
-            Enable debug mode or not
-        reward_type: str, optional
-            Reward func type, by default basic
-        encoder_type: str, optional
-            Encoder type, by default basic
-        use_builtin_gk: bool, optional
-            Indicate use builtin goalkeepers or not, by default True
-        """
-
         super().__init__()
 
-        self.debug = debug
+        self.scenario = scenario
+        self.n_agents = n_agent
+        self.reward_type = reward_type
 
-        scenario_id = args.map_name
-        n_right_players = args.n_right_players
-        n_left_players = args.n_left_players
-        use_builtin_gk = args.use_builtin_gk
-        play_with_bot = args.play_with_bot
+        self.env = football_env.create_environment(env_name=self.scenario,
+                                                   number_of_left_players_agent_controls=self.n_agents,
+                                                   representation="raw",
+                                                   # representation="simple115v2",
+                                                   rewards=self.reward_type)
+        self.feature_encoder = get_encoder("basic")()
+        self.reward_encoder = get_reward_func("basic")()
 
-        self.n_players = n_left_players
-        self.n_left_players = n_left_players
-        self.n_left_control = n_left_players
+        self.action_space = [gym.spaces.Discrete(self.env.action_space.nvec[1]) for n in range(self.n_agents)]
 
-        if not play_with_bot:
-            self.n_players = n_right_players + n_left_players
-            self.n_right_players = n_right_players
-            self.n_right_control = n_right_players
-        else:
-            self.n_players = n_left_players
-            self.n_right_control = 0
-            self.n_right_players = n_right_players
+        tmp_obs_dicts = self.env.reset()
+        tmp_obs = [self._encode_obs(obs_dict)[0] for obs_dict in tmp_obs_dicts]
+        self.observation_space = [spaces.Box(low=float("-inf"), high=float("inf"), shape=tmp_obs[n].shape, dtype=np.float32)
+                                  for n in range(self.n_agents)]
+        self.share_observation_space = self.observation_space.copy()
 
-        self.n_agents = self.n_players
-
-        if use_builtin_gk and self.n_left_players > 0:
-            self.n_left_control -= 1
-            self.n_agents -= 1
-
-        if use_builtin_gk and self.n_right_players > 0 and not play_with_bot:
-            self.n_right_control -= 1
-            self.n_agents -= 1
-
-        self.env = football_env.create_environment(
-            env_name=scenario_id,
-            stacked=stacked,
-            representation=representation,
-            logdir=os.path.join(tempfile.gettempdir(), "grfootball"),
-            write_goal_dumps=False,
-            write_full_episode_dumps=False,
-            render=render,
-            dump_frequency=0,
-            number_of_left_players_agent_controls=self.n_left_control,
-            number_of_right_players_agent_controls=self.n_right_control,
-            channel_dimensions=channel_dimensions,
-        )
-        self.env_core = retrieve_env_core(self.env)
-        self.reward_func = get_reward_func(reward_type)()
-        self.num_actions = 19
-        self.encoder = get_encoder(encoder_type)()
-        self.representation = representation
-        self.use_builtin_gk = use_builtin_gk
-
-        self.action_space = spaces.Discrete(self.num_actions)
-        observations, states, _ = self.reset()
-        self.observation_space = spaces.Box(low=float("-inf"), high=float("inf"), shape=observations[0].shape, dtype=np.float32)
-        self.share_observation_space = self.observation_space
-
-        # last frame
-        self.last_frame: Frame = None
-        self.max_episode_length: int = 3000
-        self.cnt = 0
+        self.pre_obs = None
+        self._max_episode_steps = 3000
 
     def _build_observation_from_raw(self) -> List[np.ndarray]:
         """
         get the observation of all player's in teams
         """
 
-        def encode_obs(raw_obs):
-            obs = self.encoder.encode(raw_obs)
-
+    def _encode_obs(self, raw_obs):
+            obs = self.feature_encoder.encode(raw_obs.copy())
             obs_cat = np.hstack(
                 [np.array(obs[k], dtype=np.float32).flatten() for k in sorted(obs)]
             )
+            ava = obs["avail"]
+            return obs_cat, ava
 
-            return obs_cat, obs["avail"]
+    def reset(self, **kwargs):
+        """ Returns initial observations and states"""
+        obs_dicts = self.env.reset()
+        self.pre_obs = obs_dicts
+        obs = []
+        ava = []
+        for obs_dict in obs_dicts:
+            obs_i, ava_i = self._encode_obs(obs_dict)
+            obs.append(obs_i)
+            ava.append(ava_i)
+        state = obs.copy()
+        return np.asarray(obs, dtype=np.float32), np.asarray(state, dtype=np.float32), np.asarray(ava, dtype=np.float32)
 
-        raw_obs_list = self.env.observation()
+    def step(self, actions):
+        actions_int = [int(a) for a in actions]
+        o, r, d, i = self.env.step(actions_int)
+        obs = []
+        ava = []
+        for obs_dict in o:
+            obs_i, ava_i = self._encode_obs(obs_dict)
+            obs.append(obs_i)
+            ava.append(ava_i)
+        state = obs.copy()
 
-        # if enable builtin goal keeper, we need to pop its observation
-        if self.use_builtin_gk and len(raw_obs_list) == self.n_players:
-            raw_obs_list = raw_obs_list[1:self.n_left_players] + raw_obs_list[self.n_left_players + 1:]
-        obs_list, ava_action_list = list(
-            zip(*[encode_obs(r_obs) for r_obs in raw_obs_list])
-        )
-        return obs_list, ava_action_list
+        rewards = [[self.reward_encoder.calc_reward(_r, _prev_obs, _obs)]
+                   for _r, _prev_obs, _obs in zip(r, self.pre_obs, o)]
 
-    def get_obs(self) -> Tuple[List[np.ndarray], List[np.ndarray]]:
-        """Return a list of observation for all moving agents.
+        self.pre_obs = o
 
-        Returns
-        -------
-        Tuple[List[np.ndarray], List[np.ndarray]]
-            A tuple of observation list and action_mask list.
-        """
+        dones = np.ones((self.n_agents), dtype=bool) * d
+        infos = [i for n in range(self.n_agents)]
+        return np.asarray(obs, dtype=np.float32), np.asarray(state, dtype=np.float32), np.asarray(rewards, dtype=np.float32), np.asarray(dones, dtype=np.bool_), infos, np.asarray(ava, dtype=np.float32)
 
-        if self.representation == "raw":
-            obs, action_masks = self._build_observation_from_raw()
-        else:
-            raise NotImplementedError("only raw representation is supported.")
-
-        return obs, action_masks
-
-    def step(self, actions: Union[Dict[AgentID, int], Sequence[int]]) -> Tuple:
-        """A single environment step. Returns a tuple of ...
-
-        Parameters
-        ----------
-        actions : Union[Dict[AgentID, int], Sequence[int]]
-            A dict or sequence of agents' actions. If a sequence, the actions are sorted from left to right.
-
-        Returns
-        -------
-        Tuple
-            A tuple of (observations, states, rewards, dones, infos, available_actions), all of them are `np.ndarray`, except info.
-        """
-
-        self.cnt += 1
-
-        if isinstance(actions, Dict):
-            actions = [int(v) for k, v in sorted(actions)]
-        elif isinstance(actions, Sequence):
-            actions = list(map(int, actions))
-        elif isinstance(actions, np.ndarray) and len(actions.shape) > 1:
-            actions = actions.squeeze()
-
-        # if self.use_builtin_gk and self.n_left_control > 0:
-        #     actions.insert(0, 19)
-        # if self.use_builtin_gk and self.n_right_control > 0:
-        #     actions.insert(self.n_left_players, 19)
-
-        if self.debug:
-            logging.debug("Actions".center(60, "-"))
-
-        raw_observations, raw_rewards, done, info = self.env.step(actions)
-        raw_observations = copy.deepcopy(raw_observations)
-
-        # reward shaping
-        rewards = np.asarray(
-            [
-                self.reward_func.calc_reward(_r, _prev_obs, _obs)
-                for _r, _prev_obs, _obs in zip(
-                    raw_rewards.tolist(), self.last_frame.observations, raw_observations
-                )
-            ],
-            dtype=np.float32,
-        )
-
-        observations, available_actions = list(map(np.asarray, self.get_obs()))
-        dones = np.asarray([done] * len(observations), dtype=bool)
-        infos = [info.copy() for _ in range(len(observations))]
-
-        if self.cnt == self.max_episode_length:
-            dones = np.asarray([True] * len(observations))
-
-        if any(dones):
-            for i, _obs in enumerate(raw_observations):
-                my_score, opponent_score = _obs["score"]
-                if my_score > opponent_score:
-                    score = 1.0
-                elif my_score == opponent_score:
-                    score = 0.5
-                else:
-                    score = 0.0
-                goal_diff = my_score - opponent_score
-                infos[i]["score"] = score
-                infos[i]["win"] = int(score == 1.0)
-                infos[i]["goal_diff"] = goal_diff
-
-        states = self.get_state(observations)
-
-        # update last frame
-        self.last_frame = Frame(
-            actions=actions,
-            rewards=raw_rewards,
-            observations=raw_observations,
-            states=states,
-        )
-
-        # expand rewards
-        rewards = np.expand_dims(rewards, -1)
-
-        # local observation, global state, rewards, done, info, action masks
-        return observations, states, rewards, dones, infos, available_actions
-
-    def get_state(self, observations: Sequence[np.ndarray]) -> np.ndarray:
-        """Retrieve state for each agent and transform them into numpy array-like data.
-
-        Parameters
-        ----------
-        obserations : Sequence[np.ndarray]
-            A sequence of parsed observation
-
-        Returns
-        -------
-        List[np.ndarray]
-            A stacked state, where the first dim is equal to self.n_agents
-        """
-
-        # concat all observations by group
-        repeats = self.n_agents
-        assert len(observations) == repeats, (len(observations), repeats)
-
-        states = observations.copy()
-
-        return states
-
-    def reset(self) -> Tuple:
-        """Reset environment.
-
-        Returns
-        -------
-        Tuple
-            A tuple of observations, states and available actions.
-        """
-
-        raw_observations = self.env.reset()
-        observations, available_actions = list(map(np.asarray, self.get_obs()))
-        states = np.asarray(self.get_state(observations))
-        self.last_frame = Frame(
-            actions=np.zeros(len(states), dtype=int),
-            rewards=np.zeros(len(states), dtype=np.float32),
-            observations=raw_observations,
-            states=states,
-        )
-        self.cnt = 0
-
-        return observations, states, available_actions
-
-    def render(self):
-        return super().render()
+    def render(self, **kwargs):
+        # self.env.render(**kwargs)
+        pass
 
     def close(self):
-        self.env.close()
+        pass
+
+    def seed(self, args):
+        pass
+
+    def get_env_info(self):
+
+        env_info = {"state_shape": self.observation_space[0].shape,
+                    "obs_shape": self.observation_space[0].shape,
+                    "n_actions": self.action_space[0].n,
+                    "n_agents": self.n_agents,
+                    "action_spaces": self.action_space
+                    }
+        return env_info
+
 
     def save_replay(self):
         raise NotImplementedError
         # self.env.write_dump("shutdown")
-
-
-if __name__ == "__main__":
-    import time
-
-    args = Namespace(map_name="5_vs_5", n_right_agents=5, n_left_agents=5)
-    env = GRFootball(args)
-
-    observations, states, available_actions = env.reset()
-    n_agents = env.n_agents
-    act_space = env.action_space
-
-    def compute_action(
-        observation: List[np.ndarray], available_actions: List[np.ndarray]
-    ):
-        assert len(observation) == n_agents
-        act = []
-        for ava_actions in available_actions:
-            idxes = np.where(ava_actions == 1)[0]
-            act.append(np.random.choice(idxes))
-        return act
-
-    try:
-        start = time.time()
-        n_frame = 0
-
-        while True:
-            actions = compute_action(observations, available_actions)
-            observations, states, rewards, dones, infos, available_actions = env.step(
-                actions
-            )
-            n_frame += 1
-            if n_frame % 10 == 0:
-                cur_time = time.time()
-                print(
-                    "FPS: {:.3} reward: {:.3f} {:.3f} {:.3f} done: {}".format(
-                        n_frame / (cur_time - start),
-                        np.mean(rewards),
-                        np.max(rewards),
-                        np.min(rewards),
-                        any(dones),
-                    )
-                )
-            if any(dones):
-                break
-    except KeyboardInterrupt:
-        env.close()

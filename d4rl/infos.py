@@ -283,6 +283,10 @@ REF_MAX_SCORE = {
     'bullet-maze2d-large-v0': 285.92,
 }
 
+REF_POLICY = {
+    'antmaze': 'http://rail.eecs.berkeley.edu/datasets/offline_rl/ant_hierarch_pol.pkl',
+}
+
 
 #Gym-MuJoCo V1/V2 envs
 for env in ['halfcheetah', 'hopper', 'walker2d', 'ant']:
