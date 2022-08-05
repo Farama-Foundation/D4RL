@@ -75,7 +75,7 @@ class OfflineEnv(gym.Env):
 
     def __init__(self, dataset_url=None, ref_max_score=None, ref_min_score=None, 
                        deprecated=False, deprecation_message=None, **kwargs):
-        super(OfflineEnv, self).__init__(**kwargs)
+        super(OfflineEnv, self).__init__()
         self.dataset_url = self._dataset_url = dataset_url
         self.ref_max_score = ref_max_score
         self.ref_min_score = ref_min_score
@@ -112,6 +112,9 @@ class OfflineEnv(gym.Env):
 
         # Run a few quick sanity checks
         for key in ['observations', 'actions', 'rewards', 'terminals']:
+            # reshape data
+            data_dict[key] = data_dict[key].squeeze()
+            print("check {}'s shape as: {}".format(key, data_dict[key].shape))
             assert key in data_dict, 'Dataset is missing key %s' % key
         N_samples = data_dict['observations'].shape[0]
         if self.observation_space.shape is not None:
