@@ -120,7 +120,7 @@ class OfflineEnv(gym.Env):
             chunk_id (int): An integer representing which slice of the dataset to return.
 
         Returns:
-            A dictionary containing observtions, actions, rewards, and terminals.
+            A dictionary containing observations, actions, rewards, and terminals.
         """
         if h5path is None:
             if self._dataset_url is None:
