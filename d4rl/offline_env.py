@@ -63,10 +63,10 @@ class OfflineEnv(gym.Env):
         self.ref_min_score = ref_min_score
         if deprecated:
             if deprecation_message is None:
-                deprecation_message = "This environment is deprecated. Please use the most recent version of this environment."
+                deprecation_message = "This environment is deprecated. Please use the most recent version of this " \
+                                      "environment. "
             # stacklevel=2 will bump the warning to the superclass.
             warnings.warn(colorize(deprecation_message, 'yellow'), stacklevel=2)
- 
 
     def get_normalized_score(self, score):
         if (self.ref_max_score is None) or (self.ref_min_score is None):

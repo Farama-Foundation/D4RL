@@ -8,11 +8,12 @@ from d4rl.pointmaze_bullet import bullet_robot
 from d4rl.pointmaze import maze_model
 from d4rl import offline_env
 
+
 class MazeRobot(bullet_robot.MJCFBasedRobot):
     def __init__(self, maze_spec):
         model = maze_model.point_maze(maze_spec)
         maze_hash = hashlib.md5(maze_spec.encode('ascii')).hexdigest()
-        filename = os.path.join(offline_env.DATASET_PATH, 'tmp_bullet_xml', maze_hash+'.xml')
+        filename = os.path.join(offline_env.DATASET_PATH, 'tmp_bullet_xml', maze_hash + '.xml')
         if not os.path.exists(filename):
             os.makedirs(os.path.dirname(filename), exist_ok=True)
             with model.asfile() as f:
@@ -27,6 +28,7 @@ class MazeRobot(bullet_robot.MJCFBasedRobot):
                                         action_dim=2,
                                         obs_dim=4,
                                         self_collision=True)
+
     @property
     def qpos(self):
         x = self.particle.get_position()[0:2]
@@ -34,21 +36,21 @@ class MazeRobot(bullet_robot.MJCFBasedRobot):
 
     @property
     def qvel(self):
-        #vx = self.particle.speed()[0:2]
-        #vx = np.array([self.ball_x.get_velocity(), self.ball_y.get_velocity()], dtype=np.float32)
+        # vx = self.particle.speed()[0:2]
+        # vx = np.array([self.ball_x.get_velocity(), self.ball_y.get_velocity()], dtype=np.float32)
         vx = (self.qpos - self.last_qpos) / self.dt
         return vx
 
     def calc_state(self):
-        #import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         return np.concatenate([self.qpos - 1.0, self.qvel])
 
     def set_state(self, qpos, qvel):
         self.particle.reset_position(np.array([qpos[0], qpos[1], 0.0]))
         self.particle.reset_velocity(np.array([qvel[0], qvel[1], 0.0]))
         self.last_qpos = self.qpos
-        #self.ball_x.set_velocity(qvel[0])
-        #self.ball_y.set_velocity(qvel[1])
+        # self.ball_x.set_velocity(qvel[0])
+        # self.ball_y.set_velocity(qvel[1])
 
     def get_obs(self):
         return self.calc_state()
@@ -58,8 +60,8 @@ class MazeRobot(bullet_robot.MJCFBasedRobot):
         self.particle = self.parts["particle"]
         self.ball_x = self.jdict["ball_x"]
         self.ball_y = self.jdict["ball_y"]
-        #u = self.np_random.uniform(low=-.1, high=.1)
-        #self.j1.reset_current_position(u if not self.swingup else 3.1415 + u, 0)
+        # u = self.np_random.uniform(low=-.1, high=.1)
+        # self.j1.reset_current_position(u if not self.swingup else 3.1415 + u, 0)
         self.ball_x.set_motor_torque(0)
         self.ball_y.set_motor_torque(0)
         self.last_qpos = self.qpos
@@ -67,13 +69,13 @@ class MazeRobot(bullet_robot.MJCFBasedRobot):
     def apply_action(self, a):
         assert (np.isfinite(a).all())
         self.last_qpos = self.qpos
-        self.ball_x.set_motor_torque(a[0]*10)
-        self.ball_y.set_motor_torque(a[1]*10)
+        self.ball_x.set_motor_torque(a[0] * 10)
+        self.ball_y.set_motor_torque(a[1] * 10)
 
 
 class Maze2DBulletEnv(env_bases.MJCFBaseBulletEnv, offline_env.OfflineEnv):
 
-    def __init__(self, maze_spec, 
+    def __init__(self, maze_spec,
                  reward_type='dense',
                  reset_target=False,
                  **kwargs):
@@ -89,7 +91,7 @@ class Maze2DBulletEnv(env_bases.MJCFBaseBulletEnv, offline_env.OfflineEnv):
         self.reset_locations = list(zip(*np.where(self.maze_arr == maze_model.EMPTY)))
         self.reset_locations.sort()
 
-        self._target = np.array([0.0,0.0])
+        self._target = np.array([0.0, 0.0])
 
         # Set the default goal (overriden by a call to set_target)
         # Try to find a goal if it exists
@@ -107,11 +109,11 @@ class Maze2DBulletEnv(env_bases.MJCFBaseBulletEnv, offline_env.OfflineEnv):
         return scene_abstract.SingleRobotEmptyScene(bullet_client, gravity=9.8, timestep=0.0165, frame_skip=1)
 
     def reset(self):
-        if (self.stateId >= 0):
-          self._p.restoreState(self.stateId)
+        if self.stateId >= 0:
+            self._p.restoreState(self.stateId)
         r = env_bases.MJCFBaseBulletEnv.reset(self)
-        if (self.stateId < 0):
-          self.stateId = self._p.saveState()
+        if self.stateId < 0:
+            self.stateId = self._p.saveState()
 
         self.reset_model()
         ob = self.robot.calc_state()
@@ -119,7 +121,7 @@ class Maze2DBulletEnv(env_bases.MJCFBaseBulletEnv, offline_env.OfflineEnv):
 
     def step(self, action):
         action = np.clip(action, -1.0, 1.0)
-        #self.clip_velocity()
+        # self.clip_velocity()
         self.robot.apply_action(action)
         self.scene.global_step()
         ob = self.robot.calc_state()
@@ -170,4 +172,3 @@ class Maze2DBulletEnv(env_bases.MJCFBaseBulletEnv, offline_env.OfflineEnv):
         qvel = self.np_random.randn(2) * .1
         self.robot.set_state(qpos, qvel)
         return self.robot.get_obs()
-
