@@ -79,6 +79,7 @@ class OfflineEnv(gym.Env):
         self.dataset_url = self._dataset_url = dataset_url
         self.ref_max_score = ref_max_score
         self.ref_min_score = ref_min_score
+        self.legal_keys = kwargs.get("legal_keys", None) or ['observations', 'actions', 'rewards', 'terminals']
         if deprecated:
             if deprecation_message is None:
                 deprecation_message = "This environment is deprecated. Please use the most recent version of this environment."
@@ -111,16 +112,17 @@ class OfflineEnv(gym.Env):
                     data_dict[k] = dataset_file[k][()]
 
         # Run a few quick sanity checks
-        for key in ['observations', 'actions', 'rewards', 'terminals']:
+        for key in self.legal_keys:
             # reshape data
             data_dict[key] = data_dict[key].squeeze()
             print("check {}'s shape as: {}".format(key, data_dict[key].shape))
             assert key in data_dict, 'Dataset is missing key %s' % key
-        N_samples = data_dict['observations'].shape[0]
-        if self.observation_space.shape is not None:
-            assert data_dict['observations'].shape[1:] == self.observation_space.shape, \
-                'Observation shape does not match env: %s vs %s' % (
-                    str(data_dict['observations'].shape[1:]), str(self.observation_space.shape))
+        N_samples = data_dict['terminals'].shape[0]
+        # TODO(ming): we temporary turn off the observation checking, for dict example
+        # if self.observation_space.shape is not None:
+        #     assert data_dict['observations'].shape[1:] == self.observation_space.shape, \
+        #         'Observation shape does not match env: %s vs %s' % (
+        #             str(data_dict['observations'].shape[1:]), str(self.observation_space.shape))
         assert data_dict['actions'].shape[1:] == self.action_space.shape, \
             'Action shape does not match env: %s vs %s' % (
                 str(data_dict['actions'].shape[1:]), str(self.action_space.shape))
