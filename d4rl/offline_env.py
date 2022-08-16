@@ -46,8 +46,11 @@ def get_keys(h5file):
 
 
 def filepath_from_url(dataset_url):
-    _, dataset_name = os.path.split(dataset_url)
-    dataset_filepath = os.path.join(DATASET_PATH, dataset_name)
+    if os.path.exists(dataset_url):
+        dataset_filepath = dataset_url
+    else:
+        _, dataset_name = os.path.split(dataset_url)
+        dataset_filepath = os.path.join(DATASET_PATH, dataset_name)
     return dataset_filepath
 
 
