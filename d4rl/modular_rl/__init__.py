@@ -2,8 +2,10 @@ from gym.envs.registration import register
 import os
 import glob
 
-ENV_DIR = 'd4rl/modular_rl/environments'
-XML_DIR = 'd4rl/modular_rl/environments/xmls'
+
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+ENV_DIR = os.path.join(MODULE_DIR, 'environments')
+XML_DIR = os.path.join(MODULE_DIR, 'environments/xmls')
 
 def register_env(env_name, max_episode_steps=1000):
     """register the MuJoCo envs with Gym and return the per-limb observation size and max action value (for modular

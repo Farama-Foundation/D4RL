@@ -2,7 +2,7 @@ import random
 from collections import OrderedDict
 import gym
 from gym import spaces
-from gym_minigrid.roomgrid import RoomGrid
+from d4rl.gym_minigrid.roomgrid import RoomGrid
 from .verifier import *
 import string
 

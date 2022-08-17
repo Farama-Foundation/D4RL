@@ -1,5 +1,5 @@
 from .levelgen import *
-from gym_minigrid.envs import Key, Ball, Box
+from d4rl.gym_minigrid.envs import Key, Ball, Box
 
 
 class Level_GoToRedBallGrey(RoomGridLevel):
