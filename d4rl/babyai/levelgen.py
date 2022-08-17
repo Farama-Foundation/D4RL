@@ -29,7 +29,7 @@ class String(gym.Space):
         return string
 
     def contains(self, x):
-        return isinstance(x, str) and self.min_length < len(x) < self.max_length
+        return type(x) is str and len(x) > self.min_length and len(x) < self.max_length
 
 
 class RejectSampling(Exception):
@@ -47,6 +47,7 @@ class RoomGridLevel(RoomGrid):
     one or more patterns. Levels should produce a family of missions
     of approximately similar difficulty.
     """
+    metadata={"render_modes": []}
 
     def __init__(
             self,

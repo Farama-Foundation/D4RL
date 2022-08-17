@@ -7,6 +7,7 @@ REF_MIN_SCORE = {}
 REF_MAX_SCORE = {}
 
 DATASET_URLS = {}
+ALL_ENVS = []
 
 # list from https://github.com/openai/gym/blob/master/gym/envs/__init__.py
 for agent in ['1RoomS12',
@@ -65,6 +66,7 @@ for agent in ['1RoomS12',
               'UnlockToUnlock',
               'Unlock']:
     env_name = '%s-expert-v0' % agent
+    ALL_ENVS.append(env_name)
     register(
         id=env_name,
         entry_point='d4rl.babyai.envs:OfflineBabyaiEnv',

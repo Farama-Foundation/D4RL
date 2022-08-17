@@ -3,7 +3,7 @@ from abc import ABC
 import gym
 import h5py
 from tqdm import tqdm
-
+import numpy as np
 
 def get_keys(h5file):
     keys = []
@@ -45,19 +45,34 @@ class OfflineEnv(gym.Env):
         if h5path is None:
             h5path = self.dataset_filepath
         data_dict = {}
+        obs_names = []
         with h5py.File(h5path, 'r') as dataset_file:
-            for k in tqdm(get_keys(dataset_file), desc="load datafile"):
-                try:  # first try loading as an array
-                    data_dict[k] = dataset_file[k][:]
-                except ValueError as e:  # try loading as a scalar
-                    data_dict[k] = dataset_file[k][()]
+            for k in get_keys(dataset_file):
+                if "observations" in k and len(k.split('/')) > 1:
+                    obs_name = '/'.join(k.split('/')[1:])
+                    if "observations" not in data_dict:
+                        data_dict["observations"] = dict()
+                    data_dict["observations"][obs_name] = dataset_file[k][:]
+                    obs_names.append(obs_name)
+                else:
+                    try:  # first try loading as an array
+                        data_dict[k] = dataset_file[k][:]
+                    except ValueError as e:  # try loading as a scalar
+                        data_dict[k] = dataset_file[k][()]
 
+        # XXX(ziyu): if need to use a unified API, this line should be changed somewhere else
+        data_dict['observations']['mission'] = data_dict['observations']['mission'].astype(str)
+
+        # ziyu: this is because baby AI's h5 file is of wrong dtype
+        if "int" not in data_dict['actions'].dtype.name:
+            data_dict['actions'] = data_dict['actions'].astype(np.int32)
         # Run a few quick sanity checks
         N_samples = data_dict['rewards'].shape[0]
         if data_dict['rewards'].shape == (N_samples, 1):
             data_dict['rewards'] = data_dict['rewards'][:, 0]
         if data_dict['terminals'].shape == (N_samples, 1):
             data_dict['terminals'] = data_dict['terminals'][:, 0]
+        
         return data_dict
 
     def get_dataset_chunk(self, chunk_id, h5path):
