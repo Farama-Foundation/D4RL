@@ -118,7 +118,7 @@ class OfflineEnv(gym.Env):
         for key in self.legal_keys:
             # reshape data
             data_dict[key] = data_dict[key].squeeze()
-            print("check {}'s shape as: {}".format(key, data_dict[key].shape))
+            print("check {}'s shape as: {}, dtype is: {}".format(key, data_dict[key].shape, data_dict[key].dtype))
             assert key in data_dict, 'Dataset is missing key %s' % key
         N_samples = data_dict['terminals'].shape[0]
         # TODO(ming): we temporary turn off the observation checking, for dict example
