@@ -1,0 +1,139 @@
+{
+    "source_dir": "/home/igorhome/deployments/D4PG-pytorch/results/Pendulum-v0-d4pg-2019-08-12_13:03:07",
+    "colors": {
+        "color_1": "#26BC6C",
+        "color_2": "#871CF2",
+        "color_3": "#1C2AF2",
+        "color_4": "#3385F0",
+        "color_5": "#38B2D7",
+        "color_6": "#10E7EF",
+        "color_7": "#42DFD0",
+        "color_8": "#42DF9B",
+        "color_9": "#359E09",
+        "color_10": "#1FDC32"
+    },
+    "content": [
+        {
+            "type": "head",
+            "header": "Continous Control Testbed",
+            "title": "D3PG",
+            "author": "Igor Kuznetsov",
+            "date": "9 August",
+            "logo": "logo.png"
+        },
+        {
+            "type": "text",
+            "style": "bold",
+            "text": "Outline"
+        },
+        {
+            "type": "text",
+            "style": "normal",
+            "text": "LearnToMove on D3PG"
+        },
+        {
+          "type": "list",
+          "items": [
+              "num_agents: 1",
+              "max_episodes: 20",
+              "buffer_size: 1e6",
+              "batch_size: 256",
+              "replay_queue: 64",
+              "batch_queue: 64"
+          ]
+        },
+        {
+            "type": "text",
+            "style": "bold",
+            "text": "Rewards"
+        },
+        {
+            "type": "lineplot",
+            "title": "Reward Original",
+            "x": "update_step",
+            "y": "reward",
+            "align": "group",
+            "figsize": [7, 7],
+            "dpi": 200
+        },
+        {
+            "type": "text",
+            "style": "bold",
+            "text": "Timings"
+        },
+        {
+            "type": "lineplot",
+            "title": "Episode Timing",
+            "x": "update_step",
+            "y": "episode_timing",
+            "align": "group",
+            "figsize": [10, 10],
+            "dpi": 200
+        },
+        {
+            "type": "text",
+            "style": "bold",
+            "text": "Losses"
+        },
+        {
+            "type": "lineplot",
+            "title": "Policy loss",
+            "x": "update_step",
+            "y": "policy_loss",
+            "align": "group",
+            "figsize": [10, 10],
+            "dpi": 200
+        },
+        {
+            "type": "lineplot",
+            "title": "Critic loss",
+            "x": "update_step",
+            "y": "value_loss",
+            "align": "group",
+            "figsize": [10, 10],
+            "dpi": 200
+        },
+        {
+            "type": "text",
+            "style": "bold",
+            "text": "Data Structures"
+        },
+        {
+            "type": "lineplot",
+            "title": "Replay Queue",
+            "align": "group",
+            "x": "global_episode",
+            "y": "replay_queue",
+            "figsize": [10, 10],
+            "dpi": 200
+        },
+        {
+            "type": "lineplot",
+            "title": "Batch Queue",
+            "align": "group",
+            "x": "global_episode",
+            "y": "batch_queue",
+            "figsize": [10, 10],
+            "dpi": 200
+        },
+        {
+            "type": "lineplot",
+            "title": "Batch Queue",
+            "align": "group",
+            "x": "global_episode",
+            "y": "replay_buffer",
+            "figsize": [10, 10],
+            "dpi": 200
+        },
+        {
+            "type": "caption",
+            "level": 2,
+            "text": "Conclusion"
+        },
+        {
+            "type": "text",
+            "style": "normal",
+            "text": "..."
+        }
+    ]
+}
