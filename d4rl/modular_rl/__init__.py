@@ -85,3 +85,5 @@ for agent in env_names:
             'ref_max_score': REF_MAX_SCORE[agent],
         }
     )
+
+ALL_ENVS = env_names
