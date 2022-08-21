@@ -89,4 +89,4 @@ class TrajectoryDatasetWriter(DatasetWriter):
         super().append_data(s, a, r, done, goal, mujoco_env_data)
 
         if ava_action is not None:
-            self.data["ava_actions"] = ava_action
+            self.data["ava_actions"].append(ava_action)
