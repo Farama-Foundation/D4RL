@@ -42,7 +42,7 @@ class TSPEnv(gym.Env):
         # 1: time_step, 128: coord_embedding, action_dim: action_mask, 100/200: neighbor_distance, 
         self.state_dim = 1 + 128 + scale # self.action_dim # + scale
 
-        self._action_space = spaces.Discrete(self.scale)
+        self._action_space = spaces.Discrete(self.action_dim)
 
         if use_raw_state:
             self._observation_space = spaces.Dict({
