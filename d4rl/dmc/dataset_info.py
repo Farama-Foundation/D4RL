@@ -46,7 +46,7 @@ DATASET_URLS = {
     "cartpole-swingup_sparse": "/nfs/dgx05/raid/gato_dataset/dmc/dmc-cartpole-swingup_sparse.hdf5",
     # "cartpole-swingup": "/nfs/dgx05/raid/gato_dataset/dmc/dmc-cartpole-swingup.hdf5",
     "finger-spin": "/nfs/dgx05/raid/gato_dataset/dmc/dmc-finger-spin.hdf5",
-    "finger-turn_easy": "/nfs/dgx05/raid/gato_dataset/dmc/dmc-fingger-turn_easy.hdf5",
+    "finger-turn_easy": "/nfs/dgx05/raid/gato_dataset/dmc/dmc-finger-turn_easy.hdf5",
     "finger-turn_hard": "/nfs/dgx05/raid/gato_dataset/dmc/dmc-finger-turn_hard.hdf5",
     "fish-swim": "/nfs/dgx05/raid/gato_dataset/dmc/dmc-fish-swim.hdf5",
     "fish-upright": "/nfs/dgx05/raid/gato_dataset/dmc/dmc-fish-upright.hdf5",
