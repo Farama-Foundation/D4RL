@@ -34,8 +34,8 @@ for scale in [100, 200]:
             max_episode_steps=scale,
             kwargs={
                 'scale': scale,
-                'env_dataset_path': f"/raid/gato_dataset/tsp{scale}/tsp{scale}_train_seed{seed}.pkl",
-                'env_node_embedding_path': f"/raid/gato_dataset/tsp{scale}/tsp{scale}_{seed}_node_embeddings.npy",
+                'env_dataset_path': f"/nfs/dgx5/raid/gato_dataset/tsp{scale}/tsp{scale}_train_seed{seed}.pkl",
+                'env_node_embedding_path': f"/nfs/dgx5/raid/gato_dataset/tsp{scale}/tsp{scale}_{seed}_node_embeddings.npy",
                 'action_dim': int(action_dims[str(seed)]),
                 'dataset_url': file_uri,
                 'ref_min_score': REF_MIN_SCORES[f"{prefix}/{seed}"],
