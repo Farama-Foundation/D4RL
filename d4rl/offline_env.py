@@ -126,6 +126,9 @@ class OfflineEnv(gym.Env):
         #     assert data_dict['observations'].shape[1:] == self.observation_space.shape, \
         #         'Observation shape does not match env: %s vs %s' % (
         #             str(data_dict['observations'].shape[1:]), str(self.observation_space.shape))
+        # fix single-atom action shape
+        if len(data_dict['actions'].shape) == 1:
+            data_dict['actions'] = data_dict['actions'].reshape(-1, 1)
         assert data_dict['actions'].shape[1:] == self.action_space.shape, \
             'Action shape does not match env: %s vs %s' % (
                 str(data_dict['actions'].shape[1:]), str(self.action_space.shape))
