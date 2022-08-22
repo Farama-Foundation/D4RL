@@ -6,12 +6,14 @@ import scipy
 import pickle
 import os
 import csv
+from torch.utils import tensorboard
 
 class DataLog:
 
-    def __init__(self):
+    def __init__(self, log_dir):
         self.log = {}
         self.max_len = 0
+        self.summary_writer = tensorboard.SummaryWriter(log_dir)
 
     def log_kv(self, key, value):
         # logs the (key, value) pair
