@@ -69,15 +69,12 @@ class BC:
         if not self.policy.is_discrete:
             act = torch.from_numpy(act).float().to(self.device).reshape(batch_size, -1)
             mu = action_logits[..., 0]
+            # (batch, act_dim)
             scale = action_logits[..., 1]
             zs = (act - mu) / torch.exp(scale)
-            LL = torch.mean(-0.5 * torch.sum(zs ** 2, dim=1) - torch.sum(scale, dim=1) - 0.5 * mu * np.log(2 * np.pi))
+            LL = torch.mean(-0.5 * torch.sum(zs ** 2, dim=1) - torch.sum(scale, dim=1) - 0.5 * self.policy.action_dim * np.log(2 * np.pi))
             action_error = torch.mean(torch.abs(act - mu))
         else:
-            # add mask here
-            # mask = torch.abs(torch.from_numpy(data['ava_actions'][idx]).float().to(self.device) - 1.) * 1e6
-            # action_logits += mask
-
             policy = F.softmax(action_logits, dim=-1)
             actions = torch.from_numpy(act).long().to(action_logits.device)
             # print("max actions", self.policy.output_dim, actions.max(), actions.min())
@@ -97,16 +94,16 @@ class BC:
             act_logits = self.policy(obs)
             mu = act_logits[..., 0]
             scale = act_logits[..., 1]
-            dist = Normal(mu, scale.exp())
+            dist = Normal(mu, torch.clip(scale.exp(), min=1e-9))
             actions = dist.rsample()
             act_expert = act_expert.float().reshape(self.mb_size, -1)
             assert act_expert.shape == actions.shape
             action_error = torch.mean(torch.abs(actions - act_expert)).detach()
         else:
-            act_pi = self.policy.model(obs)
-            actions = F.softmax(act_pi, dim=-1)
-            action_error = torch.mean(torch.abs(act_pi.argmax(-1) - act_expert.float())).detach()
-            act_expert = F.one_hot(act_expert.long(), 100).float()
+            act_logits = self.policy.model(obs)
+            dist = Normal(act_logits[..., 0], torch.clip(act_logits[..., 1].exp(), min=1e-8))
+            actions = dist.rsample()
+            action_error = torch.mean(actions - act_expert.float()).detach()
 
         return F.mse_loss(actions, act_expert), action_error
 
@@ -122,7 +119,7 @@ class BC:
         global_step = 0
         for ep in config_tqdm(range(self.epochs), suppress_fit_tqdm):
             mean_loss = 0.
-            inner_step = int(num_samples / self.mb_size)
+            inner_step =  kwargs.get("max_steps", 0) or int(num_samples / self.mb_size)
             for mb in tqdm(range(inner_step), desc="Epoch", leave=False):
                 rand_idx = np.random.choice(num_samples, size=self.mb_size)
                 self.optimizer.zero_grad()
@@ -138,11 +135,16 @@ class BC:
                         self.logger.summary_writer.add_scalar(f'Eval/{k}', v, global_step=global_step)
                 global_step += 1
             self.logger.summary_writer.add_scalar("Training/mean_loss", mean_loss, global_step=ep)
+            if kwargs.get("max_steps", 0):
+                break
 
     def train(self, **kwargs):
         observations = np.concatenate([path["observations"] for path in self.expert_paths])
         expert_actions = np.concatenate([path["actions"] for path in self.expert_paths])
-        ava_actions = np.concatenate([path['ava_actions'] for path in self.expert_paths])
+        if 'ava_actions' in self.expert_paths[0]:
+            ava_actions = np.concatenate([path['ava_actions'] for path in self.expert_paths])
+        else:
+            ava_actions = None
         data = dict(observations=observations, expert_actions=expert_actions, ava_actions=ava_actions)
         self.fit(data, **kwargs)
 

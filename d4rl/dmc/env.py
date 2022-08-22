@@ -45,7 +45,7 @@ class DMControl(core.Env):
         self,
         domain_name,
         task_name,
-        task_kwargs=None,
+        task_kwargs={},
         visualize_reward={},
         from_pixels=False,
         height=84,
@@ -55,9 +55,6 @@ class DMControl(core.Env):
         environment_kwargs=None,
         channels_first=True,
     ):
-        assert (
-            "random" in task_kwargs
-        ), "please specify a seed, for deterministic behaviour"
         self._from_pixels = from_pixels
         self._height = height
         self._width = width
@@ -65,7 +62,9 @@ class DMControl(core.Env):
         self._frame_skip = frame_skip
         self._channels_first = channels_first
 
+
         # create task
+        task_kwargs['random'] = 1
         self._env = suite.load(
             domain_name=domain_name,
             task_name=task_name,
@@ -91,6 +90,7 @@ class DMControl(core.Env):
                 self._env.observation_spec().values(), np.float64
             )
 
+        self.is_discrete = isinstance(self.action_space, spaces.Discrete)
         self._state_space = _spec_to_box(
             self._env.observation_spec().values(), np.float64
         )
@@ -146,6 +146,8 @@ class DMControl(core.Env):
 
     def step(self, action):
         action = action.astype(np.float32)
+        # clip actions
+        action = np.clip(action, self._norm_action_space.low, self._norm_action_space.high)
         assert self._norm_action_space.contains(action), (
             action,
             action.shape,
@@ -190,22 +192,5 @@ class OfflineDMCEnv(DMControl, OfflineEnv):
         from_pixels = kwargs['from_pixels']
         visualize_reward = not from_pixels
 
-        DMControl.__init__(domain_name=domain_name, task_name=task_name, visualize_reward=visualize_reward, from_pixels=from_pixels, height=84, width=84, camera_id=0, frame_skip=1)
-        OfflineEnv.__init__(**kwargs)
-
-    def reset(self) -> Any:
-        return self.env.reset()
-
-    def render(self, mode="rgb_array"):
-        frame = self.env.render(mode=mode)
-        return frame
-
-    def step(self, action):
-        next_state, reward, terminal, info = self.env.step(action.ravel())
-        return next_state, reward, terminal, info
-
-    def close(self) -> None:
-        self.env.close()
-
-    def seed(self, seed: int = ...):
-        self.env.seed(seed)
+        DMControl.__init__(self, domain_name=domain_name, task_name=task_name, visualize_reward=visualize_reward, from_pixels=from_pixels, height=84, width=84, camera_id=0, frame_skip=1)
+        OfflineEnv.__init__(self, **kwargs)

@@ -22,19 +22,16 @@ class BC(nn.Module):
         )
         self.device = device
 
-    def get_action(self, obs, action_mask):
+    def get_action(self, obs, action_mask=None):
         with torch.no_grad():
             obs = torch.from_numpy(obs.reshape(1, -1)).float().to(self.device)
-            logits = self.emb(obs)
+            logits = self.forward(obs)
             mu = logits[..., 0]
             scale = logits[..., 1]
             dist = Normal(mu, scale.exp())
-            ava_actions = np.asarray([idx for idx, v in enumerate(action_mask) if v > 0])
-            ava_actions = torch.from_numpy(ava_actions).float().to(self.device)
-            log_probs = dist.log_prob(ava_actions)
-            ava_idx = log_probs.argmax()
-            action = ava_actions[ava_idx].long().item()
-        return action, log_probs[ava_idx].item()
+            action = dist.sample().cpu().numpy()[0]
+
+        return action, None
 
     def forward(self, observation: torch.Tensor):
         batch_size = observation.shape[0]
