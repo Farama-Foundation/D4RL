@@ -7,7 +7,7 @@ from gym.envs.registration import register, registry
 CUR_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-for scale in [100]:
+for scale in [100, 200]:
     # filter urls with tsp{scales}
     prefix = f"TSP{scale}"
 
