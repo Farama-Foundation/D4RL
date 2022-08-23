@@ -1,0 +1,5 @@
+<mujoco>
+  <asset>
+      <texture name="skybox" type="skybox" builtin="flat" rgb1="1 1 1" width="800" height="800">
+  </asset>
+</mujoco>

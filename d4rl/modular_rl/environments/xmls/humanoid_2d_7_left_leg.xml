@@ -1,0 +1,74 @@
+<mujoco model="humanoid">
+    <include file="../../misc/skybox.xml" />
+    <include file="../../misc/visual.xml" />
+    <include file="../../misc/materials.xml" />
+    <compiler angle="degree" inertiafromgeom="true"/>
+    <default>
+        <joint armature="1" damping="1" limited="true"/>
+        <geom conaffinity="0" condim="3" contype="1" density="1000" friction=".7 .1 .1" material="self" />
+        <motor ctrllimited="true" ctrlrange="-1 1"/>
+    </default>
+    <option integrator="RK4" timestep="0.002" />
+    <visual>
+        <map fogend="5" fogstart="3"/>
+    </visual>
+    <worldbody>
+        <light cutoff="100" diffuse="1 1 1" dir="-1 -0 -1.5" directional="true" exponent="1" pos="0 0 1.3" specular=".1 .1 .1"/>
+        <geom conaffinity="1" condim="3" material="grid" name="floor" pos="0 0 0" size="20 20 0.125" type="plane" />
+        <!-- <geom condim="3" material="MatPlane" name="floor" pos="0 0 0" size="10 10 0.125" type="plane"/>-->
+        <body name="torso" pos="0 0 1.4">
+            <camera name="tilted" mode="trackcom" pos="3.6 4 -0.2" xyaxes="1 -.9 0 0 0 -1"/>
+            <camera name="track" mode="trackcom" pos="0 4 0" xyaxes="1 0 0 0 0 -1"/>
+            <joint armature="0.02" axis="1 0 0" damping="0" name="abdomen_x" pos="0 0 0" stiffness="0" type="slide" limited="false"/>
+            <joint armature="0.02" axis="0 0 1" damping="0" name="abdomen_z" pos="0 0 0" ref="1.25" stiffness="0" type="slide" limited="false"/>
+            <joint armature="0.02" axis="0 1 0" damping="0" name="abdomen_y" pos="0 0 1.1" stiffness="0" type="hinge" limited="false"/>
+            <geom fromto="0 -.07 0 0 .07 0" name="torso1" size="0.07" type="capsule"/>
+            <geom name="head" pos="0 0 .19" size=".09" type="sphere"/>
+            <geom fromto="-.01 -.06 -.12 -.01 .06 -.12" name="uwaist" size="0.06" type="capsule"/>
+            <geom fromto="-.01 -.06 -0.260 -.01 .06 -0.260" name="lwaist" size="0.06" quat="1.000 0 -0.002 0" type="capsule"/>
+            <geom fromto="-.02 -.07 -0.425 -.02 .07 -0.425" name="butt" size="0.09" quat="1.000 0 -0.002 0" type="capsule"/>
+            
+            <body name="right_thigh" pos="0 -0.1 -0.465">
+                <joint armature="0.0080" axis="0 1 0" damping="5" name="right_hip_y" pos="0 0 0" range="-110 20" stiffness="20" type="hinge"/>
+                <geom fromto="0 0 0 0 0.01 -.34" name="right_thigh1" size="0.06" type="capsule"/>
+                <body name="right_shin" pos="0 0.01 -0.403">
+                    <joint armature="0.0060" axis="0 -1 0" name="right_knee" pos="0 0 .02" range="-160 -2" type="hinge"/>
+                    <geom fromto="0 0 0 0 0 -.3" name="right_shin1" size="0.049" type="capsule"/>
+                    <geom name="right_foot" pos="0 0 -0.35" size="0.075" type="sphere"/>
+                </body>
+            </body>
+
+            <body name="right_upper_arm" pos="0 -0.17 0.06">
+                <joint armature="0.0060" axis="0 -1 0" name="right_shoulder1" pos="0 0 0" range="-85 60" stiffness="1" type="hinge"/>
+                <geom fromto="0 0 0 .16 -.16 -.16" name="right_uarm1" size="0.04 0.16" type="capsule"/>
+                <body name="right_lower_arm" pos=".18 -.18 -.18">
+                    <joint armature="0.0028" axis="0 -1 0" name="right_elbow" pos="0 0 0" range="-90 50" stiffness="0" type="hinge"/>
+                    <geom fromto="0.01 0.01 0.01 .17 .17 .17" name="right_larm" size="0.031" type="capsule"/>
+                    <geom name="right_hand" pos=".18 .18 .18" size="0.04" type="sphere"/>
+                    <camera pos="0 0 0"/>
+                </body>
+            </body>
+            <body name="left_upper_arm" pos="0 0.17 0.06">
+                <joint armature="0.0060" axis="0 -1 0" name="left_shoulder1" pos="0 0 0" range="-60 85" stiffness="1" type="hinge"/>
+                <geom fromto="0 0 0 .16 .16 -.16" name="left_uarm1" size="0.04 0.16" type="capsule"/>
+                <body name="left_lower_arm" pos=".18 .18 -.18">
+                    <joint armature="0.0028" axis="0 -1 0" name="left_elbow" pos="0 0 0" range="-90 50" stiffness="0" type="hinge"/>
+                    <geom fromto="0.01 -0.01 0.01 .17 -.17 .17" name="left_larm" size="0.031" type="capsule"/>
+                    <geom name="left_hand" pos=".18 -.18 .18" size="0.04" type="sphere"/>
+                </body>
+            </body>
+            
+        </body>
+    </worldbody>
+
+
+    <actuator>
+        <!--<motor gear="100" joint="abdomen_y" name="abdomen_y"/>-->
+        <motor gear="150" joint="right_hip_y" name="right_hip_y"/>
+        <motor gear="100" joint="right_knee" name="right_knee"/>
+        <motor gear="12.5" joint="right_shoulder1" name="right_shoulder1"/>
+        <motor gear="12.5" joint="right_elbow" name="right_elbow"/>
+        <motor gear="12.5" joint="left_shoulder1" name="left_shoulder1"/>
+        <motor gear="12.5" joint="left_elbow" name="left_elbow"/>
+    </actuator>
+</mujoco>

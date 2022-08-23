@@ -1,5 +1,8 @@
+from typing import List, Type, Dict, Any
+
 import h5py
 import numpy as np
+import pickle
 
 class DatasetWriter(object):
     def __init__(self, mujoco=False, goal=False):
@@ -9,11 +12,12 @@ class DatasetWriter(object):
         self._num_samples = 0
 
     def _reset_data(self):
-        data = {'observations': [],
+        data = {
+            'observations': [],
             'actions': [],
             'terminals': [],
             'rewards': [],
-            }
+        }
         if self.mujoco:
             data['infos/qpos'] = []
             data['infos/qvel'] = []
@@ -51,5 +55,38 @@ class DatasetWriter(object):
         dataset = h5py.File(fname, 'w')
         for k in np_data:
             dataset.create_dataset(k, data=np_data[k], compression=compression)
+
         dataset.close()
 
+        
+class TrajectoryDatasetWriter(DatasetWriter):
+
+    def __init__(self, n_agent: int, mujoco=False, goal=False, ava_action=False):
+        self.ava_action = ava_action
+        self.n_agent = n_agent
+        self.transition_len = 4
+        if ava_action:
+            self.transition_len += 1
+        if goal:
+            self.transition_len += 1
+        if mujoco:
+            self.transition_len += 2
+
+        super().__init__(mujoco, goal)
+
+
+    def _reset_data(self):
+        data = super()._reset_data()
+        if self.ava_action:
+            data['ava_actions'] = []
+        return data
+
+    @property
+    def num_tokens(self) -> int:
+        return self._num_samples * self.n_agent * self.transition_len
+
+    def append_data(self, s, a, r, done, goal=None, mujoco_env_data=None, ava_action=None):
+        super().append_data(s, a, r, done, goal, mujoco_env_data)
+
+        if ava_action is not None:
+            self.data["ava_actions"].append(ava_action)

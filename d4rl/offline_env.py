@@ -1,11 +1,28 @@
 import os
 import urllib.request
 import warnings
+import progressbar
 
 import gym
 from gym.utils import colorize
 import h5py
 from tqdm import tqdm
+
+
+class MyProgressBar():
+    def __init__(self):
+        self.pbar = None
+
+    def __call__(self, block_num, block_size, total_size):
+        if not self.pbar:
+            self.pbar=progressbar.ProgressBar(maxval=total_size)
+            self.pbar.start()
+
+        downloaded = block_num * block_size
+        if downloaded < total_size:
+            self.pbar.update(downloaded)
+        else:
+            self.pbar.finish()
 
 
 def set_dataset_path(path):
@@ -29,8 +46,11 @@ def get_keys(h5file):
 
 
 def filepath_from_url(dataset_url):
-    _, dataset_name = os.path.split(dataset_url)
-    dataset_filepath = os.path.join(DATASET_PATH, dataset_name)
+    if os.path.exists(dataset_url):
+        dataset_filepath = dataset_url
+    else:
+        _, dataset_name = os.path.split(dataset_url)
+        dataset_filepath = os.path.join(DATASET_PATH, dataset_name)
     return dataset_filepath
 
 
@@ -38,7 +58,8 @@ def download_dataset_from_url(dataset_url):
     dataset_filepath = filepath_from_url(dataset_url)
     if not os.path.exists(dataset_filepath):
         print('Downloading dataset:', dataset_url, 'to', dataset_filepath)
-        urllib.request.urlretrieve(dataset_url, dataset_filepath)
+        show_percentage = MyProgressBar()
+        urllib.request.urlretrieve(dataset_url, dataset_filepath, reporthook=show_percentage)
     if not os.path.exists(dataset_filepath):
         raise IOError("Failed to download dataset from %s" % dataset_url)
     return dataset_filepath
@@ -57,10 +78,11 @@ class OfflineEnv(gym.Env):
 
     def __init__(self, dataset_url=None, ref_max_score=None, ref_min_score=None, 
                        deprecated=False, deprecation_message=None, **kwargs):
-        super(OfflineEnv, self).__init__(**kwargs)
+        super(OfflineEnv, self).__init__()
         self.dataset_url = self._dataset_url = dataset_url
         self.ref_max_score = ref_max_score
         self.ref_min_score = ref_min_score
+        self.legal_keys = kwargs.get("legal_keys", None) or ['observations', 'actions', 'rewards', 'terminals']
         if deprecated:
             if deprecation_message is None:
                 deprecation_message = "This environment is deprecated. Please use the most recent version of this environment."
@@ -84,6 +106,7 @@ class OfflineEnv(gym.Env):
             h5path = download_dataset_from_url(self.dataset_url)
 
         data_dict = {}
+        print("Load dataset from:", h5path)
         with h5py.File(h5path, 'r') as dataset_file:
             for k in tqdm(get_keys(dataset_file), desc="load datafile"):
                 try:  # first try loading as an array
@@ -92,13 +115,20 @@ class OfflineEnv(gym.Env):
                     data_dict[k] = dataset_file[k][()]
 
         # Run a few quick sanity checks
-        for key in ['observations', 'actions', 'rewards', 'terminals']:
+        for key in self.legal_keys:
+            # reshape data
+            data_dict[key] = data_dict[key].squeeze()
+            print("check {}'s shape as: {}, dtype is: {}".format(key, data_dict[key].shape, data_dict[key].dtype))
             assert key in data_dict, 'Dataset is missing key %s' % key
-        N_samples = data_dict['observations'].shape[0]
-        if self.observation_space.shape is not None:
-            assert data_dict['observations'].shape[1:] == self.observation_space.shape, \
-                'Observation shape does not match env: %s vs %s' % (
-                    str(data_dict['observations'].shape[1:]), str(self.observation_space.shape))
+        N_samples = data_dict['terminals'].shape[0]
+        # TODO(ming): we temporary turn off the observation checking, for dict example
+        # if self.observation_space.shape is not None:
+        #     assert data_dict['observations'].shape[1:] == self.observation_space.shape, \
+        #         'Observation shape does not match env: %s vs %s' % (
+        #             str(data_dict['observations'].shape[1:]), str(self.observation_space.shape))
+        # fix single-atom action shape
+        if len(data_dict['actions'].shape) == 1:
+            data_dict['actions'] = data_dict['actions'].reshape(-1, 1)
         assert data_dict['actions'].shape[1:] == self.action_space.shape, \
             'Action shape does not match env: %s vs %s' % (
                 str(data_dict['actions'].shape[1:]), str(self.action_space.shape))

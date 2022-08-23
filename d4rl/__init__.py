@@ -50,6 +50,20 @@ except ImportError as e:
         print(_ERROR_MESSAGE % 'GymBullet', file=sys.stderr)
         print(e, file=sys.stderr)
 
+try:
+    import d4rl.tsp
+except ImportError as e:
+    if not SUPPRESS_MESSAGES:
+        print(_ERROR_MESSAGE % 'TSP', file=sys.stderr)
+        print(e, file=sys.stderr)
+
+try:
+    import d4rl.dmc
+except ImportError as e:
+    if not SUPPRESS_MESSAGES:
+        print(_ERROR_MESSAGE % 'DM Control', file=sys.stderr)
+        print(e, file=sys.stderr)
+
 def reverse_normalized_score(env_name, score):
     ref_min_score = d4rl.infos.REF_MIN_SCORE[env_name]
     ref_max_score = d4rl.infos.REF_MAX_SCORE[env_name]
@@ -164,6 +178,8 @@ def sequence_dataset(env, dataset=None, **kwargs):
         use_timeouts = True
 
     episode_step = 0
+    candidates = kwargs.get("candidates", None) or ["observations", "actions", "rewards", "terminals"]
+
     for i in range(N):
         done_bool = bool(dataset['terminals'][i])
         if use_timeouts:
@@ -171,7 +187,7 @@ def sequence_dataset(env, dataset=None, **kwargs):
         else:
             final_timestep = (episode_step == env._max_episode_steps - 1)
 
-        for k in dataset:
+        for k in candidates:
             data_[k].append(dataset[k][i])
 
         if done_bool or final_timestep:

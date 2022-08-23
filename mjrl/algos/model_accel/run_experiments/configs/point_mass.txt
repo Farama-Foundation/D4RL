@@ -1,0 +1,44 @@
+{
+
+# general inputs
+
+'env_name'      :   'mjrl_point_mass-v0',
+'seed'          :   123,
+'debug_mode'    :   False,
+'num_iter'      :   5,
+'iter_samples'  :   100,
+'eval_rollouts' :   25,
+'num_models'    :   3,
+'exp_notes'     :   'Toy experiment for initial trial.',
+'save_freq'     :   1,
+'device'        :   'cpu',
+'learn_reward'  :   False,
+'reward_file'   :   'utils/reward_functions/mjrl_point_mass.py',
+
+# dynamics learning
+
+'hidden_size'   :   (256, 256),
+'activation'    :   'relu',
+'fit_lr'        :   1e-3,
+'fit_wd'        :   1e-5,
+'buffer_size'   :   10000,
+'fit_mb_size'   :   16,
+'fit_epochs'    :   25,
+'refresh_fit'   :   False,
+
+# initial data
+
+'init_log_std'  :   -0.5,
+'min_log_std'   :   -2.0,
+'init_samples'  :   1000,
+
+# NPG params
+
+'policy_size'   :   (32, 32),
+'inner_steps'   :   10,
+'step_size'     :   0.05,
+'update_paths'  :   250,
+'start_state'	:   'init',
+'horizon'       :   25,
+
+}

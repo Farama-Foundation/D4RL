@@ -128,5 +128,11 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
 ._.DS_Store
 .DS_Store
+
+*.hdf5
+*.pkl
+logs
+
