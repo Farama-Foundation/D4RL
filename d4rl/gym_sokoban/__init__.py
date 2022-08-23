@@ -28,4 +28,6 @@ register(
         'ref_max_score': 12,
     }
 )
+
+ALL_ENVS = ['Sokoban-v0']
         

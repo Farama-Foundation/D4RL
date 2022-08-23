@@ -7,7 +7,7 @@ setup(
     name='d4rl',
     version='1.1',
     install_requires=[
-        'gym==0.20.0',
+        'gym',
         'psutil',
         'numpy',
         'mujoco_py',
@@ -15,11 +15,11 @@ setup(
         'h5py',
         'termcolor',  # adept_envs dependency
         'click',  # adept_envs dependency
-        'dm_control>=1.0.5',
-        'gfootball==2.10.2',
-        'patchelf==0.14.5.0',
-        'six==1.16.0',
-        "progressbar==2.5"
+        # 'dm_control>=1.0.5',
+        # 'gfootball==2.10.2',
+        # 'patchelf==0.14.5.0',
+        # 'six==1.16.0',
+        # "progressbar==2.5"
     ],
     packages=find_packages(),
     package_data={'d4rl': ['locomotion/assets/*',

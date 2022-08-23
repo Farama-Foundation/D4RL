@@ -74,6 +74,7 @@ except ImportError as e:
 import d4rl.babyai
 import d4rl.modular_rl
 import d4rl.gym_sokoban
+import d4rl.metaworld
 
 
 
