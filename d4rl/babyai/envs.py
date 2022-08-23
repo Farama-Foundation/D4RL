@@ -1,5 +1,6 @@
 import gym
 from .offline_env import OfflineEnv
+
 from gym import spaces
 import numpy as np
 import copy
@@ -25,17 +26,20 @@ def post_process(obs):
     obs["image"] = obs["image"].reshape(bsz, -1).astype(np.float32)
     return obs
 
+
 class BabyaiEnv(gym.Env):
     def __init__(self,
                  game,
                  **kwargs):
         env = gym.make(game)
         env = GatoAtariObsWrapper(env)
+
         self._env = env
 
         self.observation_space = env.observation_space
         self.action_space = env.action_space
         self.post_process_fn = post_process
+
 
     def step(self, action):
         return self._env.step(action)

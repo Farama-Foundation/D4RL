@@ -3,6 +3,7 @@ import numpy as np
 from enum import Enum
 from d4rl.gym_minigrid.minigrid import COLOR_NAMES, DIR_TO_VEC
 
+
 # Object types we are allowed to describe in language
 OBJ_TYPES = ['box', 'ball', 'key', 'door']
 

@@ -2,6 +2,7 @@ import random
 from collections import OrderedDict
 import gym
 from gym import spaces
+
 from d4rl.gym_minigrid.roomgrid import RoomGrid
 from .verifier import *
 import string
@@ -29,7 +30,7 @@ class String(gym.Space):
         return string
 
     def contains(self, x):
-        return type(x) is str and len(x) > self.min_length and len(x) < self.max_length
+        return isinstance(x, str) and self.min_length < len(x) < self.max_length
 
 
 class RejectSampling(Exception):
@@ -48,6 +49,7 @@ class RoomGridLevel(RoomGrid):
     of approximately similar difficulty.
     """
     metadata={"render_modes": []}
+
 
     def __init__(
             self,

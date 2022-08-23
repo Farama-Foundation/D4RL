@@ -3,7 +3,9 @@ from abc import ABC
 import gym
 import h5py
 from tqdm import tqdm
+
 import numpy as np
+
 
 def get_keys(h5file):
     keys = []
@@ -66,13 +68,14 @@ class OfflineEnv(gym.Env):
         # ziyu: this is because baby AI's h5 file is of wrong dtype
         if "int" not in data_dict['actions'].dtype.name:
             data_dict['actions'] = data_dict['actions'].astype(np.int32)
+
         # Run a few quick sanity checks
         N_samples = data_dict['rewards'].shape[0]
         if data_dict['rewards'].shape == (N_samples, 1):
             data_dict['rewards'] = data_dict['rewards'][:, 0]
         if data_dict['terminals'].shape == (N_samples, 1):
             data_dict['terminals'] = data_dict['terminals'][:, 0]
-        
+
         return data_dict
 
     def get_dataset_chunk(self, chunk_id, h5path):

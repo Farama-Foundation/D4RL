@@ -1,0 +1,122 @@
+[
+  {
+    "id": "Sokoban-v0",
+    "entry_point": "gym_sokoban.envs:SokobanEnv1"
+  },
+  {
+    "id": "Sokoban-v1",
+    "entry_point": "gym_sokoban.envs:SokobanEnv"
+  },
+  {
+    "id": "Sokoban-v2",
+    "entry_point": "gym_sokoban.envs:SokobanEnv2"
+  },
+  {
+    "id": "Sokoban-small-v0",
+    "entry_point": "gym_sokoban.envs:SokobanEnv_Small0"
+  },
+  {
+    "id": "Sokoban-small-v1",
+    "entry_point": "gym_sokoban.envs:SokobanEnv_Small1"
+  },
+  {
+    "id": "Sokoban-large-v0",
+    "entry_point": "gym_sokoban.envs:SokobanEnv_Large0"
+  },
+  {
+    "id": "Sokoban-large-v1",
+    "entry_point": "gym_sokoban.envs:SokobanEnv_Large1"
+  },
+  {
+    "id": "Sokoban-large-v2",
+    "entry_point": "gym_sokoban.envs:SokobanEnv_Large2"
+  },
+  {
+    "id": "Sokoban-huge-v0",
+    "entry_point": "gym_sokoban.envs:SokobanEnv_Huge0"
+  },
+  {
+    "id": "FixedTarget-Sokoban-v0",
+    "entry_point": "gym_sokoban.envs:FixedTargets_Env_v0"
+  },
+  {
+    "id": "FixedTarget-Sokoban-v1",
+    "entry_point": "gym_sokoban.envs:FixedTargets_Env_v1"
+  },
+  {
+    "id": "FixedTarget-Sokoban-v2",
+    "entry_point": "gym_sokoban.envs:FixedTargets_Env_v2"
+  },
+  {
+    "id": "FixedTarget-Sokoban-v3",
+    "entry_point": "gym_sokoban.envs:FixedTargets_Env_v3"
+  },
+  {
+    "id": "PushAndPull-Sokoban-v0",
+    "entry_point": "gym_sokoban.envs:PushAndPull_Env_v0"
+  },
+  {
+    "id": "PushAndPull-Sokoban-v1",
+    "entry_point": "gym_sokoban.envs:PushAndPull_Env_v1"
+  },
+  {
+    "id": "PushAndPull-Sokoban-v2",
+    "entry_point": "gym_sokoban.envs:PushAndPull_Env_v2"
+  },
+  {
+    "id": "PushAndPull-Sokoban-v3",
+    "entry_point": "gym_sokoban.envs:PushAndPull_Env_v3"
+  },
+  {
+    "id": "PushAndPull-Sokoban-v4",
+    "entry_point": "gym_sokoban.envs:PushAndPull_Env_v4"
+  },
+  {
+    "id": "PushAndPull-Sokoban-v5",
+    "entry_point": "gym_sokoban.envs:PushAndPull_Env_v5"
+  },
+  {
+    "id": "TwoPlayer-Sokoban-v0",
+    "entry_point": "gym_sokoban.envs:TwoPlayer_Env0"
+  },
+  {
+    "id": "TwoPlayer-Sokoban-v1",
+    "entry_point": "gym_sokoban.envs:TwoPlayer_Env1"
+  },
+  {
+    "id": "TwoPlayer-Sokoban-v2",
+    "entry_point": "gym_sokoban.envs:TwoPlayer_Env2"
+  },
+  {
+    "id": "TwoPlayer-Sokoban-v3",
+    "entry_point": "gym_sokoban.envs:TwoPlayer_Env3"
+  },
+  {
+    "id": "TwoPlayer-Sokoban-v4",
+    "entry_point": "gym_sokoban.envs:TwoPlayer_Env4"
+  },
+  {
+    "id": "TwoPlayer-Sokoban-v5",
+    "entry_point": "gym_sokoban.envs:TwoPlayer_Env5"
+  },
+  {
+    "id": "Boxoban-Train-v0",
+    "entry_point": "gym_sokoban.envs:Boxban_Env0"
+  },
+  {
+    "id": "Boxoban-Test-v0",
+    "entry_point": "gym_sokoban.envs:Boxban_Env0_test"
+  },
+  {
+    "id": "Boxoban-Val-v0",
+    "entry_point": "gym_sokoban.envs:Boxban_Env0_val"
+  },
+  {
+    "id": "Boxoban-Train-v1",
+    "entry_point": "gym_sokoban.envs:Boxban_Env1"
+  },
+  {
+    "id": "Boxoban-Val-v1",
+    "entry_point": "gym_sokoban.envs:Boxban_Env1_val"
+  }
+]

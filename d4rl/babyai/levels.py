@@ -2,6 +2,7 @@ from .levelgen import *
 from d4rl.gym_minigrid.envs import Key, Ball, Box
 
 
+
 class Level_GoToRedBallGrey(RoomGridLevel):
     """
     Go to the red ball, single room, with distractors.
