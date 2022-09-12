@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def flat_to_one_hot(val, ndim):
     """
 
@@ -12,13 +13,14 @@ def flat_to_one_hot(val, ndim):
            [ 0.,  0.,  0.,  0.,  1.],
            [ 0.,  0.,  0.,  1.,  0.]])
     """
-    shape =np.array(val).shape
+    shape = np.array(val).shape
     v = np.zeros(shape + (ndim,))
     if len(shape) == 1:
         v[np.arange(shape[0]), val] = 1.0
     else:
         v[val] = 1.0
     return v
+
 
 def one_hot_to_flat(val):
     """

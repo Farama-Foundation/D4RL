@@ -1,13 +1,15 @@
-import numpy as np
-from gym import utils
-from gym import spaces
-from mjrl.envs import mujoco_env
-from mujoco_py import MjViewer
-from d4rl.utils.quatmath import quat2euler
-from d4rl import offline_env
 import os
 
+import numpy as np
+from gym import spaces, utils
+from mjrl.envs import mujoco_env
+from mujoco_py import MjViewer
+
+from d4rl import offline_env
+from d4rl.utils.quatmath import quat2euler
+
 ADD_BONUS_REWARDS = True
+
 
 class HammerEnvV0(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
     def __init__(self, **kwargs):
@@ -18,32 +20,60 @@ class HammerEnvV0(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
         self.tool_sid = -1
         self.goal_sid = -1
         curr_dir = os.path.dirname(os.path.abspath(__file__))
-        mujoco_env.MujocoEnv.__init__(self, curr_dir+'/assets/DAPG_hammer.xml', 5)
+        mujoco_env.MujocoEnv.__init__(self, curr_dir + "/assets/DAPG_hammer.xml", 5)
 
         # Override action_space to -1, 1
-        self.action_space = spaces.Box(low=-1.0, high=1.0, dtype=np.float32, shape=self.action_space.shape)
+        self.action_space = spaces.Box(
+            low=-1.0, high=1.0, dtype=np.float32, shape=self.action_space.shape
+        )
 
         utils.EzPickle.__init__(self)
 
         # change actuator sensitivity
-        self.sim.model.actuator_gainprm[self.sim.model.actuator_name2id('A_WRJ1'):self.sim.model.actuator_name2id('A_WRJ0')+1,:3] = np.array([10, 0, 0])
-        self.sim.model.actuator_gainprm[self.sim.model.actuator_name2id('A_FFJ3'):self.sim.model.actuator_name2id('A_THJ0')+1,:3] = np.array([1, 0, 0])
-        self.sim.model.actuator_biasprm[self.sim.model.actuator_name2id('A_WRJ1'):self.sim.model.actuator_name2id('A_WRJ0')+1,:3] = np.array([0, -10, 0])
-        self.sim.model.actuator_biasprm[self.sim.model.actuator_name2id('A_FFJ3'):self.sim.model.actuator_name2id('A_THJ0')+1,:3] = np.array([0, -1, 0])
-        
-        self.target_obj_sid = self.sim.model.site_name2id('S_target')
-        self.S_grasp_sid = self.sim.model.site_name2id('S_grasp')
-        self.obj_bid = self.sim.model.body_name2id('Object')
-        self.tool_sid = self.sim.model.site_name2id('tool')
-        self.goal_sid = self.sim.model.site_name2id('nail_goal')
+        self.sim.model.actuator_gainprm[
+            self.sim.model.actuator_name2id("A_WRJ1") : self.sim.model.actuator_name2id(
+                "A_WRJ0"
+            )
+            + 1,
+            :3,
+        ] = np.array([10, 0, 0])
+        self.sim.model.actuator_gainprm[
+            self.sim.model.actuator_name2id("A_FFJ3") : self.sim.model.actuator_name2id(
+                "A_THJ0"
+            )
+            + 1,
+            :3,
+        ] = np.array([1, 0, 0])
+        self.sim.model.actuator_biasprm[
+            self.sim.model.actuator_name2id("A_WRJ1") : self.sim.model.actuator_name2id(
+                "A_WRJ0"
+            )
+            + 1,
+            :3,
+        ] = np.array([0, -10, 0])
+        self.sim.model.actuator_biasprm[
+            self.sim.model.actuator_name2id("A_FFJ3") : self.sim.model.actuator_name2id(
+                "A_THJ0"
+            )
+            + 1,
+            :3,
+        ] = np.array([0, -1, 0])
+
+        self.target_obj_sid = self.sim.model.site_name2id("S_target")
+        self.S_grasp_sid = self.sim.model.site_name2id("S_grasp")
+        self.obj_bid = self.sim.model.body_name2id("Object")
+        self.tool_sid = self.sim.model.site_name2id("tool")
+        self.goal_sid = self.sim.model.site_name2id("nail_goal")
         self.act_mid = np.mean(self.model.actuator_ctrlrange, axis=1)
-        self.act_rng = 0.5 * (self.model.actuator_ctrlrange[:, 1] - self.model.actuator_ctrlrange[:, 0])
+        self.act_rng = 0.5 * (
+            self.model.actuator_ctrlrange[:, 1] - self.model.actuator_ctrlrange[:, 0]
+        )
 
     def step(self, a):
         a = np.clip(a, -1.0, 1.0)
         try:
             a = self.act_mid + a * self.act_rng  # mean center and scale
-        except:
+        except Exception:
             a = a  # only for the initialization phase
         self.do_simulation(a, self.frame_skip)
         ob = self.get_obs()
@@ -52,11 +82,11 @@ class HammerEnvV0(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
         tool_pos = self.data.site_xpos[self.tool_sid].ravel()
         target_pos = self.data.site_xpos[self.target_obj_sid].ravel()
         goal_pos = self.data.site_xpos[self.goal_sid].ravel()
-        
+
         # get to hammer
-        reward = - 0.1 * np.linalg.norm(palm_pos - obj_pos)
+        reward = -0.1 * np.linalg.norm(palm_pos - obj_pos)
         # take hammer head to nail
-        reward -= np.linalg.norm((tool_pos - target_pos))
+        reward -= np.linalg.norm(tool_pos - target_pos)
         # make nail go inside
         reward -= 10 * np.linalg.norm(target_pos - goal_pos)
         # velocity penalty
@@ -68,9 +98,9 @@ class HammerEnvV0(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
                 reward += 2
 
             # bonus for hammering the nail
-            if (np.linalg.norm(target_pos - goal_pos) < 0.020):
+            if np.linalg.norm(target_pos - goal_pos) < 0.020:
                 reward += 25
-            if (np.linalg.norm(target_pos - goal_pos) < 0.010):
+            if np.linalg.norm(target_pos - goal_pos) < 0.010:
                 reward += 75
 
         goal_achieved = True if np.linalg.norm(target_pos - goal_pos) < 0.010 else False
@@ -87,13 +117,25 @@ class HammerEnvV0(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
         obj_rot = quat2euler(self.data.body_xquat[self.obj_bid].ravel()).ravel()
         palm_pos = self.data.site_xpos[self.S_grasp_sid].ravel()
         target_pos = self.data.site_xpos[self.target_obj_sid].ravel()
-        nail_impact = np.clip(self.sim.data.sensordata[self.sim.model.sensor_name2id('S_nail')], -1.0, 1.0)
-        return np.concatenate([qp[:-6], qv[-6:], palm_pos, obj_pos, obj_rot, target_pos, np.array([nail_impact])])
+        nail_impact = np.clip(
+            self.sim.data.sensordata[self.sim.model.sensor_name2id("S_nail")], -1.0, 1.0
+        )
+        return np.concatenate(
+            [
+                qp[:-6],
+                qv[-6:],
+                palm_pos,
+                obj_pos,
+                obj_rot,
+                target_pos,
+                np.array([nail_impact]),
+            ]
+        )
 
     def reset_model(self):
         self.sim.reset()
-        target_bid = self.model.body_name2id('nail_board')
-        self.model.body_pos[target_bid,2] = self.np_random.uniform(low=0.1, high=0.25)
+        target_bid = self.model.body_name2id("nail_board")
+        self.model.body_pos[target_bid, 2] = self.np_random.uniform(low=0.1, high=0.25)
         self.sim.forward()
         return self.get_obs()
 
@@ -103,7 +145,7 @@ class HammerEnvV0(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
         """
         qpos = self.data.qpos.ravel().copy()
         qvel = self.data.qvel.ravel().copy()
-        board_pos = self.model.body_pos[self.model.body_name2id('nail_board')].copy()
+        board_pos = self.model.body_pos[self.model.body_name2id("nail_board")].copy()
         target_pos = self.data.site_xpos[self.target_obj_sid].ravel().copy()
         return dict(qpos=qpos, qvel=qvel, board_pos=board_pos, target_pos=target_pos)
 
@@ -111,11 +153,11 @@ class HammerEnvV0(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
         """
         Set the state which includes hand as well as objects and targets in the scene
         """
-        qp = state_dict['qpos']
-        qv = state_dict['qvel']
-        board_pos = state_dict['board_pos']
+        qp = state_dict["qpos"]
+        qv = state_dict["qvel"]
+        board_pos = state_dict["board_pos"]
         self.set_state(qp, qv)
-        self.model.body_pos[self.model.body_name2id('nail_board')] = board_pos
+        self.model.body_pos[self.model.body_name2id("nail_board")] = board_pos
         self.sim.forward()
 
     def mj_viewer_setup(self):
@@ -129,7 +171,7 @@ class HammerEnvV0(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
         num_paths = len(paths)
         # success if nail insude board for 25 steps
         for path in paths:
-            if np.sum(path['env_infos']['goal_achieved']) > 25:
+            if np.sum(path["env_infos"]["goal_achieved"]) > 25:
                 num_success += 1
-        success_percentage = num_success*100.0/num_paths
+        success_percentage = num_success * 100.0 / num_paths
         return success_percentage

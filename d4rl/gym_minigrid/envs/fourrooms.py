@@ -1,7 +1,6 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-from d4rl.gym_minigrid.minigrid import *
+from d4rl.gym_minigrid.minigrid import Goal, Grid, MiniGridEnv
 from d4rl.gym_minigrid.register import register
 
 
@@ -71,13 +70,11 @@ class FourRoomsEnv(MiniGridEnv):
         else:
             self.place_obj(Goal())
 
-        self.mission = 'Reach the goal'
+        self.mission = "Reach the goal"
 
     def step(self, action):
-        obs, reward, done, info = MiniGridEnv.step(self, action)
+        obs, reward, done, info = super().step(action)
         return obs, reward, done, info
 
-register(
-    id='MiniGrid-FourRooms-v0',
-    entry_point='gym_minigrid.envs:FourRoomsEnv'
-)
+
+register(id="MiniGrid-FourRooms-v0", entry_point="gym_minigrid.envs:FourRoomsEnv")

@@ -1,15 +1,22 @@
-import d4rl
-import gym
-from d4rl.pointmaze import waypoint_controller
-from d4rl.pointmaze import maze_model
-import numpy as np
 import argparse
+
+import gym
+import numpy as np
+
+from d4rl.pointmaze import waypoint_controller
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--env_name', type=str, default='maze2d-umaze-v0', help='Maze type. small or default')
-    parser.add_argument('--num_episodes', type=int, default=100, help='Num samples to collect')
+    parser.add_argument(
+        "--env_name",
+        type=str,
+        default="maze2d-umaze-v0",
+        help="Maze type. small or default",
+    )
+    parser.add_argument(
+        "--num_episodes", type=int, default=100, help="Num samples to collect"
+    )
     args = parser.parse_args()
 
     env = gym.make(args.env_name)
@@ -28,7 +35,7 @@ def main():
             s, rew, _, _ = env.step(act)
             returns += rew
         ravg.append(returns)
-    print(args.env_name, 'returns', np.mean(ravg))
+    print(args.env_name, "returns", np.mean(ravg))
 
 
 if __name__ == "__main__":

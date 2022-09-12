@@ -1,13 +1,15 @@
-import numpy as np
-from gym import utils
-from gym import spaces
-from mjrl.envs import mujoco_env
-from d4rl.utils.quatmath import quat2euler, euler2quat
-from d4rl import offline_env
-from mujoco_py import MjViewer
 import os
 
+import numpy as np
+from gym import spaces, utils
+from mjrl.envs import mujoco_env
+from mujoco_py import MjViewer
+
+from d4rl import offline_env
+from d4rl.utils.quatmath import euler2quat
+
 ADD_BONUS_REWARDS = True
+
 
 class PenEnvV0(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
     def __init__(self, **kwargs):
@@ -24,50 +26,86 @@ class PenEnvV0(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
         self.tar_length = 1.0
 
         curr_dir = os.path.dirname(os.path.abspath(__file__))
-        mujoco_env.MujocoEnv.__init__(self, curr_dir+'/assets/DAPG_pen.xml', 5)
+        mujoco_env.MujocoEnv.__init__(self, curr_dir + "/assets/DAPG_pen.xml", 5)
 
         # Override action_space to -1, 1
-        self.action_space = spaces.Box(low=-1.0, high=1.0, dtype=np.float32, shape=self.action_space.shape)
+        self.action_space = spaces.Box(
+            low=-1.0, high=1.0, dtype=np.float32, shape=self.action_space.shape
+        )
 
         # change actuator sensitivity
-        self.sim.model.actuator_gainprm[self.sim.model.actuator_name2id('A_WRJ1'):self.sim.model.actuator_name2id('A_WRJ0')+1,:3] = np.array([10, 0, 0])
-        self.sim.model.actuator_gainprm[self.sim.model.actuator_name2id('A_FFJ3'):self.sim.model.actuator_name2id('A_THJ0')+1,:3] = np.array([1, 0, 0])
-        self.sim.model.actuator_biasprm[self.sim.model.actuator_name2id('A_WRJ1'):self.sim.model.actuator_name2id('A_WRJ0')+1,:3] = np.array([0, -10, 0])
-        self.sim.model.actuator_biasprm[self.sim.model.actuator_name2id('A_FFJ3'):self.sim.model.actuator_name2id('A_THJ0')+1,:3] = np.array([0, -1, 0])
+        self.sim.model.actuator_gainprm[
+            self.sim.model.actuator_name2id("A_WRJ1") : self.sim.model.actuator_name2id(
+                "A_WRJ0"
+            )
+            + 1,
+            :3,
+        ] = np.array([10, 0, 0])
+        self.sim.model.actuator_gainprm[
+            self.sim.model.actuator_name2id("A_FFJ3") : self.sim.model.actuator_name2id(
+                "A_THJ0"
+            )
+            + 1,
+            :3,
+        ] = np.array([1, 0, 0])
+        self.sim.model.actuator_biasprm[
+            self.sim.model.actuator_name2id("A_WRJ1") : self.sim.model.actuator_name2id(
+                "A_WRJ0"
+            )
+            + 1,
+            :3,
+        ] = np.array([0, -10, 0])
+        self.sim.model.actuator_biasprm[
+            self.sim.model.actuator_name2id("A_FFJ3") : self.sim.model.actuator_name2id(
+                "A_THJ0"
+            )
+            + 1,
+            :3,
+        ] = np.array([0, -1, 0])
 
         utils.EzPickle.__init__(self)
         self.target_obj_bid = self.sim.model.body_name2id("target")
-        self.S_grasp_sid = self.sim.model.site_name2id('S_grasp')
-        self.obj_bid = self.sim.model.body_name2id('Object')
-        self.eps_ball_sid = self.sim.model.site_name2id('eps_ball')
-        self.obj_t_sid = self.sim.model.site_name2id('object_top')
-        self.obj_b_sid = self.sim.model.site_name2id('object_bottom')
-        self.tar_t_sid = self.sim.model.site_name2id('target_top')
-        self.tar_b_sid = self.sim.model.site_name2id('target_bottom')
+        self.S_grasp_sid = self.sim.model.site_name2id("S_grasp")
+        self.obj_bid = self.sim.model.body_name2id("Object")
+        self.eps_ball_sid = self.sim.model.site_name2id("eps_ball")
+        self.obj_t_sid = self.sim.model.site_name2id("object_top")
+        self.obj_b_sid = self.sim.model.site_name2id("object_bottom")
+        self.tar_t_sid = self.sim.model.site_name2id("target_top")
+        self.tar_b_sid = self.sim.model.site_name2id("target_bottom")
 
-        self.pen_length = np.linalg.norm(self.data.site_xpos[self.obj_t_sid] - self.data.site_xpos[self.obj_b_sid])
-        self.tar_length = np.linalg.norm(self.data.site_xpos[self.tar_t_sid] - self.data.site_xpos[self.tar_b_sid])
+        self.pen_length = np.linalg.norm(
+            self.data.site_xpos[self.obj_t_sid] - self.data.site_xpos[self.obj_b_sid]
+        )
+        self.tar_length = np.linalg.norm(
+            self.data.site_xpos[self.tar_t_sid] - self.data.site_xpos[self.tar_b_sid]
+        )
 
         self.act_mid = np.mean(self.model.actuator_ctrlrange, axis=1)
-        self.act_rng = 0.5*(self.model.actuator_ctrlrange[:,1]-self.model.actuator_ctrlrange[:,0])
+        self.act_rng = 0.5 * (
+            self.model.actuator_ctrlrange[:, 1] - self.model.actuator_ctrlrange[:, 0]
+        )
 
     def step(self, a):
         a = np.clip(a, -1.0, 1.0)
         try:
             starting_up = False
-            a = self.act_mid + a*self.act_rng # mean center and scale
-        except:
+            a = self.act_mid + a * self.act_rng  # mean center and scale
+        except Exception:
             starting_up = True
-            a = a                             # only for the initialization phase
+            a = a  # only for the initialization phase
         self.do_simulation(a, self.frame_skip)
 
-        obj_pos  = self.data.body_xpos[self.obj_bid].ravel()
+        obj_pos = self.data.body_xpos[self.obj_bid].ravel()
         desired_loc = self.data.site_xpos[self.eps_ball_sid].ravel()
-        obj_orien = (self.data.site_xpos[self.obj_t_sid] - self.data.site_xpos[self.obj_b_sid])/self.pen_length
-        desired_orien = (self.data.site_xpos[self.tar_t_sid] - self.data.site_xpos[self.tar_b_sid])/self.tar_length
+        obj_orien = (
+            self.data.site_xpos[self.obj_t_sid] - self.data.site_xpos[self.obj_b_sid]
+        ) / self.pen_length
+        desired_orien = (
+            self.data.site_xpos[self.tar_t_sid] - self.data.site_xpos[self.tar_b_sid]
+        ) / self.tar_length
 
         # pos cost
-        dist = np.linalg.norm(obj_pos-desired_loc)
+        dist = np.linalg.norm(obj_pos - desired_loc)
         reward = -dist
         # orien cost
         orien_similarity = np.dot(obj_orien, desired_orien)
@@ -95,10 +133,23 @@ class PenEnvV0(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
         obj_vel = self.data.qvel[-6:].ravel()
         obj_pos = self.data.body_xpos[self.obj_bid].ravel()
         desired_pos = self.data.site_xpos[self.eps_ball_sid].ravel()
-        obj_orien = (self.data.site_xpos[self.obj_t_sid] - self.data.site_xpos[self.obj_b_sid])/self.pen_length
-        desired_orien = (self.data.site_xpos[self.tar_t_sid] - self.data.site_xpos[self.tar_b_sid])/self.tar_length
-        return np.concatenate([qp[:-6], obj_pos, obj_vel, obj_orien, desired_orien,
-                               obj_pos-desired_pos, obj_orien-desired_orien])
+        obj_orien = (
+            self.data.site_xpos[self.obj_t_sid] - self.data.site_xpos[self.obj_b_sid]
+        ) / self.pen_length
+        desired_orien = (
+            self.data.site_xpos[self.tar_t_sid] - self.data.site_xpos[self.tar_b_sid]
+        ) / self.tar_length
+        return np.concatenate(
+            [
+                qp[:-6],
+                obj_pos,
+                obj_vel,
+                obj_orien,
+                desired_orien,
+                obj_pos - desired_pos,
+                obj_orien - desired_orien,
+            ]
+        )
 
     def reset_model(self):
         qp = self.init_qpos.copy()
@@ -124,9 +175,9 @@ class PenEnvV0(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
         """
         Set the state which includes hand as well as objects and targets in the scene
         """
-        qp = state_dict['qpos']
-        qv = state_dict['qvel']
-        desired_orien = state_dict['desired_orien']
+        qp = state_dict["qpos"]
+        qv = state_dict["qvel"]
+        desired_orien = state_dict["desired_orien"]
         self.set_state(qp, qv)
         self.model.body_quat[self.target_obj_bid] = desired_orien
         self.sim.forward()
@@ -142,7 +193,7 @@ class PenEnvV0(mujoco_env.MujocoEnv, utils.EzPickle, offline_env.OfflineEnv):
         num_paths = len(paths)
         # success if pen within 15 degrees of target for 20 steps
         for path in paths:
-            if np.sum(path['env_infos']['goal_achieved']) > 20:
+            if np.sum(path["env_infos"]["goal_achieved"]) > 20:
                 num_success += 1
-        success_percentage = num_success*100.0/num_paths
+        success_percentage = num_success * 100.0 / num_paths
         return success_percentage

@@ -1,48 +1,54 @@
-import gym
-import logging
-from d4rl.pointmaze import waypoint_controller
-from d4rl.pointmaze import maze_model
-import numpy as np
-import pickle
-import gzip
-import h5py
 import argparse
+
+import gym
+import h5py
+import numpy as np
+
+from d4rl.pointmaze import maze_model, waypoint_controller
 
 
 def reset_data():
-    return {'observations': [],
-            'actions': [],
-            'terminals': [],
-            'rewards': [],
-            'infos/goal': [],
-            'infos/qpos': [],
-            'infos/qvel': [],
-            }
+    return {
+        "observations": [],
+        "actions": [],
+        "terminals": [],
+        "rewards": [],
+        "infos/goal": [],
+        "infos/qpos": [],
+        "infos/qvel": [],
+    }
+
 
 def append_data(data, s, a, tgt, done, env_data):
-    data['observations'].append(s)
-    data['actions'].append(a)
-    data['rewards'].append(0.0)
-    data['terminals'].append(done)
-    data['infos/goal'].append(tgt)
-    data['infos/qpos'].append(env_data.qpos.ravel().copy())
-    data['infos/qvel'].append(env_data.qvel.ravel().copy())
+    data["observations"].append(s)
+    data["actions"].append(a)
+    data["rewards"].append(0.0)
+    data["terminals"].append(done)
+    data["infos/goal"].append(tgt)
+    data["infos/qpos"].append(env_data.qpos.ravel().copy())
+    data["infos/qvel"].append(env_data.qvel.ravel().copy())
+
 
 def npify(data):
     for k in data:
-        if k == 'terminals':
+        if k == "terminals":
             dtype = np.bool_
         else:
             dtype = np.float32
 
         data[k] = np.array(data[k], dtype=dtype)
 
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--render', action='store_true', help='Render trajectories')
-    parser.add_argument('--noisy', action='store_true', help='Noisy actions')
-    parser.add_argument('--env_name', type=str, default='maze2d-umaze-v1', help='Maze type')
-    parser.add_argument('--num_samples', type=int, default=int(1e6), help='Num samples to collect')
+    parser.add_argument("--render", action="store_true", help="Render trajectories")
+    parser.add_argument("--noisy", action="store_true", help="Noisy actions")
+    parser.add_argument(
+        "--env_name", type=str, default="maze2d-umaze-v1", help="Maze type"
+    )
+    parser.add_argument(
+        "--num_samples", type=int, default=int(1e6), help="Num samples to collect"
+    )
     args = parser.parse_args()
 
     env = gym.make(args.env_name)
@@ -64,7 +70,7 @@ def main():
         velocity = s[2:4]
         act, done = controller.get_action(position, velocity, env._target)
         if args.noisy:
-            act = act + np.random.randn(*act.shape)*0.5
+            act = act + np.random.randn(*act.shape) * 0.5
 
         act = np.clip(act, -1.0, 1.0)
         if ts >= max_episode_steps:
@@ -73,8 +79,8 @@ def main():
 
         ns, _, _, _ = env.step(act)
 
-        if len(data['observations']) % 10000 == 0:
-            print(len(data['observations']))
+        if len(data["observations"]) % 10000 == 0:
+            print(len(data["observations"]))
 
         ts += 1
         if done:
@@ -87,15 +93,14 @@ def main():
         if args.render:
             env.render()
 
-    
     if args.noisy:
-        fname = '%s-noisy.hdf5' % args.env_name
+        fname = "%s-noisy.hdf5" % args.env_name
     else:
-        fname = '%s.hdf5' % args.env_name
-    dataset = h5py.File(fname, 'w')
+        fname = "%s.hdf5" % args.env_name
+    dataset = h5py.File(fname, "w")
     npify(data)
     for k in data:
-        dataset.create_dataset(k, data=data[k], compression='gzip')
+        dataset.create_dataset(k, data=data[k], compression="gzip")
 
 
 if __name__ == "__main__":
