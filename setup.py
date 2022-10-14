@@ -40,7 +40,8 @@ setup(
     author_email="contact@farama.org",
     description="Datasets for Data Driven Deep Reinforcement Learning."
     url="https://github.com/Farama-Foundation/D4RL",
-    license_files=("LICENSE.txt",),
+    license="Apache",
+    license_files=("LICENSE",),
     long_description=long_description,
     long_description_content_type="text/markdown",
     keywords=["Reinforcement Learning", "Datasets", "RL", "AI"],
