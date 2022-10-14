@@ -41,7 +41,7 @@ except ImportError as e:
     if not SUPPRESS_MESSAGES:
         print(_ERROR_MESSAGE % 'CARLA', file=sys.stderr)
         print(e, file=sys.stderr)
-        
+
 try:
     import d4rl.gym_bullet
     import d4rl.pointmaze_bullet
@@ -114,7 +114,7 @@ def qlearning_dataset(env, dataset=None, terminate_on_end=False, **kwargs):
         if (not terminate_on_end) and final_timestep:
             # Skip this transition and don't apply terminals on the last step of an episode
             episode_step = 0
-            continue  
+            continue
         if done_bool or final_timestep:
             episode_step = 0
 
@@ -184,3 +184,5 @@ def sequence_dataset(env, dataset=None, **kwargs):
 
         episode_step += 1
 
+
+__version__ = "1.1"

@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="d4rl-text.png" width="500px"/>
+    <img src="https://raw.githubusercontent.com/jjshoots/D4RL/master/d4rl-text.png" width="500px"/>
 </p>
 
 D4RL is an open-source benchmark for offline reinforcement learning. It provides standardized environments and datasets for training and benchmarking algorithms. A supplementary [whitepaper](https://arxiv.org/abs/2004.07219) and [website](https://sites.google.com/view/d4rl/home) are also available.
@@ -32,7 +32,7 @@ Each task is associated with a fixed offline dataset, which can be obtained with
 - `observations`: An N by observation dimensional array of observations.
 - `actions`: An N by action dimensional array of actions.
 - `rewards`: An N dimensional array of rewards.
-- `terminals`: An N dimensional array of episode termination flags. This is true when episodes end due to termination conditions such as falling over. 
+- `terminals`: An N dimensional array of episode termination flags. This is true when episodes end due to termination conditions such as falling over.
 - `timeouts`: An N dimensional array of termination flags. This is true when episodes end due to reaching the maximum episode length.
 - `infos`: Contains optional task-specific debugging information.
 
@@ -68,7 +68,7 @@ The individual min and max reference scores are stored in `d4rl/infos.py` for re
 
 ## Algorithm Implementations
 
-We have aggregated implementations of various offline RL algorithms in a [separate repository](https://github.com/rail-berkeley/d4rl_evaluations). 
+We have aggregated implementations of various offline RL algorithms in a [separate repository](https://github.com/rail-berkeley/d4rl_evaluations).
 
 ## Off-Policy Evaluations
 
@@ -84,7 +84,7 @@ D4RL currently has limited support for off-policy evaluation methods, on a selec
 ## Acknowledgements
 
 D4RL builds on top of several excellent domains and environments built by various researchers. We would like to thank the authors of:
-- [hand_dapg](https://github.com/aravindr93/hand_dapg) 
+- [hand_dapg](https://github.com/aravindr93/hand_dapg)
 - [gym-minigrid](https://github.com/maximecb/gym-minigrid)
 - [carla](https://github.com/carla-simulator/carla)
 - [flow](https://github.com/flow-project/flow)
