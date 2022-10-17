@@ -19,8 +19,8 @@ def get_description():
 
 
 def get_version():
-    """Gets the pettingzoo version."""
-    path = "pettingzoo/__init__.py"
+    """Gets the d4rl version."""
+    path = "d4rl/__init__.py"
     with open(path) as file:
         lines = file.readlines()
 
@@ -38,7 +38,7 @@ setup(
     version=version,
     author="Farama Foundation",
     author_email="contact@farama.org",
-    description="Datasets for Data Driven Deep Reinforcement Learning."
+    description="Datasets for Data Driven Deep Reinforcement Learning.",
     url="https://github.com/Farama-Foundation/D4RL",
     license="Apache",
     license_files=("LICENSE",),
