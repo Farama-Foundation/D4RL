@@ -87,7 +87,7 @@ class MujocoEnv(gym.Env):
         try:
             self.action_space = spaces.Box(
                 act_lower, act_upper, dtype=np.float32)
-            if isinstance(observation, collections.Mapping):
+            if isinstance(observation, collections.abc.Mapping):
                 self.observation_space = spaces.Dict({
                 k: spaces.Box(-np.inf, np.inf, shape=v.shape, dtype=np.float32) for k, v in observation.items()})
             else:
@@ -98,7 +98,7 @@ class MujocoEnv(gym.Env):
         except TypeError:
             # Fallback case for gym 0.9.x
             self.action_space = spaces.Box(act_lower, act_upper)
-            assert not isinstance(observation, collections.Mapping), 'gym 0.9.x does not support dictionary observation.'
+            assert not isinstance(observation, collections.abc.Mapping), 'gym 0.9.x does not support dictionary observation.'
             self.obs_dim = np.sum([o.size for o in observation]) if type(observation) is tuple else observation.size
             self.observation_space = spaces.Box(
                 -np.inf, np.inf, observation.shape)
