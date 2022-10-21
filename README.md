@@ -4,6 +4,12 @@
 
 D4RL is an open-source benchmark for offline reinforcement learning. It provides standardized environments and datasets for training and benchmarking algorithms. A supplementary [whitepaper](https://arxiv.org/abs/2004.07219) and [website](https://sites.google.com/view/d4rl/home) are also available.
 
+The current maintenance plan for this library is:
+
+1) Pull the majority of the environments out of D4RL, fix the long standing bugs, and have them depend on the new MuJoCo bindings. The majority of the environments housed in D4RL were already maintained projects in Farama, and all the ones that aren't will be going into [Gymnasium-Robotics](https://github.com/Farama-Foundation/Gymnasium-Robotics), a standard library for housing many different Robotics environments. There are some envrionments that we don't plan to maintain, noteably the PyBullet ones (MuJoCo is not maintained and open source and PyBullet is now longer maintained) and Flow (it was never really used and the original author's don't view it as especially valuable).
+2) Recreate all the datasets in D4RL given the revised versions of environments, and host them in a standard offline RL dataset repostiry we're working on called [Kabkuk](https://github.com/Farama-Foundation/Kabuki)
+
+
 ## Setup
 
 D4RL can be installed by cloning the repository as follows:
