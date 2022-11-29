@@ -46,7 +46,7 @@ You can also load data using `d4rl.qlearning_dataset(env)`, which formats the da
 
 ```python
 import gym
-import d4rl # Import required to register environments
+import d4rl # Import required to register environments, you may need to also import the submodule
 
 # Create the environment
 env = gym.make('maze2d-umaze-v1')
