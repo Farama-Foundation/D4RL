@@ -110,7 +110,7 @@ class KitchenV0(robot_env.RobotEnv):
             'obs_dict': self.obs_dict,
             'rewards': reward_dict,
             'score': score,
-            'images': np.asarray(self.render(mode='rgb_array'))
+            # 'images': np.asarray(self.render(mode='rgb_array'))
         }
         # self.render()
         return obs, reward_dict['r_total'], done, env_info
