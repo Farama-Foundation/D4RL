@@ -428,7 +428,6 @@ register(
     entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=2000,
     kwargs={
-        'deprecated': True,
         'maze_map': maze_env.ULTRA_MAZE_TEST,
         'reward_type':'sparse',
         'non_zero_reset':False,
@@ -446,7 +445,6 @@ register(
     entry_point='d4rl.locomotion.ant:make_ant_maze_env',
     max_episode_steps=2000,
     kwargs={
-        'deprecated': True,
         'maze_map': maze_env.ULTRA_MAZE_TEST,
         'reward_type':'sparse',
         'non_zero_reset':False,
