@@ -205,7 +205,6 @@ class AntMazeEnv(maze_env.MazeEnv, GoalReachingAntEnv, offline_env.OfflineEnv):
     return self.set_target_goal(target_location)
 
   def seed(self, seed=None):
-    # print(f"MazeEnv seed = {seed}")
     mujoco_env.MujocoEnv.seed(self, seed)
 
 def make_ant_maze_env(**kwargs):
