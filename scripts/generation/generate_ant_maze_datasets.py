@@ -75,6 +75,8 @@ def main():
         maze = maze_env.BIG_MAZE
     elif args.maze == 'large':
         maze = maze_env.HARDEST_MAZE
+    elif args.maze == 'ultra':
+        maze = maze_env.ULTRA_MAZE
     elif args.maze == 'umaze_eval':
         maze = maze_env.U_MAZE_EVAL
     elif args.maze == 'medium_eval':
@@ -124,7 +126,13 @@ def main():
     ts = 0
     num_episodes = 0
     for _ in range(args.num_samples):
-        act, waypoint_goal = data_collection_policy(s)
+        try:
+            act, waypoint_goal = data_collection_policy(s)
+        except Exception as e:
+            print(e)
+            #curr_frame = env.physics.render(width=500, height=500, depth=False)
+            #frames = np.array([curr_frame])
+            #save_video('./videos/', args.env + '_navigation', frames, num_episodes)
 
         if args.noisy:
             act = act + np.random.randn(*act.shape)*0.2
