@@ -1,10 +1,16 @@
 import os
 import sys
+
+escape_mask = '\033]8;{};{}\033\\{}\033]8;;\033\\'
+print(f"""Warning: All of online environments libraries in D4RL have been moved {escape_mask.format('', 'https://github.com/Farama-Foundation/Gymnasium', 'Gymnasium')}, {escape_mask.format('', 'https://github.com/Farama-Foundation/MiniGrid', 'MiniGrid')} and {escape_mask.format('', 'https://github.com/Farama-Foundation/Gymnasium-Robotics', 'Gymnasium-Robotics')}, and all offline datasets in D4RL have been moved to {escape_mask.format('', 'https://github.com/Farama-Foundation/Minari', 'Minari')}.
+These new versions include large bug fixes, new versions of Python, and are where all new development will continue. Please upgrade these libraries as soon as you're able to do so.
+If you'd like to read more about the story behind this switch, please check out {escape_mask.format('', 'https://farama.org/Announcing-Minari', 'this blog post')}.""", file=sys.stderr)
+
 import collections
 import numpy as np
 
-import d4rl.infos
-from d4rl.offline_env import set_dataset_path, get_keys
+# import d4rl.infos
+# from d4rl.offline_env import set_dataset_path, get_keys
 
 SUPPRESS_MESSAGES = bool(os.environ.get('D4RL_SUPPRESS_IMPORT_ERROR', 0))
 
