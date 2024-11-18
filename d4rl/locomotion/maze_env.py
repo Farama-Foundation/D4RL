@@ -52,6 +52,22 @@ HARDEST_MAZE = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                 [1, 0, 0, 1, G, 0, G, 1, 0, G, 0, 1],
                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
 
+ULTRA_MAZE = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+              [1, R, 0, 0, G, 0, 0, 0, 1, 0, 0, G, 0, 0, G, 1],
+              [1, 0, 1, 1, 1, G, 1, 0, 1, G, 1, 1, 0, 1, 0, 1],
+              [1, 0, 1, 1, 1, 0, 1, G, 0, 0, 0, 1, 0, 1, 0, 1],
+              [1, 0, 0, G, 1, 0, 1, 1, 0, 1, 1, 1, G, 1, 0, 1],
+              [1, G, 1, 0, 0, 0, 1, G, 0, 0, G, 0, 0, 0, G, 1],
+              [1, 0, 0, 0, 1, G, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1],
+              [1, 0, 1, G, 1, 1, 1, 0, 1, 0, 0, G, 1, 0, 1, 1],
+              [1, G, 0, 0, 0, 0, 0, G, 1, 0, 1, 0, 0, G, 0, 1],
+              [1, 1, 0, 1, 1, G, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1],
+              [1, 1, 0, 1, 0, 0, 1, 0, 1, G, 0, 0, 0, 0, G, 1],
+              [1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1]]
+
+
+
+
 # Maze specifications with a single target goal
 U_MAZE_TEST = [[1, 1, 1, 1, 1],
               [1, R, 0, 0, 1],
@@ -59,6 +75,7 @@ U_MAZE_TEST = [[1, 1, 1, 1, 1],
               [1, G, 0, 0, 1],
               [1, 1, 1, 1, 1]]
 
+# effective size 6*6
 BIG_MAZE_TEST = [[1, 1, 1, 1, 1, 1, 1, 1],
                 [1, R, 0, 1, 1, 0, 0, 1],
                 [1, 0, 0, 1, 0, 0, 0, 1],
@@ -68,6 +85,7 @@ BIG_MAZE_TEST = [[1, 1, 1, 1, 1, 1, 1, 1],
                 [1, 0, 0, 0, 1, 0, G, 1],
                 [1, 1, 1, 1, 1, 1, 1, 1]]
 
+# effective size 7*10
 HARDEST_MAZE_TEST = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, R, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
                     [1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
@@ -77,6 +95,21 @@ HARDEST_MAZE_TEST = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                     [1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1],
                     [1, 0, 0, 1, 0, 0, 0, 1, 0, G, 0, 1],
                     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+
+# effective size 14*14 -> 10*14
+ULTRA_MAZE_TEST = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                  [1, R, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+                  [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1],
+                  [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1],
+                  [1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1],
+                  [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                  [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1],
+                  [1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1],
+                  [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+                  [1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1],
+                  [1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, G, 1],
+                  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
+
 
 # Maze specifications for evaluation
 U_MAZE_EVAL = [[1, 1, 1, 1, 1],
@@ -208,8 +241,8 @@ class MazeEnv(gym.Env):
   def _xy_to_rowcol(self, xy):
     size_scaling = self._maze_size_scaling
     xy = (max(xy[0], 1e-4), max(xy[1], 1e-4))
-    return (int(1 + (xy[1]) / size_scaling),
-            int(1 + (xy[0]) / size_scaling))
+    return (int((xy[1]+self._init_torso_y+0.25*size_scaling) / size_scaling),
+            int((xy[0]+self._init_torso_x+0.25*size_scaling) / size_scaling))
   
   def _get_reset_location(self,):
     prob = (1.0 - self._np_maze_map) / np.sum(1.0 - self._np_maze_map) 
@@ -226,11 +259,11 @@ class MazeEnv(gym.Env):
 
   def _rowcol_to_xy(self, rowcol, add_random_noise=False):
     row, col = rowcol
-    x = col * self._maze_size_scaling - self._init_torso_x
-    y = row * self._maze_size_scaling - self._init_torso_y
+    x = col * self._maze_size_scaling - self._init_torso_x - 0.125*self._maze_size_scaling
+    y = row * self._maze_size_scaling - self._init_torso_y - 0.125*self._maze_size_scaling
     if add_random_noise:
-      x = x + np.random.uniform(low=0, high=self._maze_size_scaling * 0.25)
-      y = y + np.random.uniform(low=0, high=self._maze_size_scaling * 0.25)
+      x = x + np.random.uniform(low=0, high=self._maze_size_scaling * 0.25) - 0.125*self._maze_size_scaling
+      y = y + np.random.uniform(low=0, high=self._maze_size_scaling * 0.25) - 0.125*self._maze_size_scaling
     return (x, y)
 
   def goal_sampler(self, np_random, only_free_cells=True, interpolate=True):
@@ -313,6 +346,8 @@ class MazeEnv(gym.Env):
 
     visited = {}
     to_visit = [target_rowcol]
+    if self._maze_map[current_rowcol[0]][current_rowcol[1]] not in [0, RESET, GOAL]:
+        print()
     while to_visit:
       next_visit = []
       for rowcol in to_visit:
@@ -337,7 +372,7 @@ class MazeEnv(gym.Env):
           next_visit.append(next_rowcol)
       to_visit = next_visit
 
-    raise ValueError('No path found to target.')
+    raise ValueError(f'No path found from {current_rowcol} to targe {target_rowcol}.')
 
   def create_navigation_policy(self,
                                goal_reaching_policy_fn,
