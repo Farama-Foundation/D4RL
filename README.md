@@ -1,6 +1,6 @@
 ## Important Notice
 
-### The team that has been maintaining D4RL has moved all future development of offline-RL to [Minari](https://github.com/Farama-Foundation/Minari) and the Robotics environments future development moved to [Gymnasium-Robotics](https://github.com/Farama-Foundation/Gymnasium-Robotics), and D4RL will not be receiving any future updates. Please switch over to Minari and/or Gymnasium-Robotics as soon as you're able to do so. If you'd like to read more about the story behind this switch, please check out [this blog post](https://farama.org/Announcing-Minari).
+### All of online environments libraries in D4RL have been moved [Gymnasium](https://github.com/Farama-Foundation/Gymnasium), [MiniGrid](https://github.com/Farama-Foundation/MiniGrid) and [Gymnasium-Robotics](https://github.com/Farama-Foundation/Gymnasium-Robotics), and all offline datasets in DR4L have been moved to [Minari](https://github.com/Farama-Foundation/Minari). These new versions include large bug fixes, new versions of Python, and are where all new development will continue. Please upgrade these libraries as soon as you're able to do so. If you'd like to read more about the story behind this switch, please check out [this blog post](https://farama.org/Announcing-Minari).
 
 <p align="center">
     <img src="https://raw.githubusercontent.com/jjshoots/D4RL/master/d4rl-text.png" width="500px"/>
