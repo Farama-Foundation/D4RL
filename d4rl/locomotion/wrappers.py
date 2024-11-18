@@ -22,6 +22,9 @@ class ProxyEnv(Env):
 
     def step(self, action):
         return self._wrapped_env.step(action)
+    
+    def seed(self, seed=None):
+        return self._wrapped_env.seed(seed)
 
     def render(self, *args, **kwargs):
         return self._wrapped_env.render(*args, **kwargs)

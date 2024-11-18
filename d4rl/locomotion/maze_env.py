@@ -214,13 +214,13 @@ class MazeEnv(gym.Env):
   def _get_reset_location(self,):
     prob = (1.0 - self._np_maze_map) / np.sum(1.0 - self._np_maze_map) 
     prob_row = np.sum(prob, 1)
-    row_sample = np.random.choice(np.arange(self._np_maze_map.shape[0]), p=prob_row)
-    col_sample = np.random.choice(np.arange(self._np_maze_map.shape[1]), p=prob[row_sample] * 1.0 / prob_row[row_sample])
+    row_sample = self.np_random.choice(np.arange(self._np_maze_map.shape[0]), p=prob_row)
+    col_sample = self.np_random.choice(np.arange(self._np_maze_map.shape[1]), p=prob[row_sample] * 1.0 / prob_row[row_sample])
     reset_location = self._rowcol_to_xy((row_sample, col_sample))
     
     # Add some random noise
-    random_x = np.random.uniform(low=0, high=0.5) * 0.5 * self._maze_size_scaling
-    random_y = np.random.uniform(low=0, high=0.5) * 0.5 * self._maze_size_scaling
+    random_x = self.np_random.uniform(low=0, high=0.5) * 0.5 * self._maze_size_scaling
+    random_y = self.np_random.uniform(low=0, high=0.5) * 0.5 * self._maze_size_scaling
 
     return (max(reset_location[0] + random_x, 0), max(reset_location[1] + random_y, 0))
 
@@ -229,8 +229,8 @@ class MazeEnv(gym.Env):
     x = col * self._maze_size_scaling - self._init_torso_x
     y = row * self._maze_size_scaling - self._init_torso_y
     if add_random_noise:
-      x = x + np.random.uniform(low=0, high=self._maze_size_scaling * 0.25)
-      y = y + np.random.uniform(low=0, high=self._maze_size_scaling * 0.25)
+      x = x + self.np_random.uniform(low=0, high=self._maze_size_scaling * 0.25)
+      y = y + self.np_random.uniform(low=0, high=self._maze_size_scaling * 0.25)
     return (x, y)
 
   def goal_sampler(self, np_random, only_free_cells=True, interpolate=True):
@@ -247,11 +247,11 @@ class MazeEnv(gym.Env):
     # If there is a 'goal' designated, use that. Otherwise, any valid cell can
     # be a goal.
     sample_choices = goal_cells if goal_cells else valid_cells
-    cell = sample_choices[np_random.choice(len(sample_choices))]
+    cell = sample_choices[self.np_random.choice(len(sample_choices))]
     xy = self._rowcol_to_xy(cell, add_random_noise=True)
 
-    random_x = np.random.uniform(low=0, high=0.5) * 0.25 * self._maze_size_scaling
-    random_y = np.random.uniform(low=0, high=0.5) * 0.25 * self._maze_size_scaling
+    random_x = self.np_random.uniform(low=0, high=0.5) * 0.25 * self._maze_size_scaling
+    random_y = self.np_random.uniform(low=0, high=0.5) * 0.25 * self._maze_size_scaling
 
     xy = (max(xy[0] + random_x, 0), max(xy[1] + random_y, 0))
 
@@ -259,7 +259,7 @@ class MazeEnv(gym.Env):
   
   def set_target_goal(self, goal_input=None):
     if goal_input is None:
-      self.target_goal = self.goal_sampler(np.random)
+      self.target_goal = self.goal_sampler(self.np_random)
     else:
       self.target_goal = goal_input
     
